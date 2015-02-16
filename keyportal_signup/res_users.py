@@ -33,7 +33,7 @@ class res_partner(osv.Model):
 
 
     def _get_signup_url_for_action(self, cr, uid, ids, action='login', view_type=None, menu_id=None, res_id=None, model=None, context=None):
-        """ generate a signup url for the given partner ids and action, possibly overriding
+        """ generate a signup url for the given partner ids and action, possibly overriding 
             the url state components (menu_id, id, view_type) """
         res = dict.fromkeys(ids, False)
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
