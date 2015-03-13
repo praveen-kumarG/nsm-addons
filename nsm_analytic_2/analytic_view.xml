@@ -29,7 +29,7 @@
         <record id="view_account_analytic_line_tree_nsm" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.nsm</field>
             <field name="model">account.analytic.line</field>
-            <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
+            <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
                     <field name="user_id" position="replace">
                         <field name="user_id" invisible="1"/>
