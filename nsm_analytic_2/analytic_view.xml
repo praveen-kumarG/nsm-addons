@@ -32,11 +32,11 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
                     <field name="user_id" position="replace">
-                        <field name="user_id" invisible='1'/>
+                        <field name="user_id" invisible="1"/>
                         <field name="partner_id"/>
                     </field> 
                     <field name="journal_id" position="replace">
-                        <field name="journal_id" invisible="True"/>
+                        <field name="journal_id" invisible="1"/>
                     </field>
             </field>
         </record>
