@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,12 +15,24 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import account_analytic
-import account_analytic_line
+from openerp.osv import fields
+from openerp.osv import osv
+from openerp.tools.translate import _
+
+class account_analytic_line(osv.osv):
+    _inherit = 'account.analytic.line'
+    _description = 'Analytic Line'
+    _columns = {
+        'partner_id': fields.related('move_id', 'partner_id', string='Partner', store=True, readonly=True),
+    }
+
+
+account_analytic_line()
+
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
