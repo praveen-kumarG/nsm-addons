@@ -27,7 +27,7 @@ class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _description = 'Analytic Line'
     _columns = {
-        'partner_id': fields.related('move_id', 'partner_id', type='many2one', relation='res.partner',string='Partner', store=True, readonly=True),
+        'partner_id': fields.related('move_id', 'partner_id', type="many2one", relation="res.partner",string='Partner', store=False, readonly=True),
     }
 
 
