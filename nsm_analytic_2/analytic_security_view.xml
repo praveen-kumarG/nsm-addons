@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="0">
+
+        
+         
+        <record model="ir.rule" id="analytic_user_rule">
+            <field name="name">Analytic Lines</field>
+            <field name="model_id" ref="model_account_analytic_line"/>
+            <field name="global" eval="False"/>
+            <field name="domain_force">[('section_id.member_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('megis_auth.goedk_facturen','megis_auth.authorize'))]"/>
+        </record>
+
+        
+        
+    </data>
+</openerp>
