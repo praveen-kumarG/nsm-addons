@@ -27,7 +27,7 @@
 ##############################################################################
 
 {
-    'name' : 'nsm_expenxe',
+    'name' : 'nsm_expense',
     'version' : '1.0',
     'category': 'other',
     'description': """
