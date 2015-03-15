@@ -9,6 +9,13 @@
             <field name="domain_force">['|',('account_id.department_id.member_ids.user_id','=',user.id),('account_id.department_id.manager_id','=',user.id)]</field>
             <field name="groups" eval="[(4, ref('megis_auth.goedk_facturen'))]"/>
         </record>
+	<record model="ir.rule" id="analytic_account_user_rule">
+            <field name="name">Analytic Accounts</field>
+            <field name="model_id" ref="account.model_account_analytic_account"/>
+            <field name="global" eval="False"/>
+            <field name="domain_force">['|',('department_id.member_ids.user_id','=',user.id),('department_id.manager_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('megis_auth.goedk_facturen'))]"/>
+        </record>
 	
 	<menuitem name="Journal Entries"
                 id="account.menu_finance_entries" parent="account.menu_finance"
@@ -17,7 +24,7 @@
     
 	<menuitem id="account.account_analytic_journal_entries"
 		name="Analytic Journal Items" parent="account.menu_finance_entries"
-		groups="megis_auth.goedk_facturen,analytic.group_analytic_accounting"
+		groups="analytic.group_analytic_accounting"
                 sequence="10"/>
         
     </data>

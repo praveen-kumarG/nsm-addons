@@ -27,22 +27,23 @@
 ##############################################################################
 
 {
-    'name' : 'nsm_holidays',
+    'name' : 'nsm_expenxe',
     'version' : '1.0',
     'category': 'other',
     'description': """
-This module adds validation of selected request lines in hr_holiday trees.
+This module adds "department_id.manager_id" to expense domain hr_user .
 =============================================================================
 
 
     """,
     'author'  : 'Magnus - Willem Hulshof',
     'website' : 'http://www.magnus.nl',
-    'depends' : ['hr_holidays',
+    'depends' : ['account',
+		'analytic',
+		'hr',
+		'hr_expense',
     ],
-    'data' : ["hr_holidays_state_view.xml",
-	      "hr_view.xml",
-	      "ir_rule.xml",
+    'data' : ["ir_rule.xml",
     ],
     'demo' : [],
     'installable': True
