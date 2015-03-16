@@ -16,7 +16,8 @@
             <field name="global" eval="False"/>
             <field name="domain_force">['|','|',('department_id.member_ids.user_id','=',user.id),('department_id.manager_id','=',user.id),
 					    '|',('section_ids.member_ids','=',user.id),('section_ids.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(4, ref('megis_auth.goedk_facturen'))]"/>
+            <field name="perm_read" eval="False"/>
+	    <field name="groups" eval="[(4, ref('megis_auth.goedk_facturen'))]"/>
         </record>
 	
 	<menuitem name="Journal Entries"
