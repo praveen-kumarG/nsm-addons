@@ -21,6 +21,17 @@
                         <field name="date_publish"/>
                     </field>
             </field>
-        </record>    
+        </record>
+	<record id="view_account_analytic_account_list" model="ir.ui.view">
+            <field name="name">account.analytic.account.list.nsm</field>
+            <field name="model">account.analytic.account</field>
+	    <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <field name="complete_name" position="replace">
+                        <field name="name"/>
+                </field>
+            </field>
+        </record>
     </data>
 </openerp>
