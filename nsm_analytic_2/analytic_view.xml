@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <field name="currency_id" position="after">
-                    <field name="section_id" string="Section"/>
+                    <field name="section_ids" string="Section"/>
                     <field name="department_id" string="Department"/>
                 </field>
             </field>
@@ -21,7 +21,7 @@
             <field name="arch" type="xml">
                     <field name="complete_name" position="replace">
                         <field name="complete_name" invisible="1"/>
-                        <field name="section_id" string="Section"/>
+                        <field name="section_ids" string="Section"/>
                         <field name="department_id" string="Department"/>
                     </field>
             </field>
