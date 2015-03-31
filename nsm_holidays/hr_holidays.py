@@ -47,7 +47,7 @@ class hr_holidays(osv.osv):
 	beginnetje = datetime.date.toordinal(from_dt)
 	eindje = datetime.date.toordinal(to_dt)
 	verschil = eindje-beginnetje
-	tijdlijst = [beginnetje]
+	tijdlijst = []
 	tijdlijst2 = []
         tijdlijst3=[]
 	for i in range(verschil):
