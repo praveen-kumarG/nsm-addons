@@ -49,9 +49,9 @@ class hr_holidays(osv.osv):
 	verschil = eindje-beginnetje
 	tijdlijst = [beginnetje]
 	tijdlijst2 = []
-	for i in verschil:
+	for i in range(1,verschil):
 	    tijdlijst.append[beginnetje+1]
-	for x in verschil:
+	for x in range(1,verschil):
 	    tijdlijst2.append(datetime.date.fromordinal(tijdlijst[x-1]))
 	zaterdagen = tijdlijst2.count(6)
 	zondagen = tijdlijst2.count(7)
