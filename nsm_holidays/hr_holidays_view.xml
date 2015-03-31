@@ -1,0 +1,100 @@
+<openerp>
+    <data>
+
+        <!-- Holidays: Leave Request days --> hrs-->
+
+
+        <record id="edit_holiday_new_hrs" model="ir.ui.view">
+            <field name="name">Leave Request</field>
+            <field name="model">hr.holidays</field>
+            <field name="priority">1</field>
+            <field name="inherit_id" ref="hr.edit_holiday_new"/>
+            <field name="arch" type="xml">
+                <field name="number_of_days_temp" position="replace">
+                    <field name="number_of_days_temp" class="oe_inline"/> hours         
+                </field>
+            </field>
+        </record>
+
+        <!-- Holidays: Allocation Request -->
+        <record model="ir.ui.view" id="allocation_leave_new_hrs">
+            <field name="name">Allocation Request</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr.allocation_leave_new"/>
+            <field name="arch" type="xml">
+                <field name="number_of_days_temp" position="replace">
+                    <field name="number_of_days_temp" class="oe_inline"/> hours 
+                </field>  
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_holiday_allocation_tree_hrs">
+            <field name="name">hr.holidays.allocation.tree</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr.view_holiday_allocation_tree"/>
+            <field name="arch" type="xml">
+                <field name="number_of_days" position="replace">
+                    <field name="number_of_days" string="Allocated Hours" sum="Remaining Hours"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- Holidays: Leaves Management -->
+        <record model="ir.ui.view" id="allocation_company_new_hrs">
+            <field name="name">Leaves Management</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr.allocation_company_new"/>
+            <field name="arch" type="xml">
+                <field name="number_of_days_temp" position="replace">
+                    <field name="number_of_days_temp" string="Allocated Hours?"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_holiday_simple_hrs">
+            <field name="name">hr.holidays.report_tree</field>
+            <field name="model">hr.holidays</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr.view_holiday_simple"/>
+            <field name="arch" type="xml">
+                <field name="number_of_days" position="replace">
+                    <field name="number_of_days" string="Number of Hours" sum="Remaining Hours"/>
+                </field>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_holiday_hrs">
+            <field name="name">hr.holidays.tree</field>
+            <field name="model">hr.holidays</field>
+            <field name="inherit_id" ref="hr.view_holiday"/>
+            <field name="arch" type="xml">
+                <field name="number_of_days" position="replace">
+                    <field name="number_of_days" string="Number of Hours" sum="Remaining Hours"/>
+                </field>   
+            </field>
+        </record>
+
+
+        <!-- Holidays status -->
+
+
+        <!-- Hr employee inherit Legal Leaves -->
+        <record id="view_employee_form_leave_inherit_hrs" model="ir.ui.view">
+            <field name="name">hr.employee.leave.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='active_group']" position="before">
+                    <group string="Leaves">
+                        <label for="remaining_leaves"/>
+                        <div>
+                            <field name="remaining_leaves" class="oe_inline"/> hours
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>

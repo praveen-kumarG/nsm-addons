@@ -41,6 +41,7 @@ This module adds validation of selected request lines in hr_holiday trees.
     'depends' : ['hr_holidays',
     ],
     'data' : ["hr_holidays_state_view.xml",
+	      "hr_holidays_view.xml",
 	      "hr_view.xml",
 	      "ir_rule.xml",
     ],
