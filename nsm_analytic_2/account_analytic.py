@@ -27,7 +27,7 @@ class account_analytic(osv.osv):
     
 
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'section_ids': fields.many2many('crm.case.section','analytic_section_rel','analytic_account_id','section_id','Sales Teams'),
         'department_id': fields.many2one('hr.department', 'Department'),
     }
 account_analytic()
