@@ -83,7 +83,8 @@ class hr_holidays(osv.osv):
         # Compute and update the number of days
         if (date_to and date_from) and (date_from <= date_to):
             diff_day = self._get_number_of_days(date_from, date_to)
-            result['value']['number_of_days_temp'] = (round(math.floor(diff_day))+1)*8
+            #result['value']['number_of_days_temp'] = (round(math.floor(diff_day))+1)*8
+            result['value']['number_of_days_temp'] = diff_day*8
         else:
             result['value']['number_of_days_temp'] = 0
 
@@ -103,7 +104,8 @@ class hr_holidays(osv.osv):
         # Compute and update the number of days
         if (date_to and date_from) and (date_from <= date_to):
             diff_day = self._get_number_of_days(date_from, date_to)
-            result['value']['number_of_days_temp'] = (round(math.floor(diff_day))+1)*8
+            #result['value']['number_of_days_temp'] = (round(math.floor(diff_day))+1)*8
+            result['value']['number_of_days_temp'] = diff_day*8
         else:
             result['value']['number_of_days_temp'] = 0
 
