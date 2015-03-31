@@ -44,8 +44,8 @@ class hr_holidays(osv.osv):
         to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
         timedelta = to_dt - from_dt
 	diff_day0 = timedelta.days + float(timedelta.seconds) / 86400
-	beginnetje = datetime(from_dt).toordinal()
-	eindje = datetime(to_dt).toordinal()
+	beginnetje = date(from_dt).toordinal()
+	eindje = date(to_dt).toordinal()
 	verschil = eindje-beginnetje
 	tijdlijst = [beginnetje]
 	tijdlijst2 = []
