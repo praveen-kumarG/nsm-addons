@@ -22,7 +22,6 @@
 ##############################################################################
 
 import datetime
-from datetime import *
 import time
 from itertools import groupby
 from operator import itemgetter
@@ -45,15 +44,15 @@ class hr_holidays(osv.osv):
         to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
         timedelta = to_dt - from_dt
 	diff_day0 = timedelta.days + float(timedelta.seconds) / 86400
-	beginnetje = datetime.toordinal(from_dt)
-	eindje = datetime.toordinal(to_dt)
+	beginnetje = datetime.date.toordinal(from_dt)
+	eindje = datetime.date.toordinal(to_dt)
 	verschil = eindje-beginnetje
 	tijdlijst = [beginnetje]
 	tijdlijst2 = []
 	for i in verschil:
 	    tijdlijst.append[beginnetje+1]
 	for x in verschil:
-	    tijdlijst2.append(date.fromordinal(tijdlijst[x-1]))
+	    tijdlijst2.append(datetime.date.fromordinal(tijdlijst[x-1]))
 	zaterdagen = tijdlijst2.count(6)
 	zondagen = tijdlijst2.count(7)
 	weekenddagen = zaterdagen+zondagen
