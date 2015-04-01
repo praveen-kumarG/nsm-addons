@@ -43,27 +43,27 @@ class hr_holidays(osv.osv):
         from_dt = datetime.datetime.strptime(date_from, DATETIME_FORMAT)
         to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
         timedelta = to_dt - from_dt
-	diff_day0 = timedelta.days + float(timedelta.seconds) / 86400
-	beginnetje = datetime.date.toordinal(from_dt)
-	eindje = datetime.date.toordinal(to_dt)
-	verschil = eindje-beginnetje
-	tijdlijst = []
-	tijdlijst2 = []
-    tijdlijst3=[]
-	for i in range(verschil):
-	    tijdlijst.append(beginnetje+i)
-	for x in range(verschil):
-	    tijdlijst2.append(datetime.date.fromordinal(tijdlijst[x]))
-    for y in range(verschil):
-        tijdlijst3.append(datetime.date.isoweekday(tijdlijst2[y]))
-	zaterdagen = tijdlijst3.count(6)
-	zondagen = tijdlijst3.count(7)
-	weekenddagen = zaterdagen + zondagen
-    if datetime.date.isoweekday(from_dt) in(6,7) or datetime.date.isoweekday(to_dt) in(6,7):
-        diff_day = diff_day0 - weekenddagen - 1
-    else:
-        diff_day = diff_day0 - weekenddagen	
-    return diff_day
+        diff_day0 = timedelta.days + float(timedelta.seconds) / 86400
+        beginnetje = datetime.date.toordinal(from_dt)
+        eindje = datetime.date.toordinal(to_dt)
+        verschil = eindje-beginnetje
+        tijdlijst = []
+        tijdlijst2 = []
+        tijdlijst3=[]
+        for i in range(verschil):
+            tijdlijst.append(beginnetje+i)
+        for x in range(verschil):
+            tijdlijst2.append(datetime.date.fromordinal(tijdlijst[x]))
+        for y in range(verschil):
+            tijdlijst3.append(datetime.date.isoweekday(tijdlijst2[y]))
+        zaterdagen = tijdlijst3.count(6)
+        zondagen = tijdlijst3.count(7)
+        weekenddagen = zaterdagen + zondagen
+        if datetime.date.isoweekday(from_dt) in(6,7) or datetime.date.isoweekday(to_dt) in(6,7):
+            diff_day = diff_day0 - weekenddagen - 1
+        else:
+            diff_day = diff_day0 - weekenddagen	
+        return diff_day
 
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
