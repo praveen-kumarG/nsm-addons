@@ -4,7 +4,7 @@
         <!-- Holidays: Leave Request days --> hrs-->
 
 
-        <record id="edit_holiday_new_hrs" model="ir.ui.view">
+        <record model="ir.ui.view" id="edit_holiday_new_hrs">
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="priority">1</field>
