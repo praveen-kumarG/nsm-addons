@@ -59,7 +59,9 @@ class hr_holidays(osv.osv):
         zaterdagen = tijdlijst3.count(6)
         zondagen = tijdlijst3.count(7)
         weekenddagen = zaterdagen + zondagen
-        if datetime.date.isoweekday(from_dt) in(6,7) or datetime.date.isoweekday(to_dt) in(6,7):
+        if datetime.date.isoweekday(from_dt) in(6,7) and datetime.date.isoweekday(to_dt) in(1):
+            diff_day = diff_day0 - weekenddagen
+        elif datetime.date.isoweekday(from_dt) in(6,7) or datetime.date.isoweekday(to_dt) in(6,7):
             diff_day = diff_day0 - weekenddagen - 1
         else:
             diff_day = diff_day0 - weekenddagen	
