@@ -8,7 +8,7 @@
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="priority">1</field>
-            <field name="inherit_id" ref="hr.allocation_leave_new"/>
+            <field name="inherit_id" ref="hr.edit_holiday_new"/>
             <field name="arch" type="xml">
                 <field name="number_of_days_temp" position="replace">
                     <field name="number_of_days_temp" class="oe_inline"/> hours         
