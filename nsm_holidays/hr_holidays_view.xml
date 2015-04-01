@@ -11,7 +11,7 @@
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="priority">1</field>
-            <field name="inherit_id" ref="hr.edit_holiday_new"/>
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
             <field name="arch" type="xml">
                 <field name="number_of_days_temp" position="replace">
                     <field name="number_of_days_temp" class="oe_inline"/> hours         
@@ -23,7 +23,7 @@
         <record model="ir.ui.view" id="allocation_leave_new_hrs">
             <field name="name">Allocation Request</field>
             <field name="model">hr.holidays</field>
-            <field name="inherit_id" ref="hr.allocation_leave_new"/>
+            <field name="inherit_id" ref="hr_holidays.allocation_leave_new"/>
             <field name="arch" type="xml">
                 <field name="number_of_days_temp" position="replace">
                     <field name="number_of_days_temp" class="oe_inline"/> hours 
@@ -34,7 +34,7 @@
         <record model="ir.ui.view" id="view_holiday_allocation_tree_hrs">
             <field name="name">hr.holidays.allocation.tree</field>
             <field name="model">hr.holidays</field>
-            <field name="inherit_id" ref="hr.view_holiday_allocation_tree"/>
+            <field name="inherit_id" ref="hr_holidays.view_holiday_allocation_tree"/>
             <field name="arch" type="xml">
                 <field name="number_of_days" position="replace">
                     <field name="number_of_days" string="Allocated Hours" sum="Remaining Hours"/>
@@ -46,7 +46,7 @@
         <record model="ir.ui.view" id="allocation_company_new_hrs">
             <field name="name">Leaves Management</field>
             <field name="model">hr.holidays</field>
-            <field name="inherit_id" ref="hr.allocation_company_new"/>
+            <field name="inherit_id" ref="hr_holidays.allocation_company_new"/>
             <field name="arch" type="xml">
                 <field name="number_of_days_temp" position="replace">
                     <field name="number_of_days_temp" string="Allocated Hours?"/>
@@ -58,7 +58,7 @@
             <field name="name">hr.holidays.report_tree</field>
             <field name="model">hr.holidays</field>
             <field name="priority">20</field>
-            <field name="inherit_id" ref="hr.view_holiday_simple"/>
+            <field name="inherit_id" ref="hr_holidays.view_holiday_simple"/>
             <field name="arch" type="xml">
                 <field name="number_of_days" position="replace">
                     <field name="number_of_days" string="Number of Hours" sum="Remaining Hours"/>
@@ -69,7 +69,7 @@
         <record model="ir.ui.view" id="view_holiday_hrs">
             <field name="name">hr.holidays.tree</field>
             <field name="model">hr.holidays</field>
-            <field name="inherit_id" ref="hr.view_holiday"/>
+            <field name="inherit_id" ref="hr_holidays.view_holiday"/>
             <field name="arch" type="xml">
                 <field name="number_of_days" position="replace">
                     <field name="number_of_days" string="Number of Hours" sum="Remaining Hours"/>
