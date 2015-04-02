@@ -35,6 +35,7 @@ from openerp.tools.translate import _
 
 class hr_holidays(osv.osv):
     _inherit = 'hr.holidays'
+    _sql_constraints[2]=('date_check', 'CHECK ( number_of_days_temp >= 0 )', 'The number of hours must be greater than 0.')
     
     def _get_number_of_days(self, date_from, date_to):
         """Returns a float equals to the timedelta between two dates given as string."""
