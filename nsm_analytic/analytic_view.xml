@@ -8,8 +8,8 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                     <field name="manager_id" position="after">
-			<field name="date_publish" attrs="{'invisible': [('type', '=', 'view')]}"/>
-		    </field>
+						<field name="date_publish" attrs="{'invisible': [('type', '=', 'view')]}"/>
+					</field>
             </field>
         </record>
         <record id="view_account_analytic_account_tree_nsm" model="ir.ui.view">
@@ -25,7 +25,7 @@
 	<record id="view_account_analytic_account_list" model="ir.ui.view">
             <field name="name">account.analytic.account.list.nsm</field>
             <field name="model">account.analytic.account</field>
-	    <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
+			<field name="inherit_id" ref="account.view_account_analytic_account_list"/>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <field name="complete_name" position="replace">
