@@ -36,5 +36,17 @@ class hr_expense_expense(osv.osv):
         
     }
     
+class hr_expense_line(osv.osv):
+     _inherit = 'hr.expense.line'
+     
+     def onchange_product_id(self, cr, uid, ids, product_id, context=None):
+        res = {}
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            res['name'] = product.name
+            amount_unit = product.price_get('standard_price')[product.id]
+#            res['unit_amount'] = amount_unit
+#            res['uom_id'] = product.uom_id.id
+        return {'value': res}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
