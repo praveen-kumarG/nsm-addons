@@ -48,27 +48,13 @@ class hr_holidays(osv.osv):
         DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
         from_dt = datetime.datetime.strptime(date_from, DATETIME_FORMAT)
         to_dt = datetime.datetime.strptime(date_to, DATETIME_FORMAT)
-#        timedelta = to_dt - from_dt
-#        diff_day0 = timedelta.days + float(timedelta.seconds) / 86400
         beginnetje = datetime.date.toordinal(from_dt)
         eindje = datetime.date.toordinal(to_dt)
         verschil = eindje-beginnetje+1
-        tijdlijst = []
-        tijdlijst2 = []
-        tijdlijst3=[]
+        tijdlijst=[]
         for i in range(verschil):
-            tijdlijst.append(beginnetje+i)
-        for x in range(verschil):
-            tijdlijst2.append(datetime.date.fromordinal(tijdlijst[x]))
-        for y in range(verschil):
-            tijdlijst3.append(datetime.date.isoweekday(tijdlijst2[y]))
-        zaterdagen = tijdlijst3.count(6)
-        zondagen = tijdlijst3.count(7)
-        weekenddagen = zaterdagen + zondagen
-#        if datetime.date.isoweekday(from_dt) in(6,7) and datetime.date.isoweekday(to_dt) in(6,7):
-#            diff_day = diff_day0 - weekenddagen - 1
-#        else:
-#            diff_day = diff_day0 - weekenddagen
+            tijdlijst.append(datetime.date.isoweekday(datetime.date.fromordinal(beginnetje+i)))
+        weekenddagen = tijdlijst.count(6) + tijdlijst.count(7)
         diff_day = verschil - weekenddagen
         return diff_day
 
