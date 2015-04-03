@@ -30,11 +30,12 @@ import openerp.addons.decimal_precision as dp
 class hr_expense_expense(osv.osv):
     _inherit = 'hr.expense.expense'
     
-
-    _columns = {
-        'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)],'accepted':[('readonly',False)]}),
+    current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+    if account.group_account_invoice is in current_user.group_id/id:
+        _columns = {
+            'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)],'accepted':[('readonly',False)]}),
         
-    }
+        }
     
 class hr_expense_line(osv.osv):
      _inherit = 'hr.expense.line'
