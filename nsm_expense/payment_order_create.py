@@ -93,6 +93,6 @@ class account_move(orm.Model):
     _inherit = 'account.move'
     
     _columns = {
-        'expense_id': fields.one2many('hr.expense.expense', 'move_id', 'Expense', readonly=True),
+        'expense_id': fields.one2many('hr.expense.expense', 'account_move_id', 'Expense', readonly=True),
     }
     
