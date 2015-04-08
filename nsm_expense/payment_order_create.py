@@ -66,8 +66,8 @@ class payment_order_create(orm.TransientModel):
         ### end account_direct_debit ###
 
         domain = domain + [
-            #'|', ('date_maturity', '<=', search_due_date),
-            #('date_maturity', '=', False)
+            '|', ('date_maturity', '<=', search_due_date),
+            ('date_maturity', '=', False)
             ]
         line_ids = line_obj.search(cr, uid, domain, context=context)
         context.update({'line_ids': line_ids})
