@@ -58,8 +58,8 @@ class payment_order_create(orm.TransientModel):
         if payment.mode.payment_term_ids:
             domain += [
                 #'|',('invoice.payment_term', 'in', 
-                # [term.id for term in payment.mode.payment_term_ids]
-                # ),('move_id.expense_id', '!=', False)
+                # [term.id for term in payment.mode.payment_term_ids]),
+                 ('move_id.expense_id', '!=', False)
                 ]
         #self.extend_payment_order_domain(
            #cr, uid, payment, domain, context=context)
