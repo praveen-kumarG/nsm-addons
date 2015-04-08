@@ -51,7 +51,7 @@ class payment_order_create(orm.TransientModel):
             ('reconcile_id', '=', False),
             ('company_id', '=', payment.mode.company_id.id),
             #'|',('invoice.state', '=', 'auth'),
-            ('move_id.expense_id.state', '=', 'done')
+            #('move_id.expense_id.state', '=', 'done')
             ]
 
         # apply payment term filter
@@ -61,13 +61,13 @@ class payment_order_create(orm.TransientModel):
                 # [term.id for term in payment.mode.payment_term_ids]
                 # ),('move_id.expense_id', '!=', False)
                 ]
-        self.extend_payment_order_domain(
-           cr, uid, payment, domain, context=context)
+        #self.extend_payment_order_domain(
+           #cr, uid, payment, domain, context=context)
         ### end account_direct_debit ###
 
         domain = domain + [
-            '|', ('date_maturity', '<=', search_due_date),
-            ('date_maturity', '=', False)
+            #'|', ('date_maturity', '<=', search_due_date),
+            #('date_maturity', '=', False)
             ]
         line_ids = line_obj.search(cr, uid, domain, context=context)
         context.update({'line_ids': line_ids})
