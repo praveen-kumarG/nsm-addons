@@ -50,7 +50,7 @@ class payment_order_create(orm.TransientModel):
             ('move_id.state', '=', 'posted'),
             ('reconcile_id', '=', False),
             ('company_id', '=', payment.mode.company_id.id),
-            #'|',('invoice.state', '=', 'auth'),
+            '|',('invoice.state', '=', 'auth'),
             ('move_id.expense_id.state', '=', 'done')
             ]
 
@@ -61,8 +61,8 @@ class payment_order_create(orm.TransientModel):
                 # [term.id for term in payment.mode.payment_term_ids]),
                  ('move_id.expense_id', '!=', False)
                 ]
-        self.extend_payment_order_domain(
-                cr, uid, payment, domain, context=context)
+        #self.extend_payment_order_domain(
+                #cr, uid, payment, domain, context=context)
         ### end account_direct_debit ###
 
         domain = domain + [
