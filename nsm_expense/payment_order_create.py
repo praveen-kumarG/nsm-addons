@@ -51,7 +51,7 @@ class payment_order_create(orm.TransientModel):
             ('reconcile_id', '=', False),
             ('company_id', '=', payment.mode.company_id.id),
             #'|',('invoice.state', '=', 'auth'),
-            #('move_id.expense_id.state', '=', 'done')
+            ('move_id.expense_id.state', '=', 'done')
             ]
 
         # apply payment term filter
