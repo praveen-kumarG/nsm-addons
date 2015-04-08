@@ -50,15 +50,16 @@ class payment_order_create(orm.TransientModel):
             ('move_id.state', '=', 'posted'),
             ('reconcile_id', '=', False),
             ('company_id', '=', payment.mode.company_id.id),
-            '|',('invoice.state', '=', 'auth'),('invoice', '=', False)
+            #'|',('invoice.state', '=', 'auth'),
+            ('invoice', '=', False)
             ]
 
         # apply payment term filter
         if payment.mode.payment_term_ids:
             domain += [
-                '|',('invoice.payment_term', 'in', 
-                 [term.id for term in payment.mode.payment_term_ids]
-                 ),('invoice', '=', False)
+              #  '|',('invoice.payment_term', 'in', 
+              #   [term.id for term in payment.mode.payment_term_ids]
+              #   ),('invoice', '=', False)
                 ]
         self.extend_payment_order_domain(
             cr, uid, payment, domain, context=context)
