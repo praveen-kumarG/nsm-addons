@@ -29,6 +29,15 @@ from openerp.tools.translate import _
 
 class payment_order_create(orm.TransientModel):
     _inherit = 'payment.order.create'
+    
+    def extend_payment_order_domain(
+            self, cr, uid, payment_order, domain, context=None):
+        if payment_order.payment_order_type == 'payment':
+            domain += [
+                ('account_id.type', 'in', ('payable', 'receivable')),
+                ('amount_to_pay', '>', 0)
+            ]
+        return True
 
     def search_entries(self, cr, uid, ids, context=None):
         """
