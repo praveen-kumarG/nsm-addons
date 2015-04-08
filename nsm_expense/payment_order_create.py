@@ -94,4 +94,5 @@ class account_move(orm.Model):
     _columns = {
         'expense_id': fields.one2many('hr.expense.expense', 'move_id', 'Expense', readonly=True)
     }
+#
    class 
