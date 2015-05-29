@@ -36,7 +36,7 @@ class payment_order_create(orm.TransientModel):
                 ('account_id.type', 'in', ('payable', 'receivable')),
                 ('amount_to_pay', '>', 0)
             ]
-        if payment.mode.payment_term_ids:
+        if payment_order.mode.payment_term_ids:
            domain += [
                '|',('invoice.payment_term', 'in', [term.id for term in payment.mode.payment_term_ids]),
                ('move_id.expense_id', '!=', False)
