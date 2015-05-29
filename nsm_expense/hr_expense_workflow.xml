@@ -49,8 +49,8 @@
             <field name="wkf_id" ref="hr_expense.wkf_expenses"/>
             <field name="name">done</field>
             <field name="kind">function</field>
-            <field name="action">confirm_paid()</field>
-            <field name="signal_send">subflow.paid</field>
+            <field name="action">write({'state': 'paid'})</field>
+            <!--field name="signal_send">subflow.paid</field-->
         </record>
 
         <!--record id="t1" model="workflow.transition">
