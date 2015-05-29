@@ -32,10 +32,14 @@ class payment_order_create(orm.TransientModel):
     
     def extend_payment_order_domain(
             self, cr, uid, payment_order, domain, context=None):
-        if payment_order.payment_order_type == 'payment':
-            domain += [
+        domain += [
                 ('account_id.type', 'in', ('payable', 'receivable')),
                 ('amount_to_pay', '>', 0)
+            ]
+        if payment.mode.payment_term_ids:
+           domain += [
+               '|',('invoice.payment_term', 'in', [term.id for term in payment.mode.payment_term_ids]),
+               ('move_id.expense_id', '!=', False)
             ]
         return True
 
@@ -59,23 +63,25 @@ class payment_order_create(orm.TransientModel):
             ('move_id.state', '=', 'posted'),
             ('reconcile_id', '=', False),
             ('company_id', '=', payment.mode.company_id.id),
-            '|',('invoice.state', '=', 'auth'),
+            '|',
+            ('invoice.state', '=', 'auth'),
             ('move_id.expense_id.state', '=', 'done')
             ]
 
         # apply payment term filter
-        if payment.mode.payment_term_ids:
-            domain += [
-                '|',('invoice.payment_term', 'in', 
-                 [term.id for term in payment.mode.payment_term_ids]),
-                 ('move_id.expense_id', '!=', False)
-                ]
+        #if payment.mode.payment_term_ids:
+        #    domain += [
+        #        '|',('invoice.payment_term', 'in', 
+        #         [term.id for term in payment.mode.payment_term_ids]),
+        #         ('move_id.expense_id', '!=', False)
+        #        ]
         self.extend_payment_order_domain(
                 cr, uid, payment, domain, context=context)
         ### end account_direct_debit ###
 
         domain = domain + [
-            '|', ('date_maturity', '<=', search_due_date),
+            '|',
+            ('date_maturity', '<=', search_due_date),
             ('date_maturity', '=', False)
             ]
         line_ids = line_obj.search(cr, uid, domain, context=context)
