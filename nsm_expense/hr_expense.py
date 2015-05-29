@@ -41,6 +41,7 @@ class hr_expense_expense(osv.osv):
         '''
         main function that is called when trying to create the accounting entries related to an expense, inherited from hr_expense
         '''
+        '''
         super(hr_expense_expense, self).action_receipt_create(cr, uid, ids, context=context)
         '''
         move_obj = self.pool.get('account.move')
@@ -79,8 +80,7 @@ class hr_expense_expense(osv.osv):
             if journal_id.entry_posted:
                 move_obj.button_validate(cr, uid, [move_id], context)
             move_obj.write(cr, uid, [move_id], {'line_id': lines}, context=context)
-            '''
-        self.write(cr, uid, ids, {'account_move_id': move_id, 'account_id': acc, 'state': 'done'}, context=context)
+            self.write(cr, uid, ids, {'account_move_id': move_id, 'account_id': acc, 'state': 'done'}, context=context)
         return True
     
     def move_line_get(self, cr, uid, expense_id, context=None):
