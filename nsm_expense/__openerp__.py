@@ -46,6 +46,7 @@ This module adds "department_id.manager_id" to expense domain hr_user .
     ],
     'data'    : ["ir_rule.xml",
                  "hr_expense_view.xml",
+                 "hr_expense_workflow.xml",
     ],
     'demo' : [],
     'installable': True
