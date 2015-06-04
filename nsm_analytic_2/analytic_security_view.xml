@@ -6,7 +6,7 @@
             <field name="name">Analytic Lines</field>
             <field name="model_id" ref="account.model_account_analytic_line"/>
             <field name="global" eval="False"/>
-            <field name="domain_force">['&amp;',('general_account_id','child_of', [419]),
+            <field name="domain_force">['&amp;',('general_account_id','child_of', ['RUBRIEK 7','RUBRIEK 8']),
 						'|','|',
 						('account_id.department_id.member_ids.user_id','=',user.id),
 						('account_id.department_id.manager_id','=',user.id),
