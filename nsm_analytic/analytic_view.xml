@@ -62,7 +62,7 @@
             <field name="name">account.analytic.line.tree.nsm.delete</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
-			<field name="groups_id" eval="[(4, ref('base.group_account_invoice'))]"/>
+			<field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="/tree" position="attributes">
@@ -75,7 +75,7 @@
             <field name="name">account.analytic.line.form.nsm.delete</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
-			<field name="groups_id" eval="[(4, ref('base.group_account_invoice'))]"/>
+			<field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="/form" position="attributes">
