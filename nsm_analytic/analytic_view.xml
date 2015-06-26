@@ -42,6 +42,8 @@
                 <data>
                     <xpath expr="/tree" position="attributes">
 					 <attribute name="delete">false</attribute>
+					 <attribute name="edit">false</attribute>
+					 <attribute name="create">false</attribute>
 					</xpath>
 				</data>    
             </field>
@@ -54,6 +56,8 @@
                 <data>
                     <xpath expr="/form" position="attributes">
 					 <attribute name="delete">false</attribute>
+					 <attribute name="edit">false</attribute>
+					 <attribute name="create">false</attribute>
 					</xpath>
 				</data>
             </field>
@@ -67,6 +71,8 @@
                 <data>
                     <xpath expr="/tree" position="attributes">
 					 <attribute name="delete">true</attribute>
+					 <attribute name="edit">true</attribute>
+					 <attribute name="create">true</attribute>
 					</xpath>
 				</data>    
             </field>
@@ -80,6 +86,8 @@
                 <data>
                     <xpath expr="/form" position="attributes">
 					 <attribute name="delete">true</attribute>
+					 <attribute name="edit">true</attribute>
+					 <attribute name="create">true</attribute>
 					</xpath>
 				</data>
             </field>
