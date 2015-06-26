@@ -12,19 +12,6 @@
 					</field>
             </field>
         </record>
-		<record id="view_account_analytic_account_form_nsm_nodelete" model="ir.ui.view">
-            <field name="name">analytic.analytic.account.form.nsm.nodelete</field>
-            <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="view_account_analytic_account_form_nsm"/>
-			<field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
-            <field name="arch" type="xml">
-				<data>
-                    <xpath expr="/form" position="attributes">
-					 <attribute name="delete">false</attribute>
-					</xpath>
-				</data>
-            </field>
-        </record>
         <record id="view_account_analytic_account_tree_nsm" model="ir.ui.view">
             <field name="name">account.analytic.account.tree.nsm</field>
             <field name="model">account.analytic.account</field>
@@ -35,20 +22,8 @@
                     </field>
             </field>
         </record>
-		<record id="view_account_analytic_account_tree_nsm_nodelete" model="ir.ui.view">
-            <field name="name">account.analytic.account.tree.nsm.nodelete</field>
-            <field name="model">account.analytic.account</field>
-            <field name="inherit_id" ref="view_account_analytic_account_tree_nsm"/>
-			<field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
-            <field name="arch" type="xml">
-				<data>
-                    <xpath expr="/tree" position="attributes">
-					 <attribute name="delete">false</attribute>
-					</xpath>
-				</data>
-            </field>
-        </record>
-	<record id="view_account_analytic_account_list" model="ir.ui.view">
+		
+		<record id="view_account_analytic_account_list" model="ir.ui.view">
             <field name="name">account.analytic.account.list.nsm</field>
             <field name="model">account.analytic.account</field>
 			<field name="inherit_id" ref="account.view_account_analytic_account_list"/>
@@ -57,6 +32,31 @@
                 <field name="complete_name" position="replace">
                         <field name="name"/>
                 </field>
+            </field>
+        </record>
+		<record id="view_account_analytic_line_tree_nsm_nodelete" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.nsm.nodelete</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/tree" position="attributes">
+					 <attribute name="delete">false</attribute>
+					</xpath>
+				</data>    
+            </field>
+        </record>
+		<record id="view_account_analytic_line_form_nsm_nodelete" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.nsm.nodelete</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+			<field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/form" position="attributes">
+					 <attribute name="delete">false</attribute>
+					</xpath>
+				</data>
             </field>
         </record>
     </data>
