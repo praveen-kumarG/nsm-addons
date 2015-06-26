@@ -38,6 +38,7 @@
             <field name="name">account.analytic.line.tree.nsm.nodelete</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+			<field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="/tree" position="attributes">
