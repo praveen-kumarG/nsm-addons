@@ -38,7 +38,6 @@
             <field name="name">account.analytic.line.tree.nsm.nodelete</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
-			<field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="/tree" position="attributes">
@@ -51,11 +50,36 @@
             <field name="name">account.analytic.line.form.nsm.nodelete</field>
             <field name="model">account.analytic.line</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
-			<field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="/form" position="attributes">
 					 <attribute name="delete">false</attribute>
+					</xpath>
+				</data>
+            </field>
+        </record>
+		<record id="view_account_analytic_line_tree_nsm_delete" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.nsm.delete</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
+			<field name="groups_id" eval="[(4, ref('base.group_account_invoice'))]"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/tree" position="attributes">
+					 <attribute name="delete">true</attribute>
+					</xpath>
+				</data>    
+            </field>
+        </record>
+		<record id="view_account_analytic_line_form_nsm_delete" model="ir.ui.view">
+            <field name="name">account.analytic.line.form.nsm.delete</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
+			<field name="groups_id" eval="[(4, ref('base.group_account_invoice'))]"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/form" position="attributes">
+					 <attribute name="delete">true</attribute>
 					</xpath>
 				</data>
             </field>
