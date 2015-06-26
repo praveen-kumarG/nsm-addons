@@ -18,9 +18,11 @@
             <field name="inherit_id" ref="view_account_analytic_account_form_nsm"/>
 			<field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
             <field name="arch" type="xml">
+				<data>
                     <xpath expr="/form" position="attributes">
 					 <attribute name="delete">false</attribute>
 					</xpath>
+				</data>
             </field>
         </record>
         <record id="view_account_analytic_account_tree_nsm" model="ir.ui.view">
@@ -39,9 +41,11 @@
             <field name="inherit_id" ref="view_account_analytic_account_tree_nsm"/>
 			<field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
             <field name="arch" type="xml">
+				<data>
                     <xpath expr="/tree" position="attributes">
 					 <attribute name="delete">false</attribute>
 					</xpath>
+				</data>
             </field>
         </record>
 	<record id="view_account_analytic_account_list" model="ir.ui.view">
