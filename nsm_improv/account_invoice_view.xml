@@ -91,7 +91,7 @@
             </field>
         </record>
 		
-		<record id="action_invoice_tree1_view1_nsm" model="ir.actions.act_window.view">
+		<record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
             <field name="view_mode">tree</field>
 			<field name="view_id" ref="customer_invoice_tree"/>
