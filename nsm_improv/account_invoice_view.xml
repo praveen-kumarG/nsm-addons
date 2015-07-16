@@ -57,16 +57,46 @@
             <field name="arch" type="xml">
                 <data>
 					<field name="number" position="after">
-						<field name="type" invisible="1"/>
-						<field name="section_id" attrs="{'invisible': [('type','in',['out_invoice','out_refund'])]}"/>
+						<field name="section_id" />
 					</field>
 					<field name="user_id" position="replace">
-						<field name="user_id" attrs="{'invisible': [('type','in',['out_invoice','out_refund'])]}"/>
-						<field name="supplier_invoice_number" attrs="{'invisible': [('type','in',['out_invoice','out_refund'])]}"/>
+						<field name="user_id" />
+						<field name="supplier_invoice_number" />
 					</field>
 					<field name="origin" position="replace"/>
 				</data>
             </field>
         </record>
+		<record id="customer_invoice_tree" model="ir.ui.view">
+            <field name="name">account.invoice.tree</field>
+            <field name="model">account.invoice</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
+                    <field name="partner_id" groups="base.group_user"/>
+                    <field name="date_invoice"/>
+                    <field name="number"/>
+                    <field name="reference" invisible="1"/>
+                    <field name="name" invisible="1"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="period_id" invisible="1" groups="account.group_account_user"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="user_id"/>
+                    <field name="date_due"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="residual" sum="Residual Amount"/>
+                    <field name="amount_untaxed" sum="Untaxed Amount"/>
+                    <field name="amount_total" sum="Total Amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+		
+		<record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+			<field name="view_id" ref="customer_invoice_tree"/>
+            <field name="act_window_id" ref="account.action_invoice_tree1"/>
+        </record>
+		
     </data>    
 </openerp>  
