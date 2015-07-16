@@ -11,7 +11,7 @@
             <field name="arch" type="xml">
                 <data>
 					<xpath expr="//field[@name='internal_number']" position="replace">
-                        <field name="internal_number" /><!--groups="account.group_account_manager"-->
+                        <field name="internal_number" invisible="0" groups="account.group_account_manager"/>
                     </xpath>
                 </data>
             </field>
@@ -26,7 +26,7 @@
             <field name="arch" type="xml">
                 <data>
 					<xpath expr="//field[@name='internal_number']" position="replace">
-                        <field name="internal_number" />
+                        <field name="internal_number" invisible="0" groups="account.group_account_manager"/>
                     </xpath>
                     <xpath expr="//field[@name='user_id']" position="replace">
                         <field name="user_id" required="1"/>
