@@ -68,7 +68,7 @@
             </field>
         </record>
 		<record id="customer_invoice_tree" model="ir.ui.view">
-            <field name="name">account.invoice.tree</field>
+            <field name="name">customer.invoice.tree</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'" string="Invoice">
