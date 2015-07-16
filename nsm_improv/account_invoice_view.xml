@@ -67,7 +67,7 @@
 				</data>
             </field>
         </record>
-		<record id="customer_invoice_tree" model="ir.ui.view">
+		<!--record id="customer_invoice_tree" model="ir.ui.view">
             <field name="name">customer.invoice.tree</field>
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
@@ -89,7 +89,7 @@
                     <field name="state"/>
                 </tree>
             </field>
-        </record>
+        </record-->
 		
 		<!--record id="action_invoice_tree1_view1_AR" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
