@@ -25,7 +25,7 @@ from openerp.tools.translate import _
 
 
 class account_invoice(osv.osv):
-    """ Inherits invoice makes 'invoice.name' visible, 'type' readonly=False  and adds unique SQL constraint for supplier_invoice_number """
+    """ Inherits invoice makes 'invoice.name' visible, 'type' readonly=False  and adds unique SQL constraint for supplier_invoice_number, adds aprofitnummer """
     _inherit = 'account.invoice'
     
     _columns = {
@@ -36,6 +36,7 @@ class account_invoice(osv.osv):
             ('out_refund','Customer Refund'),
             ('in_refund','Supplier Refund'),
             ],'Type', readonly=False, select=True, change_default=True, track_visibility='always'),
+        'klantnummer': fields.related('partner_id','aprofitnummer', type='char', readonly=True, size=64, relation='res.partner', store=True, string='aProfit Klantnummer'),
     }
     
     _sql_constraints = [

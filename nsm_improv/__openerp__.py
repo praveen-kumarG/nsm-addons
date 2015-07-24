@@ -31,7 +31,7 @@
     'version' : '1.0',
     'category': 'validaties/required',
     'description': """
-This module changes some fields in invoices views in OpenERP.
+This module changes some fields in invoices and partner views in OpenERP.
 =============================================================================
 
 
@@ -40,7 +40,8 @@ This module changes some fields in invoices views in OpenERP.
     'website' : 'http://www.magnus.nl',
     'depends' : ['account','sale_crm'
     ],
-    'data' : ["account_invoice_view.xml"
+    'data' : ["account_invoice_view.xml",
+              "res_partner_view.xml"
     ],
     'demo' : [],
     'installable': True
