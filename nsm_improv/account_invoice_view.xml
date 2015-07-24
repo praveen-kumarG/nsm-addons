@@ -59,6 +59,9 @@
             <field name="inherit_id" ref="account.invoice_tree"/>
             <field name="arch" type="xml">
                 <data>
+					<field name="partner_id" position="after">
+						<field name="klantnummer" string="aProfit"/>
+					</field>
 					<field name="number" position="after">
 						<field name="section_id" />
 					</field>
