@@ -60,7 +60,7 @@
             <field name="arch" type="xml">
                 <data>
 					<field name="partner_id" position="after">
-						<field name="klantnummer" string="aProfit"/>
+						<field name="klantnummer" string="aProfitnr"/>
 					</field>
 					<field name="number" position="after">
 						<field name="section_id" />
