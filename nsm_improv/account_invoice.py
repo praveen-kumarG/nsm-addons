@@ -36,7 +36,7 @@ class account_invoice(osv.osv):
             ('out_refund','Customer Refund'),
             ('in_refund','Supplier Refund'),
             ],'Type', readonly=False, select=True, change_default=True, track_visibility='always'),
-        'klantnummer': fields.related('partner_id','aprofitnummer', type='char', readonly=True, size=64, relation='res.partner', store=True, string='aProfit Klantnummer'),
+        'klantnummer': fields.related('partner_id','aprofit_nummer', type='char', readonly=True, size=64, relation='res.partner', store=True, string='aProfit Klantnummer'),
     }
     
     _sql_constraints = [
