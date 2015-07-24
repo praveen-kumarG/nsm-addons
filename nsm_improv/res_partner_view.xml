@@ -8,9 +8,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <field name="street" position="before">
-                    <field name="aprofit_nummer" attrs="{'readonly': 'True','invisible': [('aprofit_nummer', '=', 'Null')]}"/>
-                </field>
+                <xpath expr="//label[@for='street']" position="before">
+                        <field name="aprofit_nummer" attrs="{'readonly': 'True','invisible': [('aprofit_nummer', '=', 'Null')]}"/>
+                </xpath>
             </field>
         </record>
         
