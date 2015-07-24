@@ -11,7 +11,7 @@
             <field name="arch" type="xml">
                 <data>
 					<xpath expr="//field[@name='partner_id']" position="after">
-                        <field name="klantnummer" string="aProfit-nummer" attrs="{'readonly': 'True','invisible': [('journal_id', '!=', 'VKAP')]}"/>
+                        <field name="klantnummer" string="aProfit-nummer" attrs="{'readonly': 'True','invisible': [('journal_id', '!=', 'Verkoopboek aProfit')]}"/>
                     </xpath>
 					<xpath expr="//field[@name='internal_number']" position="replace">
                         <field name="internal_number" invisible="0" groups="account.group_account_user"/>
