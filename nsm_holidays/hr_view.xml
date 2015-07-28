@@ -12,13 +12,13 @@
                     <xpath expr="//field[@name='otherid']" position="replace">
                         <field name="ssnid" groups="base.group_hr_manager" required="1"/>
                     </xpath>
-                    <!--xpath expr="/form/notebook/page[@string='Personal Information']" position="attributes">
+                    <xpath expr="/form/sheet/notebook/page[@string='Personal Information']" position="attributes">
                         <attribute name="groups">base.group_hr_manager</attribute>
                     </xpath>
-                    <xpath expr="/form/notebook/page[@string='HR Settings']" position="attributes">
+                    <xpath expr="/form/sheet/notebook/page[@string='HR Settings']" position="attributes">
                         <attribute name="groups">base.group_hr_manager</attribute>
-                    </xpath-->
-                    <xpath expr="/form/notebook/page/group[@string='Leaves']" position="replace">
+                    </xpath>
+                    <xpath expr="/form/sheet/notebook/page/group[@string='Leaves']" position="replace">
                         <group string="Leaves">
                             <label for="remaining_leaves"/>
                                 <div>
