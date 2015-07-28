@@ -81,7 +81,7 @@
         <!-- Holidays status -->
 
 
-        <!-- Hr employee inherit Legal Leaves -->
+        <!-- Hr employee inherit Legal Leaves >
         <record id="view_employee_form_leave_inherit_hrs" model="ir.ui.view">
             <field name="name">hr.employee.leave.form.inherit</field>
             <field name="model">hr.employee</field>
@@ -96,7 +96,7 @@
                     </group>
                 </xpath>
             </field>
-        </record>
+        </record-->
 
 
     </data>
