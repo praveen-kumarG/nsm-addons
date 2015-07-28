@@ -9,6 +9,9 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <field name="user_id" position="attributes">
+                        <attribute name="groups">base.group_hr_manager</attribute>
+                    </field>    
                     <xpath expr="//field[@name='otherid']" position="replace">
                         <field name="ssnid" groups="base.group_hr_manager" required="1"/>
                     </xpath>
