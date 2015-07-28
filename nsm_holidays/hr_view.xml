@@ -12,12 +12,12 @@
                     <xpath expr="//field[@name='otherid']" position="replace">
                         <field name="ssnid" groups="base.group_hr_manager" required="1"/>
                     </xpath>
-                    <xpath expr="//page[@string='Personal Information']" position="attribute">
+                    <!--xpath expr="//page[@string='Personal Information']" position="attribute">
                         <attribute name="groups">base.group_hr_manager</attribute>
                     </xpath>
                     <xpath expr="//page[@string='HR Settings']" position="attribute">
                         <attribute name="groups">base.group_hr_manager</attribute>
-                    </xpath>
+                    </xpath-->
                 </data>
             </field>
         </record>
