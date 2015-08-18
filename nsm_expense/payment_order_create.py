@@ -65,7 +65,7 @@ class payment_order_create(orm.TransientModel):
             ('company_id', '=', payment.mode.company_id.id),
             '|',
             ('invoice.state', '=', 'auth'),
-            ('move_id.expense_id.state', '=', 'done')
+            ('move_id.expense_id.state', '=', 'approved')
             ]
 
         # apply payment term filter
