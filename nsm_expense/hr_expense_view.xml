@@ -19,26 +19,28 @@
                     <field name="total_amount" sum="Total"/>
                 </tree>
             </field>
-        </record>
+        </record-->
 
-        <record id="view_expenses_tree" model="ir.ui.view">
-            <field name="name">hr.expense.expense.tree</field>
+        <record id="view_expenses_tree_nsm" model="ir.ui.view">
+            <field name="name">hr.expense.expense.tree.nsm</field>
             <field name="model">hr.expense.expense</field>
+            <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
             <field name="arch" type="xml">
-                <tree string="Expenses" colors="blue:state=='draft'">
-                    <field name="employee_id"/>
-                    <field name="department_id" invisible="1"/>
-                    <field name="date"/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="name"/>
-                    <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="amount" sum="Total Amount"/>
-                    <field name="state"/>
-                </tree>
+                <data>
+                    <field name="employee_id" position="after">
+                           <field name="account_move_id"/>
+                    </field>
+                    <field name="department_id" position="replace" >
+                        <field name="department_id" invisible="0"/>
+                    </field>
+                    <field name="user_id" position="replace">
+                        <field name="user_id" invisible="0"/>
+                    </field>
+                </data>
             </field>
         </record>
 
-        <record id="view_editable_expenses_tree" model="ir.ui.view">
+        <!--record id="view_editable_expenses_tree" model="ir.ui.view">
             <field name="name">hr.expense.expense.tree</field>
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
