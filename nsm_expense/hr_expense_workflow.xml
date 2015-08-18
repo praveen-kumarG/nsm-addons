@@ -7,19 +7,61 @@
         
         <record id="act_paid" model="workflow.activity">
             <field name="wkf_id" ref="hr_expense.wkf_expenses"/>
-            <field name="name">done</field>
+            <field name="name">paid</field>
             <field name="kind">function</field>
             <field name="action">write({'state': 'paid'})</field>
             <!--field name="signal_send">subflow.paid</field-->
         </record>
 
         <record id="t9" model="workflow.transition">
-            <field name="act_from" ref="hr_expense.act_done"/>
+            <field name="act_from" ref="hr_expense.act_accepted"/>
             <field name="act_to" ref="act_paid"/>
             <field name="trigger_model">account.move.line</field>
             <field name="trigger_expr_id">move_line_id_payment_get()</field>
             <field name="condition">test_paid()</field>
         </record>
+        
+         <record id="hr_expense.t2" model="workflow.transition">
+            <field name="act_from" ref="act_confirm"/>
+            <field name="act_to" ref="act_done"/>
+            <field name="signal">done</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+         
+         <record id="hr_expense.t4" model="workflow.transition">
+            <field name="act_from" ref="act_confirm"/>
+            <field name="act_to" ref="act_refused"/>
+            <field name="signal">refuse</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+
+        <record id="hr_expense.t6" model="workflow.transition">
+            <field name="act_from" ref="act_done"/>
+            <field name="act_to" ref="act_refused"/>
+            <field name="signal">refuse</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+
+        <!--record id="t7" model="workflow.transition">
+            <field name="act_from" ref="act_confirm"/>
+            <field name="act_to" ref="act_draft"/>
+            <field name="signal">draft</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record-->
+
+        <record id="hr_expense.t8" model="workflow.transition">
+            <field name="act_from" ref="act_done"/>
+            <field name="act_to" ref="act_accepted"/>
+            <field name="signal">validate</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+
+        <!--record id="t10" model="workflow.transition">
+            <field name="act_from" ref="act_refused"/>
+            <field name="act_to" ref="act_draft"/>
+            <field name="signal">draft</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record-->
 
     </data>
 </openerp>
