@@ -32,7 +32,7 @@ class hr_expense_expense(osv.osv):
     
 
     _columns = {
-        'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)],'accepted':[('readonly',False)]}),
+        'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)],'confirmed':[('readonly',False)]}),
         'account_id': fields.many2one('account.account', 'Account', readonly=True, help="The partner account used for this expense."),
         'state': fields.selection([
             ('draft', 'New'),
