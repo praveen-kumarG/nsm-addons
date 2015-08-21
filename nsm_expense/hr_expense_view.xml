@@ -63,7 +63,9 @@
             <field name="inherit_id" ref="hr_expense.view_expenses_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <!--button name="confirm" states="draft" string="Submit to Manager" type="workflow" class="oe_highlight"/-->
+                <button name="confirm" position="replace">
+                    <button name="confirm"  states="draft" string="Submit" type="workflow" class="oe_highlight"/>
+                </button>
                 <button name="validate" position="replace">   
                     <button name="validate" states="done" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                 </button>
@@ -80,7 +82,7 @@
                     <button name="action_expense_cancel" states="accepted,paid" string="Cancel Expense" groups="account.group_account_invoice" type="object" />
                 </button>
                 <button name="action_view_receipt" position="replace">
-                    <button name="action_view_receipt" states="done,accepted" string="Open Accounting Entries" type="object" groups="account.group_account_invoice"/>
+                    <button name="action_view_receipt" states="done,accepted,paid" string="Open Accounting Entries" type="object" groups="account.group_account_invoice"/>
                 </button>        
                 <xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="replace">
                         <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}" required="1"/>    
