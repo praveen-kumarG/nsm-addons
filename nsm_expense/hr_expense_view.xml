@@ -67,7 +67,7 @@
                     <button name="confirm"  states="draft" string="Submit" type="workflow" class="oe_highlight"/>
                 </button>
                 <button name="validate" position="replace">   
-                    <button name="validate" states="done" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button name="validate" states="done" string="Approve" type="workflow" groups="base.group_hr_user,account.group_account_invoice" class="oe_highlight"/>
                 </button>
                 <button name="refuse" position="replace">
                     <button name="refuse" states="confirm" string="Refuse" type="workflow" groups="account.group_account_invoice" />
