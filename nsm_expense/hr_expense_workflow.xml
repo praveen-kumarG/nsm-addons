@@ -54,6 +54,7 @@
             <field name="act_to" ref="hr_expense.act_accepted"/>
             <field name="signal">validate</field>
             <field name="group_id" ref="base.group_hr_user"/>
+            <field name="group_id" ref="account.group_account_invoice"/>
         </record>
         <record id="hr_expense.t6" model="workflow.transition">
             <field name="act_from" ref="hr_expense.act_accepted"/>
