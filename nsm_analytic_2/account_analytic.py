@@ -27,9 +27,13 @@ class account_analytic(osv.osv):
     
 
     _columns = {
+        'code': fields.char('Reference', select=True, required=True, track_visibility='onchange'),
         'section_ids': fields.many2many('crm.case.section','analytic_section_rel','analytic_account_id','section_id','Sales Teams'),
         'department_id': fields.many2one('hr.department', 'Department'),
     }
+    _sql_constraints = [
+        ('code_uniq', 'unique(code)', 'Code Analytic Account must be unique!'),
+    ]
 account_analytic()
 
 

@@ -27,24 +27,24 @@
 ##############################################################################
 
 {
-    'name' : 'nsm_improv',
-    'version' : '1.0',
+    'name': 'nsm_improv',
+    'version': '1.0',
     'category': 'validaties/required',
     'description': """
-This module changes some fields in invoices and partner views in OpenERP.
+This module changes some fields in invoices, account_move and partner views in Odoo.
 =============================================================================
 
 
     """,
-    'author'  : 'Magnus - Willem Hulshof',
-    'website' : 'http://www.magnus.nl',
-    'depends' : ['account','sale_crm'
-    ],
-    'data' : ["account_invoice_view.xml",
-              "res_partner_view.xml"
-    ],
-    'demo' : [],
+    'author': 'Magnus - Willem Hulshof',
+    'website': 'http://www.magnus.nl',
+    'depends': ['account', 'sale_crm'
+                ],
+    'data': ["account_invoice_view.xml",
+             "res_partner_view.xml",
+             "account_view.xml",
+             ],
+    'demo': [],
     'installable': True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
