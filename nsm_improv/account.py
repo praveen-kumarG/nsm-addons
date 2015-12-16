@@ -34,30 +34,8 @@ class account_move(osv.osv):
         }
     }
     _columns = {
-#        'name': fields.char('Number', size=64, required=True),
-#        'ref': fields.char('Reference', size=64),
-#        'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
-#        'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
         'state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', required=True, readonly=True,
-            help='All manually created new journal entries are usually in the status \'Unposted\', but you can set the option to skip that status on the related journal. In that case, they will behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' status.', track_visibility='always'),
-#        'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
-#        'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
-#        'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store={
-#            _name: (lambda self, cr,uid,ids,c: ids, ['line_id'], 10),
-#            'account.move.line': (_get_move_from_lines, ['partner_id'],10)
-#            }),
-#        'amount': fields.function(_amount_compute, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
-#        'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}, select=True),
-#        'narration':fields.text('Internal Note'),
-#        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
-#        'balance': fields.float('balance', digits_compute=dp.get_precision('Account'), help="This is a field only used for internal purpose and shouldn't be displayed"),
+            help='All manually created new journal entries are usually in the status \'Unposted\', but you can set the option to skip that status on the related journal. In that case, they will behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' status.', track_visibility='onchange'),
     }
 
-#    _defaults = {
-#        'name': '/',
-#        'state': 'draft',
-#        'period_id': _get_period,
-#        'date': fields.date.context_today,
-#        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
-#    }
 account_move()

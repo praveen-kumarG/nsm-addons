@@ -32,7 +32,7 @@
     'category': 'validaties/required',
     'description': """
 This module changes some fields in invoices, account_move and partner views in Odoo.
-=============================================================================
+=====================================================================================
 
 
     """,
