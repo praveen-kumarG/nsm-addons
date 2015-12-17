@@ -70,16 +70,17 @@
                     <button name="validate" states="done" string="Approve" type="workflow" groups="base.group_hr_user,account.group_account_invoice" class="oe_highlight"/>
                 </button>
                 <button name="refuse" position="replace">
-                    <button name="refuse" states="confirm" string="Refuse" type="workflow" groups="account.group_account_invoice" />
+                    <button name="refuse" states="done,accepted" string="Refuse" type="workflow" groups="base.group_hr_user,account.group_account_invoice" />
                 </button>
                 <button name="draft" position="replace">
                     <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="account.group_account_invoice" />
                 </button>
                 <button name="done" position="replace">
                     <button name="done" states="confirm" string="Generate Accounting Entries" type="workflow" groups="account.group_account_invoice" class="oe_highlight"/>
+                    <button name="re-done" states="accepted" string="Terug Boekhouding" type="workflow" groups="base.group_hr_user,account.group_account_invoice" class="oe_highlight"/>
                 </button>
                 <button name="action_expense_cancel" position="replace">
-                    <button name="action_expense_cancel" states="accepted,paid" string="Cancel Expense" groups="account.group_account_invoice" type="object" />
+                    <!--button name="action_expense_cancel" states="done,accepted,paid" string="Cancel Expense" groups="account.group_account_invoice" type="object" /-->
                 </button>
                 <button name="action_view_receipt" position="replace">
                     <button name="action_view_receipt" states="done,accepted,paid" string="Open Accounting Entries" type="object" groups="account.group_account_invoice"/>

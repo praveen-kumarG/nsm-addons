@@ -203,7 +203,35 @@ class hr_expense_expense(osv.osv):
             context = {}
         self.write(cr, uid, ids, {'state':'paid'}, context=context)
         return True
-    
+
+    def expense_accept(self, cr, uid, ids, context=None):
+        move_obj = self.pool.get('account.move')
+        for expense in self.browse(cr, uid, ids, context=context):
+            if expense.account_move_id:
+                move_obj.button_validate(cr, uid, [expense.account_move_id.id], context)
+        return self.write(cr, uid, ids, {'state': 'accepted', 'date_valid': time.strftime('%Y-%m-%d'), 'user_valid': uid}, context=context)
+
+
+    def expense_redone(self, cr, uid, ids, context=None):
+        move_obj = self.pool.get('account.move')
+        for expense in self.browse(cr, uid, ids, context=context):
+            if expense.account_move_id:
+                move_obj.button_cancel(cr, uid, [expense.account_move_id.id], context)
+        return self.write(cr, uid, ids, {'state': 'done'}, context=context)
+
+
+    def expense_canceled(self, cr, uid, ids, context=None):
+        for expense in self.browse(cr, uid, ids, context=context):
+            if expense.account_move_id:
+                for move_line in expense.account_move_id.line_id:
+                    if move_line.reconcile_id or move_line.reconcile_partial_id:
+                         raise osv.except_osv(
+                                 _('Error!'),
+                                 _('Please unreconcile payment accounting entries before cancelling this expense'))
+                ### Then we unlink the move line
+                self.pool.get('account.move').unlink(cr, uid, [expense.account_move_id.id], context=context)
+        return self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
+
 class hr_expense_line(osv.osv):
      _inherit = 'hr.expense.line'
      
@@ -212,7 +240,7 @@ class hr_expense_line(osv.osv):
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             res['name'] = product.name
-            amount_unit = product.price_get('standard_price')[product.id]
+#            amount_unit = product.price_get('standard_price')[product.id]
 #            res['unit_amount'] = amount_unit
 #            res['uom_id'] = product.uom_id.id
         return {'value': res}
