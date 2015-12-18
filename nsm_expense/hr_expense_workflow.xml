@@ -24,7 +24,8 @@
             <field name="wkf_id" ref="hr_expense.wkf_expenses"/>
             <field name="name">refused</field>
             <field name="kind">function</field>
-            <field name="action">expense_redone() expense_canceled()</field>
+            <field name="action">expense_redone()
+                expense_canceled()</field>
         </record>
 
         <record id="hr_expense.t2" model="workflow.transition">
