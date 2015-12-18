@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright 2015 Magnus.nl
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,23 +19,23 @@
 #
 ##############################################################################
 
-from openerp.osv import osv
-from openerp.osv import fields
-from openerp.tools.translate import _
 
-class account_analytic(osv.osv):
-    _inherit = 'account.analytic.account'
-    
+from openerp.osv import fields, osv, expression
 
-    _columns = {
-        'code': fields.char('Reference', select=True, required=True, track_visibility='onchange'),
-        'section_ids': fields.many2many('crm.case.section','analytic_section_rel','analytic_account_id','section_id','Sales Teams'),
-        'department_id': fields.many2one('hr.department', 'Department'),
+
+class account_move(osv.osv):
+
+    _name = "account.move"
+#    _inherit =
+    _inherit = ['account.move','mail.thread']
+
+    _track = {
+        'state': {
+        }
     }
-    _sql_constraints = [
-        ('code_uniq', 'unique(code)', 'Code Analytic Account must be unique!'),
-    ]
-account_analytic()
+    _columns = {
+        'state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', required=True, readonly=True,
+            help='All manually created new journal entries are usually in the status \'Unposted\', but you can set the option to skip that status on the related journal. In that case, they will behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' status.', track_visibility='onchange'),
+    }
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+account_move()
