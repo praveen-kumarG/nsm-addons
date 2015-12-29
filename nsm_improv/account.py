@@ -88,7 +88,7 @@ class account_move(osv.osv):
         #           'SET state=%s '\
         #           'WHERE id IN %s',
         #           ('posted', tuple(valid_moves),))
-        result = super(account_move, self).write(cr, uid, ids, {'state':'posted'})
+        result = super(account_move, self).write(cr, uid, valid_moves, {'state':'posted'})
         return result
 
     def button_cancel(self, cr, uid, ids, context=None):
