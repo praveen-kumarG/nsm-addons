@@ -41,7 +41,7 @@ class account_analytic(osv.osv):
         if context is None:
             context={}
         if name:
-            account_ids = self.search(cr, uid, [('code', '=like', name + "%")] + args, limit=limit, context=context)
+            account_ids = self.search(cr, uid, [('code', '=ilike', name + "%")] + args, limit=limit, context=context)
             if not account_ids:
                 dom = []
                 for name2 in name.split('/'):

@@ -38,13 +38,12 @@ This module changes some fields in invoices, account_move and partner views in O
     """,
     'author': 'Magnus - Willem Hulshof',
     'website': 'http://www.magnus.nl',
-    'depends': ['account', 'sale_crm', 'account_reversal',
+    'depends': ['account', 'sale_crm',
                 ],
     'data': ["account_invoice_view.xml",
              "res_partner_view.xml",
              "account_view.xml",
              "account_data.xml",
-            # "account_workflow.xml"
              ],
     'demo': [],
     'installable': True
