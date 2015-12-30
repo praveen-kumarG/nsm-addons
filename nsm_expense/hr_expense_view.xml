@@ -96,11 +96,27 @@
         </record>
 
 
-        <!--record id="view_hr_expense_filter" model="ir.ui.view">
-            <field name="name">hr.expense.expense.filter</field>
+        <record id="view_hr_expense_filter_nsm" model="ir.ui.view">
+            <field name="name">hr.expense.expense.filter.nsm</field>
             <field name="model">hr.expense.expense</field>
+            <field name="inherit_id" ref="hr_expense.view_hr_expense_filter"/>
             <field name="arch" type="xml">
-                <search string="Expense">
+                <xpath expr="//search/filter[@name='invoices']" position="replace">
+			        <filter name="invoices" string="Posted Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Authorized/Paid Invoices"/>
+                </xpath>
+		        <xpath expr="//search/filter[@name='unpaid']" position="replace">
+			        <filter name="unpaid" string="Unpaid" domain="[('state','in',['open','auth'])]" help="Unpaid Invoices"/>
+		        </xpath>
+		        <xpath expr="//search/filter[@name='draft']" position="after">
+			        <filter name="open" string="Open Invoices" domain="[('state','=','open')]" help="Open Invoices"/>
+                </xpath>
+                <xpath expr="//search/filter[@name='invoices']" position="before">
+			        <filter name="open" string="Authorized" domain="[('state','=','auth')]" help="Authorized Invoices"/>
+                </xpath>
+		        <xpath expr="//search/filter[@name='unpaid']" position="after">
+			        <filter name="paid" string="Paid" domain="[('state','=',['paid'])]" help="Paid Invoices"/>
+		        </xpath>
+                <!--search string="Expense">
                     <field name="name" string="Expenses"/>
                     <field name="date"/>
                     <filter icon="terp-document-new" domain="[('state','=','draft')]" string="New" help="New Expense"/>
@@ -115,11 +131,11 @@
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
-                </search>
+                </search-->
             </field>
         </record>
 
-        <record id="expense_all" model="ir.actions.act_window">
+        <!--record id="expense_all" model="ir.actions.act_window">
             <field name="name">Expenses</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="view_type">form</field>
