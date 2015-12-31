@@ -103,14 +103,15 @@
             <field name="arch" type="xml">
                 <xpath expr="//search/filter[@string='New']" position="replace">
 			        <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Expense"/>
+                    <filter name="cancelled" string="Refused" domain="[('state','=','cancelled')]" help="Refused"/>
                 </xpath>
 		        <xpath expr="//search/filter[@string='To Approve']" position="replace">
 			        <filter name="confirm" string="Waiting Finance" domain="[('state','=','confirm')]" help="Waiting Finance"/>
-
 		        </xpath>
 		        <xpath expr="//search/filter[@string='To Pay']" position="replace">
                     <filter name="done" string="Waiting Approval" domain="[('state','=','done')]" help="Waiting Approval"/>
                     <filter name="accepted" string="Waiting Payment" domain="[('state','=','accepted')]" help="Waiting Payment"/>
+                    <filter name="paid" string="Paid" domain="[('state','=','paid')]" help="Paid"/>
                 </xpath>
                 <!--search string="Expense">
                     <field name="name" string="Expenses"/>
