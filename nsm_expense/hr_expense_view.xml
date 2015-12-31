@@ -101,21 +101,17 @@
             <field name="model">hr.expense.expense</field>
             <field name="inherit_id" ref="hr_expense.view_hr_expense_filter"/>
             <field name="arch" type="xml">
-                <xpath expr="//search/filter[@name='invoices']" position="replace">
-			        <filter name="invoices" string="Posted Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Authorized/Paid Invoices"/>
+                <xpath expr="//search/filter[@string='New']" position="replace">
+			        <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Expense"/>
                 </xpath>
-		        <xpath expr="//search/filter[@name='unpaid']" position="replace">
-			        <filter name="unpaid" string="Unpaid" domain="[('state','in',['open','auth'])]" help="Unpaid Invoices"/>
+		        <xpath expr="//search/filter[@string='To Approve']" position="replace">
+			        <filter name="confirm" string="Waiting Finance" domain="[('state','=','confirm')]" help="Waiting Finance"/>
+
 		        </xpath>
-		        <xpath expr="//search/filter[@name='draft']" position="after">
-			        <filter name="open" string="Open Invoices" domain="[('state','=','open')]" help="Open Invoices"/>
+		        <xpath expr="//search/filter[@string='To Pay']" position="replace">
+                    <filter name="done" string="Waiting Approval" domain="[('state','=','done')]" help="Waiting Approval"/>
+                    <filter name="accepted" string="Waiting Payment" domain="[('state','=','accepted')]" help="Waiting Payment"/>
                 </xpath>
-                <xpath expr="//search/filter[@name='invoices']" position="before">
-			        <filter name="open" string="Authorized" domain="[('state','=','auth')]" help="Authorized Invoices"/>
-                </xpath>
-		        <xpath expr="//search/filter[@name='unpaid']" position="after">
-			        <filter name="paid" string="Paid" domain="[('state','=',['paid'])]" help="Paid Invoices"/>
-		        </xpath>
                 <!--search string="Expense">
                     <field name="name" string="Expenses"/>
                     <field name="date"/>
