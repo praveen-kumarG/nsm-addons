@@ -41,6 +41,7 @@ This module adds "section_id" and "department_id" to analytic account and limits
     'depends' : ['account',
 		'analytic',
 		'hr',
+		'megis_auth',
 		'crm',
     ],
     'data' : ["analytic_view.xml",
