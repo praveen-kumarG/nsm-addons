@@ -29,21 +29,23 @@
 {
     'name': 'nsm_improv02',
     'version': '1.0',
-    'category': 'validaties/required',
+    'category': 'workflow',
     'description': """
-This module changes some fields in invoices, account_move and partner views in Odoo.
+This module adds a verification step in the invoice authorization flow in Odoo.
 =====================================================================================
 
 
     """,
     'author': 'Magnus - Willem Hulshof',
     'website': 'http://www.magnus.nl',
-    'depends': ['account', 'megis_auth',
+    'depends': ['account', 'nsm_expense', 'megis_auth',
                 ],
-    'data': [ "account_view.xml",
-#             "account_invoice_view.xml",
-#             "res_partner_view.xml",
-#             "account_data.xml",
+    'data': ["account_view.xml",
+             "account_invoice_view.xml",
+             "account_invoice_state_view.xml",
+             "account_invoice_workflow.xml",
+             "account_security.xml",
+             "res_company_view.xml",
              "ir.model.access.csv",
              ],
     'demo': [],

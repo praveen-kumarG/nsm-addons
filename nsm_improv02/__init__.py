@@ -25,7 +25,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
-#import account_invoice
-#import res_partner
-#import account
+import account_invoice
+import account_invoice_state
+import res_company
+import payment_order_create
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
