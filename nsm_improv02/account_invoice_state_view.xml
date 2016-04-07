@@ -24,7 +24,7 @@
             res_model="account.invoice.verifier" src_model="account.invoice"
             view_mode="form" target="new" view_type="form"
             view_id="account_invoice_verifier_view"
-            groups="verification"/>
+            groups="nsm_improv02.verification"/>
 
         
 
