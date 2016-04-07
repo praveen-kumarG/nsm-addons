@@ -43,17 +43,16 @@
 	    <record id="view_account_invoice_filter_verif" model="ir.ui.view">
             <field name="name">account.invoice.select.verif</field>
             <field name="model">account.invoice</field>
-	        <field name="inherit_id" ref="megis_auth.view_account_invoice_filter_auth"/>
+	        <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
                 <data>
-
-                    <filter name="open" position="replace">
-                        <filter name="open" string="Open Invoices" domain="[('state','=','open')]" help="Open Invoices"/>
-			            <filter name="auth" string="Authorized" domain="[('state','=','auth')]" help="Authorized Invoices"/>
+                    <filter name="invoices" position="before">
                         <filter name="auth2" string="to be Verified" domain="[('state','=','auth'),('verif_tresh_exceeded','=', True)]" help="Authorized Invoices greater than Verification treshold"/>
                         <filter name="verif" string="Verified" domain="[('state','=','verified')]" help="Verified Invoices"/>
                     </filter>
-
+                    <xpath expr="//search/filter[@name='unpaid']" position="replace">
+			            <filter name="unpaid" string="Unpaid" domain="[('state','in',['open','auth','verified'])]" help="Unpaid Invoices"/>
+		            </xpath>
 		        </data>
             </field>
         </record>
