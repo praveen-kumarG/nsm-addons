@@ -5,6 +5,7 @@
             <field name="name">view.move.form.inherit_bottom</field>
             <field name="model">account.move</field>
             <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="priority">90</field>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//sheet/notebook/page/field[@name='line_id']/tree[@string='Journal Items']"
