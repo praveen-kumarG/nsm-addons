@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2013 Megis - Willem Hulshof - www.megis.nl
+# Copyright (c) 2009 Veritos - Jan Verlaan - www.veritos.nl
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -25,30 +25,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #
 ##############################################################################
-
-{
-    'name' : 'nsm_analytic_2',
-    'version' : '1.0',
-    'category': 'other',
-    'description': """
-This module adds "section_id" and "department_id" to analytic account and limits analytic_lines tree to section_id.user_id.
-=============================================================================
+import account_invoice
+import account_invoice_state
+import res_company
+import payment_order_create
 
 
-    """,
-    'author'  : 'Magnus - Willem Hulshof',
-    'website' : 'http://www.magnus.nl',
-    'depends' : ['account',
-		'analytic',
-		'hr',
-		'megis_auth',
-		'crm',
-    ],
-    'data' : ["analytic_view.xml",
-	      "analytic_security_view.xml",
-    ],
-    'demo' : [],
-    'installable': True
-}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

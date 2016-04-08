@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-# Copyright (c) 2013 Megis - Willem Hulshof - www.megis.nl
+# Copyright (c) 2013 Magnus - Willem Hulshof - www.magnus.nl
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -27,28 +27,28 @@
 ##############################################################################
 
 {
-    'name' : 'nsm_analytic_2',
-    'version' : '1.0',
-    'category': 'other',
+    'name': 'nsm_improv02',
+    'version': '1.0',
+    'category': 'workflow',
     'description': """
-This module adds "section_id" and "department_id" to analytic account and limits analytic_lines tree to section_id.user_id.
-=============================================================================
+This module adds a verification step in the invoice authorization flow in Odoo.
+=====================================================================================
 
 
     """,
-    'author'  : 'Magnus - Willem Hulshof',
-    'website' : 'http://www.magnus.nl',
-    'depends' : ['account',
-		'analytic',
-		'hr',
-		'megis_auth',
-		'crm',
-    ],
-    'data' : ["analytic_view.xml",
-	      "analytic_security_view.xml",
-    ],
-    'demo' : [],
+    'author': 'Magnus - Willem Hulshof',
+    'website': 'http://www.magnus.nl',
+    'depends': ['account', 'nsm_expense', 'megis_auth',
+                ],
+    'data': ["account_view.xml",
+             "account_invoice_view.xml",
+             "account_invoice_state_view.xml",
+             "account_invoice_workflow.xml",
+             "account_security.xml",
+             "res_company_view.xml",
+             "ir.model.access.csv",
+             ],
+    'demo': [],
     'installable': True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
