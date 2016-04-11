@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-09 11:35+0000\n"
-"PO-Revision-Date: 2016-04-09 13:41+0200\n"
+"POT-Creation-Date: 2016-04-11 23:08+0000\n"
+"PO-Revision-Date: 2016-04-12 01:15+0200\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -30,12 +30,12 @@ msgstr "Bedrag"
 #. module: nsm_improv02
 #: view:account.invoice.verifier:0
 msgid "Authorize Open Invoices"
-msgstr "Autoriseer Open Facturen"
+msgstr "Keur Open Facturen goed"
 
 #. module: nsm_improv02
 #: view:account.invoice:0
 msgid "Authorized Invoices greater than Verification treshold"
-msgstr "Geautoriseerde facturen groter dan de verificatie drempel"
+msgstr "Goedgekeurde facturen groter dan de verificatie drempel"
 
 #. module: nsm_improv02
 #: view:account.invoice.verifier:0
@@ -61,7 +61,7 @@ msgstr "Valuta"
 #. module: nsm_improv02
 #: view:account.move.line:0
 msgid "Dates"
-msgstr "Datums"
+msgstr "Data"
 
 #. module: nsm_improv02
 #: code:addons/nsm_improv02/payment_order_create.py:81
@@ -83,7 +83,7 @@ msgstr "Factuurbedrag groter dan"
 #. module: nsm_improv02
 #: view:account.invoice.verifier:0
 msgid "Once authorized invoices greater than the treshold in company are verified, they will be available for payment"
-msgstr "Wanneer geautoriseerde facturen met een bedrag hoger dan de grens in bedrijf, zijn geverifieerd, zullen ze verschijnen in de betaallijst"
+msgstr "Wanneer goedgekeurde facturen met een bedrag hoger dan de grens in bedrijf, zijn geverifieerd, zullen ze verschijnen in de betaallijst"
 
 #. module: nsm_improv02
 #: view:account.move.line:0
@@ -94,7 +94,7 @@ msgstr "Aflettering"
 #: code:addons/nsm_improv02/account_invoice_state.py:44
 #, python-format
 msgid "Selected invoice(s) cannot be verified as they are not in 'Authorized' state."
-msgstr "De geselecteerde facturen kunnen niet worden geverifieerd, omdat ze niet de status ‘geautoriseerd’ hebben"
+msgstr "De geselecteerde facturen kunnen niet worden geverifieerd, omdat ze niet de status ‘goedgekeurd’ hebben"
 
 #. module: nsm_improv02
 #: view:account.move.line:0
@@ -144,29 +144,29 @@ msgstr "Geverifieerd"
 #. module: nsm_improv02
 #: view:account.invoice:0
 msgid "Verified Invoices"
-msgstr "Geverifieerde facturen"
+msgstr "Geverifieerde Facturen"
 
 #. module: nsm_improv02
 #: view:account.invoice:0
 msgid "Verify"
-msgstr "Verifiëren"
+msgstr "Verifieer"
 
 #. module: nsm_improv02
 #: model:ir.actions.act_window,name:nsm_improv02.action_account_invoice_verifier
 msgid "Verify Authorized Invoices"
-msgstr "Verifieer goedgekeurde facturen"
+msgstr "Verifieer Goedgekeurde Facturen"
 
 #. module: nsm_improv02
 #: view:account.invoice.verifier:0
 msgid "Verify Invoices"
-msgstr "Verifiee facturen"
+msgstr "Verifieer Facturen"
 
 #. module: nsm_improv02
 #: code:_description:0
 #: model:ir.model,name:nsm_improv02.model_account_invoice_verifier
 #, python-format
 msgid "Verify the selected invoices"
-msgstr "Verifieer de geselecteerde facturen"
+msgstr "Verifieer de goedgekeurde facturen"
 
 #. module: nsm_improv02
 #: code:addons/nsm_improv02/account_invoice_state.py:44
@@ -214,4 +214,4 @@ msgstr "payment.order.create"
 #. module: nsm_improv02
 #: view:account.invoice:0
 msgid "to be Verified"
-msgstr "Verifieerbaar"
+msgstr "Nog te Verifiëren"
