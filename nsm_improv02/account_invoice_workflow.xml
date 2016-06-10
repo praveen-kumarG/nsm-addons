@@ -22,6 +22,19 @@
             <field name="act_to" ref="act_verified"/>
             <field name="signal">invoice_verify</field>
         </record>
+
+        <record id="open_to_verified" model="workflow.transition">
+            <field name="act_from" ref="account.act_open"/>
+            <field name="act_to" ref="act_verified"/>
+            <field name="signal">invoice_verify</field>
+        </record>
+
+        <record id="re-open_to_verified" model="workflow.transition">
+            <field name="act_from" ref="account.act_open_test"/>
+            <field name="act_to" ref="act_verified"/>
+            <field name="signal">invoice_verify</field>
+        </record>
+
         <record id="verified_to_auth" model="workflow.transition">
             <field name="act_from" ref="act_verified"/>
             <field name="act_to" ref="megis_auth.act_auth"/>

@@ -24,7 +24,8 @@
             <field name="arch" type="xml">
                 <data>
 		            <xpath expr="//header/button[@name='invoice_cancel']" position="before">
-			            <button name="invoice_verify" states="auth" string="Verify" type="workflow" class="oe_highlight" groups="nsm_improv02.verification"/>
+                        <field name="verif_tresh_exceeded" invisible="True" />
+                        <button name="invoice_verify" string="Verify" type="workflow" attrs="{'invisible':['|' ,('verif_tresh_exceeded','!=', True),('state','not in',['open','auth'])]}" class="oe_highlight" groups="nsm_improv02.verification"/>
                         <button name="unverify" states="verified" string="Un-verify" type="workflow" groups="nsm_improv02.verification"/>
                     </xpath>
                     <xpath expr="//header/button[@name='invoice_cancel']" position="attributes">
