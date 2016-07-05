@@ -7,5 +7,17 @@
         <field name="category_id" ref="base.module_category_accounting_and_finance"/>
     </record>
 
+    <record model="ir.rule" id="megis_auth.domain_open_auth_paid_rule">
+            <field name="name">Posted Invoice</field>
+            <field name="model_id" ref="model_account_invoice"/>
+            <field name="domain_force">['&amp;','|',('section_id.member_ids', '=', user.id),('user_id','=',user.id),'|',('state','in',['open','auth','paid','verified']),('is_portal','=',True)]</field>
+            <field name="global" eval="False"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="groups" eval="[(4, ref('megis_auth.goedk_facturen'))]"/>
+    </record>
+
 </data>
 </openerp>
