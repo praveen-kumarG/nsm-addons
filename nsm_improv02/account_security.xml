@@ -7,5 +7,7 @@
         <field name="category_id" ref="base.module_category_accounting_and_finance"/>
     </record>
 
+
+
 </data>
 </openerp>
