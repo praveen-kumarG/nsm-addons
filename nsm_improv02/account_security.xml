@@ -6,17 +6,8 @@
         <field name="name">Verification</field>
         <field name="category_id" ref="base.module_category_accounting_and_finance"/>
     </record>
-     <record model="ir.rule" id="domain_verif_rule">
-        <field name="name">Posted Invoice to be Verified</field>
-        <field name="model_id" ref="model_account_invoice"/>
-        <field name="domain_force">[('verif_tresh_exceeded','=',True)]</field>
-        <field name="global" eval="False"/>
-        <field name="perm_read" eval="True"/>
-        <field name="perm_write" eval="True"/>
-        <field name="perm_create" eval="False"/>
-        <field name="perm_unlink" eval="False"/>
-        <field name="groups" eval="[(4, ref('verification'))]"/>
-    </record>
+
+
 
 </data>
 </openerp>
