@@ -18,7 +18,7 @@
                     </xpath>
                     <xpath expr="//field[@name='invoice_line']/tree/field[@name='account_analytic_id']" position="replace">
                         <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                            domain="[('type','!=','view'), ('company_id', '=', parent.company_id)]" required="1"/>
+                            domain="[('type','!=','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]" required="1"/>
                     </xpath>
                 </data>
             </field>
@@ -49,7 +49,7 @@
                     </xpath>		    
 		            <xpath expr="//field[@name='invoice_line']/tree/field[@name='account_analytic_id']" position="replace">
                         <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                            domain="[('type','!=','view'), ('company_id', '=', parent.company_id)]" required="1"/>
+                            domain="[('type','!=','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]" required="1"/>
                     </xpath>
 		            <xpath expr="//page[@string='Other Info']/group/group/field[@name='name']" position="replace">
                     </xpath>
