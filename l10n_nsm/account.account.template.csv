@@ -1,0 +1,457 @@
+id,user_type/id,reconcile,nocreate,chart_template_id/id,type,code,name,parent_id/id
+l10n_nsm.a_root,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,0,NSM STANDAARD GROOTBOEKSCHEMA,
+l10n_nsm.a_0,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,RUBRIEK 0,"VASTE ACTIVA, EIGEN VERMOGEN, LANGLOPEND VREEMD VERMOGEN EN VOORZIENINGEN",l10n_nsm.a_root
+l10n_nsm.a_00,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,00,IMMATERIELE ACTIVA,l10n_nsm.a_0
+l10n_nsm.a_01,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,01,ONROERENDE GOEDEREN,l10n_nsm.a_0
+l10n_nsm.a_02,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,02,MACHINES/INVENTARIS/ICT,l10n_nsm.a_0
+l10n_nsm.a_020,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,020,MACHINES,l10n_nsm.a_02
+l10n_nsm.a_023,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,023,VERBOUWING,l10n_nsm.a_02
+l10n_nsm.a_025,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,025,INVENTARIS/ICT,l10n_nsm.a_02
+l10n_nsm.a_03,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,03,VERVOERMIDDELEN,l10n_nsm.a_0
+l10n_nsm.a_05,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,05,FINANCIELE VASTE ACTIVA EN LANGLOPENDE VORDERINGEN,l10n_nsm.a_0
+l10n_nsm.a_050,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,050,FINANCIELE VASTE ACTIVA,l10n_nsm.a_05
+l10n_nsm.a_055,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,055,LANGLOPENDE VORDERINGEN,l10n_nsm.a_05
+l10n_nsm.a_06,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,06,EIGEN VERMOGEN,l10n_nsm.a_0
+l10n_nsm.a_07,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,07,VOORZIENINGEN,l10n_nsm.a_0
+l10n_nsm.a_08,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,08,LANGLOPENDE SCHULDEN EN AFLOSSINGEN,l10n_nsm.a_0
+l10n_nsm.a_080,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,080,LANGLOPENDE SCHULDEN,l10n_nsm.a_08
+l10n_nsm.a_086,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,086,AFLOSSINGEN,l10n_nsm.a_08
+l10n_nsm.a_1,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,RUBRIEK 1,"FINANCIELE REKENINGEN, KORTLOPENDE VORDERINGEN EN SCHULDEN",l10n_nsm.a_root
+l10n_nsm.a_10,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,10,LIQUIDE MIDDELEN,l10n_nsm.a_1
+l10n_nsm.a_13,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,13,VORDERINGEN,l10n_nsm.a_1
+l10n_nsm.a_15,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,15,KORTLOPENDE SCHULDEN,l10n_nsm.a_1
+l10n_nsm.a_2,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,RUBRIEK 2,TUSSENREKENINGEN,l10n_nsm.a_root
+l10n_nsm.a_3,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,RUBRIEK 3,"VOORRAAD GRONDSTOFFEN, ONDERHANDEN WERK",l10n_nsm.a_root
+l10n_nsm.a_4,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,RUBRIEK 4,INDIRECTE KOSTEN,l10n_nsm.a_root
+l10n_nsm.a_40,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,40,PERSONEELSKOSTEN,l10n_nsm.a_4
+l10n_nsm.a_400,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,400,SALARISKOSTEN,l10n_nsm.a_40
+l10n_nsm.a_41,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,41,HUISVESTINGSKOSTEN,l10n_nsm.a_4
+l10n_nsm.a_42,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,42,BEDRIJFSKOSTEN,l10n_nsm.a_4
+l10n_nsm.a_43,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,43,KANTOORKOSTEN,l10n_nsm.a_4
+l10n_nsm.a_435,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,435,IT KOSTEN,l10n_nsm.a_43
+l10n_nsm.a_44,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,44,VERVOERSKOSTEN,l10n_nsm.a_4
+l10n_nsm.a_45,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,45,VERKOOPKOSTEN,l10n_nsm.a_4
+l10n_nsm.a_46,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,46,ALGEMENE KOSTEN,l10n_nsm.a_4
+l10n_nsm.a_47,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,47,FINANCIERINGSKOSTEN,l10n_nsm.a_4
+l10n_nsm.a_48,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,48,AFSCHRIJVINGEN,l10n_nsm.a_4
+l10n_nsm.a_49,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,49,OVERIGE BATEN EN LASTEN,l10n_nsm.a_4
+l10n_nsm.a_5,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,RUBRIEK 5,TRANSACTIES DERDEN,l10n_nsm.a_root
+l10n_nsm.a_6,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,RUBRIEK 6,FABRIKAGEREKENINGEN,l10n_nsm.a_root
+l10n_nsm.a_7,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,RUBRIEK 7,DIRECTE KOSTEN,l10n_nsm.a_root
+l10n_nsm.a_70,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,70,TECHNISCHE  KOSTEN,l10n_nsm.a_7
+l10n_nsm.a_71,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,71,EXTERN REDACTIE,l10n_nsm.a_7
+l10n_nsm.a_72,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,72,ROYALTIES,l10n_nsm.a_7
+l10n_nsm.a_73,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,73,MARKETING ABO,l10n_nsm.a_7
+l10n_nsm.a_74,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,74,MARKETING RETAIL,l10n_nsm.a_7
+l10n_nsm.a_75,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,75,MARKETING OVERIG,l10n_nsm.a_7
+l10n_nsm.a_76,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,76,DISTRIBUTIE ABO,l10n_nsm.a_7
+l10n_nsm.a_77,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,77,DISTRIBUTIE RETAIL,l10n_nsm.a_7
+l10n_nsm.a_78,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,78,COST OF SALES,l10n_nsm.a_7
+l10n_nsm.a_79,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,79,EVENTS,l10n_nsm.a_7
+l10n_nsm.a_8,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,RUBRIEK 8,OMZET,l10n_nsm.a_root
+l10n_nsm.a_80,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,80,OMZET ADVERTENTIEMARKT,l10n_nsm.a_8
+l10n_nsm.a_801,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,801,ADVERTENTIES,l10n_nsm.a_80
+l10n_nsm.a_803,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,803,RUBRIEKSADVERTENTIES,l10n_nsm.a_80
+l10n_nsm.a_806,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,806,BARTEROMZET,l10n_nsm.a_80
+l10n_nsm.a_81,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,81,LOSSE VERKOOP,l10n_nsm.a_8
+l10n_nsm.a_82,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,82,ABONNEMENTEN,l10n_nsm.a_8
+l10n_nsm.a_83,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,83,"ONLINE BANNERS, ADVERTORIALS",l10n_nsm.a_8
+l10n_nsm.a_84,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,84,CUSTOM PUBLISHING,l10n_nsm.a_8
+l10n_nsm.a_85,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,85,ROYALTIES,l10n_nsm.a_8
+l10n_nsm.a_86,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,86,EVENTS,l10n_nsm.a_8
+l10n_nsm.a_9,account.data_account_type_view,False,False,l10n_nsm.nsm_chart_template,View,RUBRIEK 9,OVERIGE RESULTATEN,l10n_nsm.a_root
+l10n_nsm.a_0010,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0010,Publishing rights Elsevier,l10n_nsm.a_00
+l10n_nsm.a_0011,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0011,Afschrijving publishing rights Elsevier,l10n_nsm.a_00
+l10n_nsm.a_0020,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0020,Aanschafwaarde Aanloopkosten,l10n_nsm.a_025
+l10n_nsm.a_0021,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0021,Afschrijving Aanloopkosten,l10n_nsm.a_025
+l10n_nsm.a_0030,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0030,Aanschafwaarde Aparatuur,l10n_nsm.a_00
+l10n_nsm.a_0031,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0031,Afschrijving Aparatuur,l10n_nsm.a_00
+l10n_nsm.a_0210,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0210,Aanschafwaarde Kantoorinventaris,l10n_nsm.a_020
+l10n_nsm.a_0211,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0211,Afschrijving Kantoorinventaris,l10n_nsm.a_020
+l10n_nsm.a_0220,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0220,Aanschafwaarde Verbouwing,l10n_nsm.a_025
+l10n_nsm.a_0221,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0221,Afschrijving Verbouwing,l10n_nsm.a_025
+l10n_nsm.a_0230,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0230,Aanschafwaarde Bedrijfsinventaris,l10n_nsm.a_023
+l10n_nsm.a_0231,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0231,Afschrijving Bedrijfsinventaris,l10n_nsm.a_023
+l10n_nsm.a_0240,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0240,Aanschafwaarde Hardware,l10n_nsm.a_025
+l10n_nsm.a_0241,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0241,Afschrijving hardware,l10n_nsm.a_025
+l10n_nsm.a_0250,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0250,Aanschafwaarde Software,l10n_nsm.a_025
+l10n_nsm.a_0251,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0251,Afschrijving Software,l10n_nsm.a_025
+l10n_nsm.a_0260,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0260,Aanschafwaarde XX,l10n_nsm.a_025
+l10n_nsm.a_0261,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0261,Afschrijving XX,l10n_nsm.a_025
+l10n_nsm.a_0270,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0270,Aanschafwaarde XX,l10n_nsm.a_025
+l10n_nsm.a_0271,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0271,Afschrijving XX,l10n_nsm.a_025
+l10n_nsm.a_0280,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0280,Aanschafwaarde XX,l10n_nsm.a_025
+l10n_nsm.a_0281,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0281,Afschrijving XX,l10n_nsm.a_025
+l10n_nsm.a_0290,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0290,Activa in aanbouw,l10n_nsm.a_025
+l10n_nsm.a_0300,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0300,Aanschafwaarde xx,l10n_nsm.a_03
+l10n_nsm.a_0301,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0301,Afschrijving xx,l10n_nsm.a_03
+l10n_nsm.a_0500,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0500,Minderheidsdeelnemingen,l10n_nsm.a_050
+l10n_nsm.a_0510,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0510,Meerderheidsdeelnemingen,l10n_nsm.a_050
+l10n_nsm.a_0520,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0520,Bankgarantie,l10n_nsm.a_050
+l10n_nsm.a_0521,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0521,Waarborgsom,l10n_nsm.a_050
+l10n_nsm.a_0522,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,0522,Borg Leaseplan Nederland,l10n_nsm.a_050
+l10n_nsm.a_0600,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0600,Aandelenkapitaal,l10n_nsm.a_06
+l10n_nsm.a_0606,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0606,Wettelijke reserves,l10n_nsm.a_06
+l10n_nsm.a_0607,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0607,Overige reserves,l10n_nsm.a_06
+l10n_nsm.a_0610,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0610,Kapitaal,l10n_nsm.a_06
+l10n_nsm.a_0616,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0616,Premie volksverzekeringen,l10n_nsm.a_06
+l10n_nsm.a_0617,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0617,WAO en ziekengeldverzekeringen,l10n_nsm.a_06
+l10n_nsm.a_0618,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0618,Premie volksverzekeringen,l10n_nsm.a_06
+l10n_nsm.a_0619,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0619,Premie lijfrenteverzekeringen,l10n_nsm.a_06
+l10n_nsm.a_0620,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0620,Giften,l10n_nsm.a_06
+l10n_nsm.a_0621,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0621,Buitengewone lasten,l10n_nsm.a_06
+l10n_nsm.a_0622,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0622,Overige persoonlijke verplichtingen,l10n_nsm.a_06
+l10n_nsm.a_0624,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0624,Inkomstenbelasting,l10n_nsm.a_06
+l10n_nsm.a_0625,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0625,Vermogensbelasting,l10n_nsm.a_06
+l10n_nsm.a_0700,l10n_nl.user_type_equity,True,False,l10n_nsm.nsm_chart_template,Regular,0700,Pensioenverplichtingen,l10n_nsm.a_07
+l10n_nsm.a_0701,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0701,Pens.voorz. eigen beheer,l10n_nsm.a_07
+l10n_nsm.a_0702,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0702,Backservice pensioenverpl.,l10n_nsm.a_07
+l10n_nsm.a_0703,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0703,Stamrechtverplichtingen,l10n_nsm.a_07
+l10n_nsm.a_0710,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0710,Egalisatieres. grootonderh.,l10n_nsm.a_07
+l10n_nsm.a_0711,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0711,Assurantie eigen risico,l10n_nsm.a_07
+l10n_nsm.a_0712,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0712,Garantieverplichtingen,l10n_nsm.a_07
+l10n_nsm.a_0720,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0720,Voorziening deelnemingen,l10n_nsm.a_07
+l10n_nsm.a_0730,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0730,Vervangingsreserve,l10n_nsm.a_07
+l10n_nsm.a_0740,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0740,Voorziening dubieuze debiteuren,l10n_nsm.a_07
+l10n_nsm.a_0750,l10n_nl.user_type_equity,True,False,l10n_nsm.nsm_chart_template,Regular,0750,Voorziening dubieuze abonnementen,l10n_nsm.a_07
+l10n_nsm.a_0760,l10n_nl.user_type_equity,False,False,l10n_nsm.nsm_chart_template,Regular,0760,Egalisatierekening WIR,l10n_nsm.a_07
+l10n_nsm.a_0770,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0770,Voorziening Losse Verkoop Aldipress (NL) 15-16,l10n_nsm.a_07
+l10n_nsm.a_0771,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0771,Voorziening Losse Verkoop Aldipress (NL) 16-17,l10n_nsm.a_07
+l10n_nsm.a_0772,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0772,Voorziening Losse Verkoop AMP (BE) 15-16,l10n_nsm.a_07
+l10n_nsm.a_0773,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,0773,Voorziening Losse Verkoop AMP (BE) 16-17,l10n_nsm.a_07
+l10n_nsm.a_0820,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,0820,Leningen o/g Rabobank 1,l10n_nsm.a_080
+l10n_nsm.a_0821,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,0821,Leningen o/g 2,l10n_nsm.a_080
+l10n_nsm.a_0822,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,0822,Leningen o/g 3,l10n_nsm.a_080
+l10n_nsm.a_0835,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,0835,Leaseovereenkomst de Lage Landen,l10n_nsm.a_080
+l10n_nsm.a_0850,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,0850,Rekening-courant directie,l10n_nsm.a_080
+l10n_nsm.a_0860,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,0860,Aflossing lening Rabobank 1,l10n_nsm.a_086
+l10n_nsm.a_0861,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,0861,Aflossing lening o/g 2,l10n_nsm.a_086
+l10n_nsm.a_0862,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,0862,Aflossing lening o/g 3,l10n_nsm.a_086
+l10n_nsm.a_0865,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,0865,Aflossing Lease-overeenkomst De Lage Landen,l10n_nsm.a_086
+l10n_nsm.a_0880,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,0880,Lease-verplichtingen,l10n_nsm.a_086
+l10n_nsm.a_1260,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,1260,Contante betalingen abonnementen,l10n_nsm.a_10
+l10n_nsm.a_1261,account.data_account_type_bank,True,False,l10n_nsm.nsm_chart_template,Regular,1261,Kruisposten,l10n_nsm.a_10
+l10n_nsm.a_1262,account.data_account_type_bank,True,False,l10n_nsm.nsm_chart_template,Regular,1262,Kruisposten XX,l10n_nsm.a_10
+l10n_nsm.a_1263,account.data_account_type_bank,True,False,l10n_nsm.nsm_chart_template,Regular,1263,Betalingen onderweg,l10n_nsm.a_10
+l10n_nsm.a_1264,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,1264,Kruisposten XX,l10n_nsm.a_10
+l10n_nsm.a_1265,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,1265,Kruisposten XX,l10n_nsm.a_10
+l10n_nsm.a_1291,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,1291,Kruisposten XX,l10n_nsm.a_10
+l10n_nsm.a_1292,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,1292,Kruisposten XX,l10n_nsm.a_10
+l10n_nsm.a_1293,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,1293,Kruisposten XX,l10n_nsm.a_10
+l10n_nsm.a_1294,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,1294,Kruisposten XX,l10n_nsm.a_10
+l10n_nsm.a_1350,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,1350,Dubieuze debiteuren,l10n_nsm.a_13
+l10n_nsm.a_1360,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,1360,Voorziening dubieuze debiteuren,l10n_nsm.a_13
+l10n_nsm.a_1370,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,1370,Rekening Courant 1,l10n_nsm.a_13
+l10n_nsm.a_1371,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,1371,Rekening Courant 2,l10n_nsm.a_13
+l10n_nsm.a_1410,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,1410,Voorschotten personeel,l10n_nsm.a_13
+l10n_nsm.a_1420,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,1420,Rekening-courant directie,l10n_nsm.a_13
+l10n_nsm.a_1450,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,1450,Vooruitbetaalde kosten,l10n_nsm.a_13
+l10n_nsm.a_1455,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,1455,Te ontvangen ziekengeld,l10n_nsm.a_13
+l10n_nsm.a_1471,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,1471,Nog te factureren,l10n_nsm.a_13
+l10n_nsm.a_1490,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,1490,Overige vorderingen,l10n_nsm.a_13
+l10n_nsm.vat_payable_low,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1601,Btw af te dragen laag,l10n_nsm.a_15
+l10n_nsm.vat_payable_high,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1602,Btw af te dragen hoog,l10n_nsm.a_15
+l10n_nsm.vat_payable0,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1603,Btw af te dragen overig,l10n_nsm.a_15
+l10n_nsm.a_1605,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1605,Btw af te dragen laag BE 6%,l10n_nsm.a_15
+l10n_nsm.a_1606,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1606,Btw af te dragen hoog BE 21%,l10n_nsm.a_15
+l10n_nsm.a_1607,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1607,Btw af te dragen overig BE overig,l10n_nsm.a_15
+l10n_nsm.vat_refund_low,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1611,Btw te vorderen laag,l10n_nsm.a_15
+l10n_nsm.vat_refund_high,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1612,Btw te vorderen hoog,l10n_nsm.a_15
+l10n_nsm.vat_refund0,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1613,Btw te vorderen overig,l10n_nsm.a_15
+l10n_nsm.a_1620,l10n_nl.user_type_tax,True,False,l10n_nsm.nsm_chart_template,Regular,1620,Btw-afdracht/restitutie,l10n_nsm.a_15
+l10n_nsm.a_1625,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1625,Btw oude jaren,l10n_nsm.a_15
+l10n_nsm.vat_payable_verlegd,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1631,Af te dragen Btw-verlegd,l10n_nsm.a_15
+l10n_nsm.vat_refund_verlegd,l10n_nl.user_type_tax,False,False,l10n_nsm.nsm_chart_template,Regular,1632,Te vorderen Btw-verlegd,l10n_nsm.a_15
+l10n_nsm.a_1660,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1660,Loonheffing,l10n_nsm.a_15
+l10n_nsm.a_1665,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1665,Afdracht loonheffing,l10n_nsm.a_15
+l10n_nsm.a_1670,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1670,Vennootschapsbelasting,l10n_nsm.a_15
+l10n_nsm.a_1675,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1675,Dividendbelasting,l10n_nsm.a_15
+l10n_nsm.a_1677,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1677,Investeringsaftrek,l10n_nsm.a_15
+l10n_nsm.a_1678,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1678,Premie WIR,l10n_nsm.a_15
+l10n_nsm.a_1685,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1685,Termijnen onderh. werk,l10n_nsm.a_15
+l10n_nsm.a_1686,account.data_account_type_liability,True,False,l10n_nsm.nsm_chart_template,Regular,1686,Telefoon/telefax,l10n_nsm.a_15
+l10n_nsm.a_1687,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1687,Accountantskosten,l10n_nsm.a_15
+l10n_nsm.a_1688,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1688,Energiekosten,l10n_nsm.a_15
+l10n_nsm.a_1690,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1690,Sociale lasten,l10n_nsm.a_15
+l10n_nsm.a_1691,account.data_account_type_liability,True,False,l10n_nsm.nsm_chart_template,Regular,1691,Pensioenpremies,l10n_nsm.a_15
+l10n_nsm.a_1692,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1692,Vakantiegeld,l10n_nsm.a_15
+l10n_nsm.a_1693,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1693,Vakantiedagen,l10n_nsm.a_15
+l10n_nsm.a_1694,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1694,Vakantiedagenverplichting ,l10n_nsm.a_15
+l10n_nsm.a_1695,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1695,Tanti�mes,l10n_nsm.a_15
+l10n_nsm.a_1696,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1696,Rente,l10n_nsm.a_15
+l10n_nsm.a_1697,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1697,Dividend,l10n_nsm.a_15
+l10n_nsm.a_1700,account.data_account_type_liability,True,False,l10n_nsm.nsm_chart_template,Regular,1700,Leveringsverplichtingen abonnementen,l10n_nsm.a_15
+l10n_nsm.a_1710,account.data_account_type_liability,True,False,l10n_nsm.nsm_chart_template,Regular,1710,Vooruit ontvangen bedr. MC,l10n_nsm.a_15
+l10n_nsm.a_1711,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1711,Vooruit gefactureerde verzendtoeslag,l10n_nsm.a_15
+l10n_nsm.a_1713,account.data_account_type_liability,True,False,l10n_nsm.nsm_chart_template,Regular,1713,Vooruit ontvangen bedragen,l10n_nsm.a_15
+l10n_nsm.a_1714,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1714,Overige te betalen posten,l10n_nsm.a_15
+l10n_nsm.a_1715,account.data_account_type_liability,False,False,l10n_nsm.nsm_chart_template,Regular,1715,Nog te betalen kosten,l10n_nsm.a_15
+l10n_nsm.a_1716,account.data_account_type_liability,True,False,l10n_nsm.nsm_chart_template,Regular,1716,(SP) Nog te betalen kosten Sanoma,l10n_nsm.a_15
+l10n_nsm.a_1717,account.data_account_type_liability,True,False,l10n_nsm.nsm_chart_template,Regular,1717,Nog te betalen royalties,l10n_nsm.a_15
+l10n_nsm.a_1718,account.data_account_type_liability,True,False,l10n_nsm.nsm_chart_template,Regular,1718,Nog te ontvangen facturen,l10n_nsm.a_15
+l10n_nsm.a_2000,account.data_account_type_cash,True,False,l10n_nsm.nsm_chart_template,Regular,2000,Netto lonen,l10n_nsm.a_2
+l10n_nsm.a_2500,account.data_account_type_cash,True,False,l10n_nsm.nsm_chart_template,Regular,2500,Vraagposten,l10n_nsm.a_2
+l10n_nsm.a_2605,account.data_account_type_cash,True,False,l10n_nsm.nsm_chart_template,Regular,2605,Ontvangsten te specificeren,l10n_nsm.a_2
+l10n_nsm.a_2606,account.data_account_type_cash,True,False,l10n_nsm.nsm_chart_template,Regular,2606,Betalingen te specificeren,l10n_nsm.a_2
+l10n_nsm.a_3200,account.data_account_type_asset,True,False,l10n_nsm.nsm_chart_template,Regular,3200,Onderhanden werk,l10n_nsm.a_3
+l10n_nsm.a_3600,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,3600,Goederen in consignatie,l10n_nsm.a_3
+l10n_nsm.a_3650,account.data_account_type_asset,False,False,l10n_nsm.nsm_chart_template,Regular,3650,Vooraad,l10n_nsm.a_3
+l10n_nsm.a_4000,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4000,Lonen en salarissen,l10n_nsm.a_400
+l10n_nsm.a_4001,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4001,Overhevelingstoeslag,l10n_nsm.a_400
+l10n_nsm.a_4002,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4002,Correctierekening bruto lonen,l10n_nsm.a_400
+l10n_nsm.a_4005,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4005,Vakantiegeld,l10n_nsm.a_400
+l10n_nsm.a_4007,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4007,Reservering vakantiedagen,l10n_nsm.a_400
+l10n_nsm.a_4008,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4008,Levensloop,l10n_nsm.a_400
+l10n_nsm.a_4010,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4010,Gratificaties,l10n_nsm.a_400
+l10n_nsm.a_4011,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4011,Tanti�mes,l10n_nsm.a_400
+l10n_nsm.a_4012,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4012,Provisie,l10n_nsm.a_400
+l10n_nsm.a_4013,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4013,Bijzondere beloningen,l10n_nsm.a_400
+l10n_nsm.a_4014,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4014,Bonussen,l10n_nsm.a_400
+l10n_nsm.a_4020,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4020,Uitkering ziekengeld,l10n_nsm.a_400
+l10n_nsm.a_4021,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4021,Overige uitkeringen,l10n_nsm.a_400
+l10n_nsm.a_4030,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4030,Sociale lasten,l10n_nsm.a_400
+l10n_nsm.a_4031,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4031,Inhouding sociale lasten,l10n_nsm.a_400
+l10n_nsm.a_4032,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4032,Pensioenpremies,l10n_nsm.a_400
+l10n_nsm.a_4033,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4033,Inhouding pensioenpremies,l10n_nsm.a_400
+l10n_nsm.a_4034,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4034,Toev. Backservice pens.verpl.,l10n_nsm.a_400
+l10n_nsm.a_4035,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4035,Toevoeging pensioenverpl.,l10n_nsm.a_400
+l10n_nsm.a_4036,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4036,Reorganisatiekosten personeel,l10n_nsm.a_40
+l10n_nsm.a_4040,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4040,Thuiswerkers,l10n_nsm.a_40
+l10n_nsm.a_4041,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4041,Uitzendkrachten,l10n_nsm.a_40
+l10n_nsm.a_4042,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4042,Loonwerk,l10n_nsm.a_40
+l10n_nsm.a_4045,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4045,Managementvergoedingen,l10n_nsm.a_40
+l10n_nsm.a_4050,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4050,Kantinekosten,l10n_nsm.a_40
+l10n_nsm.a_4051,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4051,Bedrijfskleding,l10n_nsm.a_40
+l10n_nsm.a_4053,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4053,Gereedschapsgeld,l10n_nsm.a_40
+l10n_nsm.a_4054,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4054,Autokostenvergoeding,l10n_nsm.a_40
+l10n_nsm.a_4055,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4055,Reiskosten,l10n_nsm.a_40
+l10n_nsm.a_4056,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4056,"Congressen, seminars en symposia",l10n_nsm.a_40
+l10n_nsm.a_4057,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4057,Overige kostenverg.,l10n_nsm.a_40
+l10n_nsm.a_4058,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4058,Belastingvrije uitkeringen,l10n_nsm.a_40
+l10n_nsm.a_4060,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4060,Wervingskosten personeel,l10n_nsm.a_40
+l10n_nsm.a_4061,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4061,Opleidingskosten,l10n_nsm.a_40
+l10n_nsm.a_4062,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4062,Vergoeding studiekosten,l10n_nsm.a_40
+l10n_nsm.a_4080,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4080,Geschenken personeel,l10n_nsm.a_40
+l10n_nsm.a_4090,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4090,Overige personeelskosten,l10n_nsm.a_40
+l10n_nsm.a_4100,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4100,Huur,l10n_nsm.a_41
+l10n_nsm.a_4105,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4105,Servicekosten ,l10n_nsm.a_41
+l10n_nsm.a_4115,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4115,Belastingen onr. Goed,l10n_nsm.a_41
+l10n_nsm.a_4120,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4120,Energiekosten,l10n_nsm.a_41
+l10n_nsm.a_4125,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4125,Schoonmaakkosten,l10n_nsm.a_41
+l10n_nsm.a_4130,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4130,Assurantie onroerend goed,l10n_nsm.a_41
+l10n_nsm.a_4180,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4180,Huurwaarde woongedeelte,l10n_nsm.a_41
+l10n_nsm.a_4185,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4185,Ontvangen huren,l10n_nsm.a_41
+l10n_nsm.a_4190,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4190,Overige huisvestingskosten,l10n_nsm.a_41
+l10n_nsm.a_4200,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4200,Huur machines,l10n_nsm.a_42
+l10n_nsm.a_4202,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4202,Abonnement Elvis,l10n_nsm.a_42
+l10n_nsm.a_4300,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4300,Contributies/abonnementen,l10n_nsm.a_43
+l10n_nsm.a_4305,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4305,Kantoorbenodigdh./drukw.,l10n_nsm.a_43
+l10n_nsm.a_4310,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4310,Onderhoud kantoorinvent.,l10n_nsm.a_43
+l10n_nsm.a_4311,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4311,Huur kantoorapparatuur,l10n_nsm.a_43
+l10n_nsm.a_4315,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4315,Telefoon/telefax,l10n_nsm.a_43
+l10n_nsm.a_4317,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4317,Internetaansluiting,l10n_nsm.a_43
+l10n_nsm.a_4320,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4320,Porti,l10n_nsm.a_43
+l10n_nsm.a_4325,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4325,Administratiekosten,l10n_nsm.a_43
+l10n_nsm.a_4350,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4350,systeembeheer inhuur Magnus,l10n_nsm.a_435
+l10n_nsm.a_4360,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4360,ICT servicekosten,l10n_nsm.a_435
+l10n_nsm.a_4370,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4370,MC IT platform,l10n_nsm.a_435
+l10n_nsm.a_4390,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4390,Overige kantoorkosten,l10n_nsm.a_43
+l10n_nsm.a_4400,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4400,Brandstoffen,l10n_nsm.a_44
+l10n_nsm.a_4405,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4405,Onderhoud vrachtauto's,l10n_nsm.a_44
+l10n_nsm.a_4410,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4410,Onderhoud personenauto's,l10n_nsm.a_44
+l10n_nsm.a_4415,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4415,Assuranties auto's,l10n_nsm.a_44
+l10n_nsm.a_4420,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4420,Wegenbelasting,l10n_nsm.a_44
+l10n_nsm.a_4450,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4450,Leasing auto's,l10n_nsm.a_44
+l10n_nsm.a_4459,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4459,Doorbelasting leasing auto's,l10n_nsm.a_44
+l10n_nsm.a_4460,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4460,Bijdrage lease-auto,l10n_nsm.a_44
+l10n_nsm.a_4480,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4480,Priv_�-gebruik auto's,l10n_nsm.a_44
+l10n_nsm.a_4510,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4510,Dotatie voorziening dubieuze debiteuren,l10n_nsm.a_45
+l10n_nsm.a_4511,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4511,Afschrijvingskosten dubieuze deb. MC,l10n_nsm.a_45
+l10n_nsm.a_4512,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4512,Afschrijvingskosten dubieuze deb.,l10n_nsm.a_45
+l10n_nsm.a_4517,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4517,Relatiegeschenken,l10n_nsm.a_45
+l10n_nsm.a_4520,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4520,Reis en verblijfkosten,l10n_nsm.a_45
+l10n_nsm.a_4521,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4521,Lunch- en dinerkosten,l10n_nsm.a_45
+l10n_nsm.a_4525,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4525,Representatiekosten,l10n_nsm.a_45
+l10n_nsm.a_4530,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4530,Reclame,l10n_nsm.a_45
+l10n_nsm.a_4535,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4535,Advertenties,l10n_nsm.a_45
+l10n_nsm.a_4555,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4555,Provisie,l10n_nsm.a_45
+l10n_nsm.a_4560,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4560,Websitekosten,l10n_nsm.a_45
+l10n_nsm.a_4565,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4565,Abonnement aProfit,l10n_nsm.a_45
+l10n_nsm.a_4570,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4570,Korting Losse Verkoop Aldipress (NL) 15-16,l10n_nsm.a_45
+l10n_nsm.a_4571,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4571,Korting Losse Verkoop Aldipress (NL) 16-17,l10n_nsm.a_45
+l10n_nsm.a_4572,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4572,Korting Losse Verkoop AMP (BE) 15-16,l10n_nsm.a_45
+l10n_nsm.a_4573,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4573,Korting Losse Verkoop AMP (BE) 16-17,l10n_nsm.a_45
+l10n_nsm.a_4580,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4580,MC inbound klantenservice,l10n_nsm.a_45
+l10n_nsm.a_4581,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4581,MC back office management,l10n_nsm.a_45
+l10n_nsm.a_4583,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4583,Abonnementenland abonnementenbeheer,l10n_nsm.a_45
+l10n_nsm.a_4585,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4585,Werfkosten abonnementen,l10n_nsm.a_45
+l10n_nsm.a_4590,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4590,Overige verkoopkosten,l10n_nsm.a_45
+l10n_nsm.a_4600,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4600,Accountantskosten,l10n_nsm.a_46
+l10n_nsm.a_4605,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4605,Advieskosten,l10n_nsm.a_46
+l10n_nsm.a_4610,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4610,Juridische kosten,l10n_nsm.a_46
+l10n_nsm.a_4620,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4620,Assuranties,l10n_nsm.a_46
+l10n_nsm.a_4650,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4650,Fee MPP Sanoma,l10n_nsm.a_46
+l10n_nsm.a_4690,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4690,Overige algemene kosten,l10n_nsm.a_46
+l10n_nsm.a_4700,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4700,Rente Rabobank 1,l10n_nsm.a_47
+l10n_nsm.a_4701,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4701,Rente Rabobank 2,l10n_nsm.a_47
+l10n_nsm.a_4702,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4702,Rente Rabobank 3,l10n_nsm.a_47
+l10n_nsm.a_4703,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4703,Rente Rabobank abonnementen,l10n_nsm.a_47
+l10n_nsm.a_4710,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4710,Rente bankkrediet,l10n_nsm.a_47
+l10n_nsm.a_4720,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4720,Rente leasecontracten,l10n_nsm.a_47
+l10n_nsm.a_4730,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4730,Rente huurkoopcontracten,l10n_nsm.a_47
+l10n_nsm.a_4750,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4750,Rente lening u/g,l10n_nsm.a_47
+l10n_nsm.a_4755,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4755,Rente lening o/g,l10n_nsm.a_47
+l10n_nsm.a_4760,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4760,Bankkosten,l10n_nsm.a_46
+l10n_nsm.a_4761,account.data_account_type_expense,True,False,l10n_nsm.nsm_chart_template,Regular,4761,Kosten Buckaroo,l10n_nsm.a_10
+l10n_nsm.a_4790,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4790,Overige rentelasten,l10n_nsm.a_47
+l10n_nsm.a_4795,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4795,Overige rentebaten,l10n_nsm.a_47
+l10n_nsm.a_4802,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4802,Afschrijvingskosten Publishing rights titels Elsevier,l10n_nsm.a_48
+l10n_nsm.a_4803,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4803,Afschrijvingskosten Licenties,l10n_nsm.a_48
+l10n_nsm.a_4807,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4807,Afschrijvingskosten Aanloopkosten,l10n_nsm.a_48
+l10n_nsm.a_4808,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4808,Afschrijvingskosten Bedrijfsinventaris,l10n_nsm.a_48
+l10n_nsm.a_4820,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4820,Afschrijvingskosten Inventaris,l10n_nsm.a_48
+l10n_nsm.a_4822,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4822,Afschrijvingskosten hard-& software,l10n_nsm.a_48
+l10n_nsm.a_4830,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4830,Afschrijvingskosten Verbouwing,l10n_nsm.a_48
+l10n_nsm.a_4864,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4864,Afschrijvingskosten Kantoorinventaris,l10n_nsm.a_48
+l10n_nsm.a_4910,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4910,Ontvangen schadevergoed.,l10n_nsm.a_49
+l10n_nsm.a_4915,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4915,Voordelige koersverschil.,l10n_nsm.a_49
+l10n_nsm.a_4948,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4948,Overige baten,l10n_nsm.a_49
+l10n_nsm.a_4955,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4955,Kosten omzetbelasting,l10n_nsm.a_49
+l10n_nsm.a_4960,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4960,Kosten loonbelasting,l10n_nsm.a_49
+l10n_nsm.a_4970,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4970,Betaalde schadevergoed.,l10n_nsm.a_49
+l10n_nsm.a_4975,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4975,Nadelige koersverschillen,l10n_nsm.a_49
+l10n_nsm.a_4980,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4980,Kasverschillen,l10n_nsm.a_49
+l10n_nsm.a_4985,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4985,Betalingskorting,l10n_nsm.a_49
+l10n_nsm.a_4986,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4986,Betalingsverschil,l10n_nsm.a_49
+l10n_nsm.a_4998,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,4998,Overige lasten,l10n_nsm.a_49
+l10n_nsm.a_7000,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7000,Inkopen nul,l10n_nsm.a_70
+l10n_nsm.a_7001,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7001,Kosten handling en verzenden,l10n_nsm.a_70
+l10n_nsm.a_7002,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7002,Papier variabel via inkoop,l10n_nsm.a_70
+l10n_nsm.a_7003,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7003,Papier vast,l10n_nsm.a_70
+l10n_nsm.a_7004,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7004,Voorraadverschillen Papier,l10n_nsm.a_70
+l10n_nsm.a_7005,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7005,Verwijderingsbijdrage papier,l10n_nsm.a_70
+l10n_nsm.a_7006,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7006,Drukken,l10n_nsm.a_70
+l10n_nsm.a_7007,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7007,Drukken variabel,l10n_nsm.a_70
+l10n_nsm.a_7008,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7008,Overig technische kosten,l10n_nsm.a_70
+l10n_nsm.a_7009,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7009,Reprokosten,l10n_nsm.a_70
+l10n_nsm.a_7010,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7010,Technische kosten plusproposities,l10n_nsm.a_70
+l10n_nsm.a_7011,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7011,Productiekosten advertenties,l10n_nsm.a_70
+l10n_nsm.a_7012,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7012,Productiekosten advertorials,l10n_nsm.a_70
+l10n_nsm.a_7013,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7013,Productiekosten ISM,l10n_nsm.a_70
+l10n_nsm.a_7015,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7015,Inserts AM,l10n_nsm.a_70
+l10n_nsm.a_7017,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7017,Productiekosten branded content,l10n_nsm.a_70
+l10n_nsm.a_7018,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7018,Opmaakkosten salesproposities,l10n_nsm.a_70
+l10n_nsm.a_expense,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7050,Inkoop hoog,l10n_nsm.a_70
+l10n_nsm.a_7100,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7100,Tegenrekening inkoop,l10n_nsm.a_71
+l10n_nsm.a_7101,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7101,Eindredactie ,l10n_nsm.a_71
+l10n_nsm.a_7102,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7102,Redactiemateriaal Tekst,l10n_nsm.a_71
+l10n_nsm.a_7103,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7103,Redactiewerkzaamheden algemeen,l10n_nsm.a_71
+l10n_nsm.a_7104,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7104,Redactiemateriaal Beeld,l10n_nsm.a_71
+l10n_nsm.a_7105,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7105,Vormgeving,l10n_nsm.a_71
+l10n_nsm.a_7106,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7106,Redactionele coordinatie,l10n_nsm.a_71
+l10n_nsm.a_7107,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7107,Redactiewerkzaamheden online,l10n_nsm.a_71
+l10n_nsm.a_7108,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7108,Styling,l10n_nsm.a_71
+l10n_nsm.a_7109,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7109,Redactiekosten overig,l10n_nsm.a_71
+l10n_nsm.a_7110,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7110,Restyling,l10n_nsm.a_71
+l10n_nsm.a_7200,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7200,Royalties,l10n_nsm.a_72
+l10n_nsm.a_7302,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7302,Marketing media abo werf,l10n_nsm.a_73
+l10n_nsm.a_7303,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7303,Marketing productie / distributie abo,l10n_nsm.a_73
+l10n_nsm.a_7304,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7304,Marketing abo behoud,l10n_nsm.a_73
+l10n_nsm.a_7305,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7305,Marketing Promotion,l10n_nsm.a_73
+l10n_nsm.a_7401,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7401,Marketing losse verkoop,l10n_nsm.a_74
+l10n_nsm.a_7501,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7501,Marketing overig,l10n_nsm.a_75
+l10n_nsm.a_7502,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7502,Marketing kostprijs verkopen premies,l10n_nsm.a_75
+l10n_nsm.a_7503,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7503,Marketing handling en verzendkosten premies,l10n_nsm.a_75
+l10n_nsm.a_7504,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7504,Marketing distributiekosten,l10n_nsm.a_75
+l10n_nsm.a_7505,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7505,Marketing Barters,l10n_nsm.a_75
+l10n_nsm.a_7601,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7601,Sealkosten ,l10n_nsm.a_76
+l10n_nsm.a_7801,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7801,Transport/distributie,l10n_nsm.a_78
+l10n_nsm.a_7802,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7802,Handling en verzendkosten,l10n_nsm.a_78
+l10n_nsm.a_7803,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7803,Opslag magazijn,l10n_nsm.a_78
+l10n_nsm.a_7806,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7806,Wial fulfillment,l10n_nsm.a_78
+l10n_nsm.a_7901,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7901,Kostprijs verkopen,l10n_nsm.a_78
+l10n_nsm.a_7902,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7902,Prijsverschillen bij inkopen,l10n_nsm.a_78
+l10n_nsm.a_7904,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7904,Voorraad inventarisaties,l10n_nsm.a_78
+l10n_nsm.a_7905,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7905,huur/opbouw/verzekering events,l10n_nsm.a_79
+l10n_nsm.a_7906,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7906,promotie events,l10n_nsm.a_79
+l10n_nsm.a_7909,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7909,fotografie events,l10n_nsm.a_79
+l10n_nsm.a_7910,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7910,productie events,l10n_nsm.a_79
+l10n_nsm.a_7913,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,7913,overige kosten events,l10n_nsm.a_79
+l10n_nsm.a_8000,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8000,overig,l10n_nsm.a_80
+l10n_nsm.a_8001,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8001,overig EU,l10n_nsm.a_80
+l10n_nsm.a_8002,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8002,overig niet-EU,l10n_nsm.a_80
+l10n_nsm.a_8010,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8010,advertentie bnl.,l10n_nsm.a_801
+l10n_nsm.a_8011,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8011,advertentie EU,l10n_nsm.a_801
+l10n_nsm.a_8013,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8013,Verkopen handel laag,l10n_nsm.a_80
+l10n_nsm.a_8012,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8012,advertentie niet-EU,l10n_nsm.a_801
+l10n_nsm.a_sale,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8014,Verkopen handel hoog,l10n_nsm.a_80
+l10n_nsm.a_8015,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8015,Overige verkopen,l10n_nsm.a_80
+l10n_nsm.a_8020,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8020,e-advertorials,l10n_nsm.a_801
+l10n_nsm.a_8021,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8021,e-advertorials EU,l10n_nsm.a_801
+l10n_nsm.a_8022,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8022,e-advertorials niet-EU,l10n_nsm.a_801
+l10n_nsm.a_8030,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8030,rubrieksadv.,l10n_nsm.a_803
+l10n_nsm.a_8031,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8031,rubrieksadv. EU,l10n_nsm.a_803
+l10n_nsm.a_8032,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8032,rubrieksadv. Niet-EU,l10n_nsm.a_803
+l10n_nsm.a_8040,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8040,plusproposities derden,l10n_nsm.a_803
+l10n_nsm.a_8041,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8041,plusproposities derden EU,l10n_nsm.a_803
+l10n_nsm.a_8042,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8042,plusproposities derden niet-EU,l10n_nsm.a_803
+l10n_nsm.a_8050,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8050,inserts,l10n_nsm.a_803
+l10n_nsm.a_8051,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8051,inserts EU,l10n_nsm.a_803
+l10n_nsm.a_8052,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8052,inserts niet-EU,l10n_nsm.a_803
+l10n_nsm.a_8060,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8060,barters,l10n_nsm.a_806
+l10n_nsm.a_8061,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8061,barters EU,l10n_nsm.a_806
+l10n_nsm.a_8062,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8062,barters niet-EU,l10n_nsm.a_806
+l10n_nsm.a_8063,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8063,barters online,l10n_nsm.a_806
+l10n_nsm.a_8070,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8070,evenementen,l10n_nsm.a_80
+l10n_nsm.a_8071,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8071,evenementen EU,l10n_nsm.a_80
+l10n_nsm.a_8072,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8072,evenementen niet-EU,l10n_nsm.a_80
+l10n_nsm.a_8080,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8080,artikelen,l10n_nsm.a_80
+l10n_nsm.a_8081,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8081,artikelen EU,l10n_nsm.a_80
+l10n_nsm.a_8082,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8082,artikelen niet-EU,l10n_nsm.a_80
+l10n_nsm.a_8090,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8090,boeken,l10n_nsm.a_80
+l10n_nsm.a_8091,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8091,boeken EU,l10n_nsm.a_80
+l10n_nsm.a_8092,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8092,boeken niet-EU,l10n_nsm.a_80
+l10n_nsm.a_8100,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8100,Omzet Losse Verkoop Aldipress (NL) 15-16,l10n_nsm.a_81
+l10n_nsm.a_8101,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8101,Omzet Losse Verkoop Aldipress (NL) 16-17,l10n_nsm.a_81
+l10n_nsm.a_8110,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8110,Omzet Losse Verkoop AMP (BE) 15-16,l10n_nsm.a_81
+l10n_nsm.a_8111,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8111,Omzet Losse Verkoop AMP (BE) 16-17,l10n_nsm.a_81
+l10n_nsm.a_8120,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8120,Losse verkoop btl wereld,l10n_nsm.a_81
+l10n_nsm.a_8130,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8130,losse verkoop overig,l10n_nsm.a_81
+l10n_nsm.a_8140,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8140,leesportefeuille,l10n_nsm.a_81
+l10n_nsm.a_8150,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8150,losse nummers,l10n_nsm.a_81
+l10n_nsm.a_8160,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8160,LV diversen deals,l10n_nsm.a_81
+l10n_nsm.a_8200,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8200,abonnementsopbrengsten NL,l10n_nsm.a_82
+l10n_nsm.a_8203,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8203,Abonnementsopbrengsten Belgie,l10n_nsm.a_82
+l10n_nsm.a_8211,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8211,acceptgiro toeslag,l10n_nsm.a_82
+l10n_nsm.a_8212,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8212,incasso kosten,l10n_nsm.a_82
+l10n_nsm.a_8213,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8213,Toeslag betaalwijze facturen,l10n_nsm.a_82
+l10n_nsm.a_8250,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8250,omzet produktverkopen,l10n_nsm.a_82
+l10n_nsm.a_8251,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8251,opbrengst productverkopen Belgie,l10n_nsm.a_82
+l10n_nsm.a_8300,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8300,banners/buttons,l10n_nsm.a_83
+l10n_nsm.a_8301,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8301,banners/buttons EU,l10n_nsm.a_83
+l10n_nsm.a_8302,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8302,banners/buttons niet-EU,l10n_nsm.a_83
+l10n_nsm.a_8350,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8350,Webshop verkopen,l10n_nsm.a_83
+l10n_nsm.a_8351,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8351,Webshop verkopen EU,l10n_nsm.a_83
+l10n_nsm.a_8352,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8352,Webshop verkopen EU niet-EU,l10n_nsm.a_83
+l10n_nsm.a_8402,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8402,Redactionele bijdragen,l10n_nsm.a_84
+l10n_nsm.a_8403,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8403,Distributie vergoedingen,l10n_nsm.a_84
+l10n_nsm.a_8501,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8501,Royalties boeken,l10n_nsm.a_85
+l10n_nsm.a_8600,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8600,voorverkoop,l10n_nsm.a_86
+l10n_nsm.a_8610,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,8610,kaartverkoop op locatie,l10n_nsm.a_86
+l10n_nsm.a_9150,account.data_account_type_expense,False,False,l10n_nsm.nsm_chart_template,Regular,9150,Reorganisatiekosten,l10n_nsm.a_9
+l10n_nsm.a_9900,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,9900,Vpb normaal resultaat,l10n_nsm.a_9
+l10n_nsm.a_9950,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,9950,Vpb bijzonder resultaat,l10n_nsm.a_9
+l10n_nsm.a_9999,account.data_account_type_income,False,False,l10n_nsm.nsm_chart_template,Regular,9999,Winst,l10n_nsm.a_9
+l10n_nsm.a_recv,account.data_account_type_receivable,True,False,l10n_nsm.nsm_chart_template,Receivable,1300,Debiteuren Advertentieverkopen,l10n_nsm.a_13
+l10n_nsm.a_1310,account.data_account_type_receivable,True,False,l10n_nsm.nsm_chart_template,Receivable,1310,Debiteuren Abonnementen,l10n_nsm.a_13
+l10n_nsm.a_1320,account.data_account_type_receivable,True,False,l10n_nsm.nsm_chart_template,Receivable,1320,Debiteuren overig,l10n_nsm.a_13
+l10n_nsm.a_1330,account.data_account_type_receivable,True,False,l10n_nsm.nsm_chart_template,Receivable,1330,Debiteuren Intercompany,l10n_nsm.a_13
+l10n_nsm.a_1340,account.data_account_type_receivable,True,False,l10n_nsm.nsm_chart_template,Receivable,1340,Debiteuren barters,l10n_nsm.a_13
+l10n_nsm.a_pay,account.data_account_type_payable,True,False,l10n_nsm.nsm_chart_template,Payable,1500,Crediteuren,l10n_nsm.a_15
+l10n_nsm.a_1510,account.data_account_type_payable,True,False,l10n_nsm.nsm_chart_template,Payable,1510,Crediteuren Intercompany,l10n_nsm.a_15
+l10n_nsm.a_1520,account.data_account_type_payable,True,False,l10n_nsm.nsm_chart_template,Payable,1520,Crediteuren personeel,l10n_nsm.a_15
+l10n_nsm.a_1540,account.data_account_type_payable,True,False,l10n_nsm.nsm_chart_template,Payable,1540,Crediteuren barters,l10n_nsm.a_15
+l10n_nsm.a_1000,account.data_account_type_cash,True,False,l10n_nsm.nsm_chart_template,Liquidity,1000,Kas,l10n_nsm.a_10
+l10n_nsm.a_1010,account.data_account_type_bank,False,False,l10n_nsm.nsm_chart_template,Liquidity,1010,RABOBANK - NL60RABO0314208844 ,l10n_nsm.a_10
+l10n_nsm.a_1011,account.data_account_type_bank,False,False,l10n_nsm.nsm_chart_template,Liquidity,1011,RABOBANK - NL87RABO0314209328,l10n_nsm.a_10
+l10n_nsm.a_1012,account.data_account_type_bank,False,False,l10n_nsm.nsm_chart_template,Liquidity,1012,RABOBANK - NL35RABO0310059925 ,l10n_nsm.a_10
