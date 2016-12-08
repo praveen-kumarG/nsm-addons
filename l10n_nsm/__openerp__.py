@@ -121,8 +121,8 @@ De extra cijfers worden dan achter het rekeningnummer aangevult met 'nullen'.
     'website' : 'http://www.magnus.nl',
     'depends' : ['l10n_nl',
     ],
-    'data' : ['account.account.template.csv',
-              "account_chart_netherlands.xml",
+    'data' : ["account_chart_netherlands.xml",
+              'account.account.template.csv',
               "account_fiscal_position_template.xml",
               "account_fiscal_position_tax_template.xml",
 
