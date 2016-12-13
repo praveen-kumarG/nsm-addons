@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- TODO: put here a reminder on what to do at the first edition -->
+        <record id="hon_issue_tree_view" model="ir.ui.view">
+            <field name="name">hon.tree.view</field>
+            <field name="model">hon.issue</field>
+            <!--field name="view_type">tree</field-->
+            <field name="arch" type="xml">
+                <tree string="Hon Issues">
+                    <field name="account_analytic_id"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="hon_issue_form" model="ir.ui.view">
+            <field name="name">hon_issue.form</field>
+            <field name="model">hon.issue</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <form string="Hon Issue" version="7.0">
+                    <sheet string="Hon Issue">
+                        <group>
+                            <group>
+                                <field name="account_analytic_id"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Honorarium Lines">
+                                <field name="hon_line">
+                                    <tree string="Hon lines" editable="bottom">
+                                        <field name="sequence" widget="handle" />
+                                        <field name="name"/>
+                                        <field name="employee"/>
+                                        <field name="employee_id" />
+                                        <field name="partner_id" />
+                                        <field name="product_category_id" />
+                                        <field name="product_id"/>
+                                        <field name="price_unit"/>
+                                        <field name="quantity" />
+                                        <!--field name="price_subtotal"/-->
+                                    </tree>
+                                </field>
+                            </page>
+
+                            <page string="Other Info">
+                                <div class="oe_clear">
+                                    <label for="comment"/>
+                                </div>
+                                <field name="comment"/>
+                            </page>
+
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+         <!--record id="view_claims_filter" model="ir.ui.view">
+            <field name="name">claim.select</field>
+            <field name="model">claim</field>
+            <field name="arch" type="xml">
+                <search string="Search Claim">
+                    <field name="contrrek" string="Claim" filter_domain="['|','|', ('contrrek','ilike',self), ('zpartner','ilike',self), ('batchcode', 'ilike', self)]"/>
+                    <filter name="tax_return" string="Tax Return" domain="[('tax_return_sent','=',True)]" help="Tax return processed"/>
+                    <separator/>
+                    <field name="zpartner" operator="child_of"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                    	<filter name="group_by_debtor" string="Debtor" context="{'group_by':'zpartner'}"/>
+                        <filter name="group_by_batchcode" string="Batchcode" context="{'group_by':'batchcode'}"/>
+                        <separator/>
+                    </group>
+               </search>
+            </field>
+         </record-->
+
+        <record id="action_hon_issue_view" model="ir.actions.act_window">
+            <field name="name">Hon Issues</field>
+            <field name="res_model">hon.issue</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field eval="False" name="view_id"/>
+            <!--field name="search_view_id" ref="view_hon_issue_filter"/-->
+        </record>
+
+        <record id="action_hon_issue_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="action_hon_issue_view"/>
+        </record>
+
+        <record id="action_hon_issue_view1" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hon_issue_form"/>
+            <field name="act_window_id" ref="action_hon_issue_view"/>
+        </record>
+
+
+        <menuitem action="action_hon_issue_view"
+                  name="HON"
+                  id="menu_action_hon"
+                  parent="account.menu_finance_periodical_processing"
+                  sequence="10"
+                  groups=""
+                  />
+
+    </data>
+</openerp>
