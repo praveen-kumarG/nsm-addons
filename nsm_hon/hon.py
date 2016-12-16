@@ -29,7 +29,8 @@ class hon_issue(orm.Model):
     _name = "hon.issue"
 
     _columns = {
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Tijdschrift/Nummer', required=True),
+        'main_account_analytic_id': fields.many2one('account.analytic.account', 'Tijdschrift/Nummer', domain=[('type','=','view'), ('portal_main', '=', True)]),
+        'number': fields.char('Uitgave Nr.', size=64, select=True ),
         'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
         'hon_line': fields.one2many('hon.line', 'hon_id', 'Hon Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([
@@ -53,9 +54,6 @@ class hon_issue(orm.Model):
 class hon_line(orm.Model):
 
     _name = "hon.line"
-
-
-
 
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence of this line when displaying the invoice."),
