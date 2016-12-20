@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+
+        <record id="view_nsm_res_partner_form_hon" model="ir.ui.view">
+            <field name="name">res.partner.form.hon</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <page string="History" position="before" version="7.0">
+                    <page string="Hon Prices" col="4" name="hon_prices" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                        <group>
+                            <group>
+                                <field name="product_price_ids">
+                                    <tree string="Product Prices per Vendor" editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="price_unit"/>
+                                        <field name="company_id" invisible="1"/>
+                                        <field name="comment" />
+                                    </tree>
+                                </field>
+                            </group>
+                        </group>
+                    </page>
+                </page>
+            </field>
+        </record>
+    </data>
+</openerp>

@@ -46,6 +46,7 @@ representing the Issue and to the products representing the type and price of th
     ],
     'data' : ['security/ir.model.access.csv',
               "hon.xml",
+              "partner_product_price.xml",
     ],
     'demo' : [],
     'installable': True,
