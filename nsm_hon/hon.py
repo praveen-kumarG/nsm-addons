@@ -29,7 +29,7 @@ class hon_issue(orm.Model):
     _name = "hon.issue"
 
     _columns = {
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Titel/Nummer', required=True, domain=[('type','!=','view'), ('portal_sub', '=', True)]),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Title/Issue', required=True, domain=[('type','!=','view'), ('portal_sub', '=', True)]),
         'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
         'hon_line': fields.one2many('hon.line', 'hon_id', 'Hon Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([
@@ -48,6 +48,9 @@ class hon_issue(orm.Model):
             self.pool.get('res.company')._company_default_get(cr, uid, 'hon.issue', context=c),
         'state': 'draft',
     }
+    _sql_constraints = [
+        ('account_analytic_company_uniq', 'unique (account_analytic_id, company_id)', 'The Issue must be unique per company !'),
+    ]
 
 
     def onchange_analytic_ac(self, cr, uid, ids, analytic, context={}):
@@ -133,11 +136,12 @@ class hon_line(orm.Model):
         return res_final
 
 
-    def product_id_change(self, cr, uid, ids, product,  partner_id=False, price_unit=False,  company_id=None, context=None ):
-        import pdb; pdb.set_trace()
+    def product_id_change(self, cr, uid, ids, product,  partner_id=False, price_unit=False, context=None ):
+
         if context is None:
             context = {}
-        company_id = company_id if company_id is not None else context.get('company_id',False)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        company_id = context.get('company_id', user.company_id.id)
         context = dict(context)
         context.update({'company_id': company_id, 'force_company': company_id})
         if not partner_id :
@@ -152,14 +156,12 @@ class hon_line(orm.Model):
         a = res.property_account_expense.id
         if a:
             result['account_id'] = a
-
+        #import pdb; pdb.set_trace()
         pricelist = self.pool.get('partner.product.price').search(cr, uid, [('product_id','=',product), ('partner_id','=', partner_id), ('company_id','=', company_id )], context=context)
         if len(pricelist) >= 1 :
-            [price] = self.pool.get('partner.product.price').browse(cr, uid, pricelist, context=context )
-
-
-            if price.price_unit:
-                result.update( {'price_unit': price.price_unit} )
+            price = self.pool.get('partner.product.price').browse(cr, uid, pricelist, context=context )
+            if price :
+                result.update( {'price_unit': price[0].price_unit} )
         else:
             result.update( {'price_unit': price_unit} )
 

@@ -1,0 +1,262 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* nsm_hon
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-12-29 17:51+0000\n"
+"PO-Revision-Date: 2016-12-29 19:13+0100\n"
+"Last-Translator: Willem Hulshof <w.hulshof@magnus.nl>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.11\n"
+"Language: nl_NL\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#. module: nsm_hon
+#: help:hon.issue,state:0
+msgid ""
+" * The 'Draft' status is used when a user is encoding a new and unconfirmed Honorarium Issue.             \n"
+"* The 'Open' status is used when user create invoice.            \n"
+"* The 'Cancelled' status is used when user cancel Honorarium Issue."
+msgstr ""
+"* De status \"Concept\" wordt gebruikt als de gebruiker een nieuwe en nog niet bevestigde Honorarium Editie invult. \n"
+"* De status \"Open\" wordt gebruikt als de gebruiker de facturen genereert. \n"
+"* De status \"Geannuleerd\" betekent, dat de gebruiker de Honorarium Editie heeft geannuleerd."
+
+#. module: nsm_hon
+#: field:hon.line,account_analytic_id:0
+msgid "Editie"
+msgstr "Editie"
+
+#. module: nsm_hon
+#: model:ir.ui.menu,name:nsm_hon.menu_action_hon
+#: model:ir.ui.menu,name:nsm_hon.menu_action_hon_main
+msgid "Hon"
+msgstr "Hon"
+
+#. module: nsm_hon
+#: field:hon.line,product_category_id:0
+msgid "Page Type"
+msgstr "Soort"
+
+#. module: nsm_hon
+#: field:hon.issue,account_analytic_id:0
+msgid "Titel/Nummer"
+msgstr "Titel/Nummer"
+
+#. module: nsm_hon
+#: code:addons/nsm_hon/hon.py:147
+#, python-format
+msgid "No Product Defined!"
+msgstr "Geen Product gedefinieerd"
+
+#. module: nsm_hon
+#: field:hon.line,price_unit:0 field:partner.product.price,price_unit:0
+msgid "Unit Price"
+msgstr "Prijs/stuk"
+
+#. module: nsm_hon
+#: selection:hon.issue,state:0
+msgid "Draft"
+msgstr "Concept"
+
+#. module: nsm_hon
+#: model:ir.model,name:nsm_hon.model_partner_product_price
+msgid "partner.product.price"
+msgstr ""
+
+#. module: nsm_hon
+#: view:hon.issue:0
+msgid "Hon Issue"
+msgstr "Hon Editie"
+
+#. module: nsm_hon
+#: field:hon.line,employee:0
+msgid "Employee"
+msgstr "Medewerker"
+
+#. module: nsm_hon
+#: field:res.partner,product_price_ids:0
+msgid "Product Price"
+msgstr "Prijs"
+
+#. module: nsm_hon
+#: field:hon.line,uos_id:0
+msgid "Unit of Measure"
+msgstr "Maat Eenheid"
+
+#. module: nsm_hon
+#: field:hon.line,hon_id:0
+msgid "Issue Reference"
+msgstr "Ref Editie"
+
+#. module: nsm_hon
+#: field:hon.issue,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: nsm_hon
+#: field:hon.line,product_id:0 field:partner.product.price,product_id:0
+msgid "Product"
+msgstr "Product"
+
+#. module: nsm_hon
+#: view:hon.issue:0 model:ir.actions.act_window,name:nsm_hon.action_hon_issue
+#: model:ir.ui.menu,name:nsm_hon.menu_action_hon_detail
+msgid "Hon Issues"
+msgstr "Hon Edities"
+
+#. module: nsm_hon
+#: help:hon.line,sequence:0
+msgid "Gives the sequence of this line when displaying the honorarium issue."
+msgstr "Bepaald de rangorde van deze regel bij het tonen van de Honorarium Editie"
+
+#. module: nsm_hon
+#: field:hon.line,name:0
+msgid "Description"
+msgstr "Omschrijving"
+
+#. module: nsm_hon
+#: field:hon.issue,company_id:0 field:hon.line,company_id:0
+#: field:partner.product.price,company_id:0
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: nsm_hon
+#: field:hon.line,nr_of_columns:0
+msgid "#Cols"
+msgstr "Aantal kolommen"
+
+#. module: nsm_hon
+#: view:hon.issue:0
+msgid "Other Info"
+msgstr "Overige Informatie"
+
+#. module: nsm_hon
+#: field:hon.issue,hon_line:0
+msgid "Hon Lines"
+msgstr "Hon Regels"
+
+#. module: nsm_hon
+#: code:addons/nsm_hon/hon.py:124 code:addons/nsm_hon/hon.py:145
+#, python-format
+msgid "You must first select a partner!"
+msgstr "U dient eerst een Relatie te selecteren"
+
+#. module: nsm_hon
+#: code:addons/nsm_hon/hon.py:124 code:addons/nsm_hon/hon.py:145
+#, python-format
+msgid "No Partner Defined!"
+msgstr "Geen Relatie gedefinieerd"
+
+#. module: nsm_hon
+#: field:hon.line,quantity:0
+msgid "Quantity"
+msgstr "Hoeveelheid"
+
+#. module: nsm_hon
+#: model:ir.model,name:nsm_hon.model_hon_line
+msgid "hon.line"
+msgstr "hon.line"
+
+#. module: nsm_hon
+#: field:hon.line,account_id:0
+msgid "Account"
+msgstr "Kostensoort"
+
+#. module: nsm_hon
+#: view:res.partner:0
+msgid "Product Prices per Vendor"
+msgstr "Prijzen per Leverancier"
+
+#. module: nsm_hon
+#: view:res.partner:0
+msgid "Hon Prices"
+msgstr "Hon Prijzen"
+
+#. module: nsm_hon
+#: help:hon.line,account_id:0
+msgid "The income or expense account related to the selected product."
+msgstr "De omzet/kostesoort van het geselecteerde product."
+
+#. module: nsm_hon
+#: field:hon.line,activity_id:0
+msgid "Redactie"
+msgstr "Redactie"
+
+#. module: nsm_hon
+#: model:ir.model,name:nsm_hon.model_hon_issue
+msgid "hon.issue"
+msgstr "hon.issue"
+
+#. module: nsm_hon
+#: field:hon.line,price_subtotal:0
+msgid "Amount"
+msgstr "Bedrag"
+
+#. module: nsm_hon
+#: help:hon.line,employee:0
+msgid "It indicates that the partner is an employee."
+msgstr "Geeft aan dat de relatie een medewerker is"
+
+#. module: nsm_hon
+#: view:hon.issue:0
+msgid "Honorarium Lines"
+msgstr "Honorarium Regels"
+
+#. module: nsm_hon
+#: selection:hon.issue,state:0
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+#. module: nsm_hon
+#: field:partner.product.price,partner_id:0
+msgid "Vendor"
+msgstr "Leverancier"
+
+#. module: nsm_hon
+#: view:res.partner:0
+msgid "History"
+msgstr "Historie"
+
+#. module: nsm_hon
+#: code:addons/nsm_hon/hon.py:147
+#, python-format
+msgid "You must first select a Product!"
+msgstr "U dient eerst een Product te selecteren"
+
+#. module: nsm_hon
+#: field:hon.line,sequence:0
+msgid "Sequence"
+msgstr "Rangorde"
+
+#. module: nsm_hon
+#: view:hon.issue:0
+msgid "Hon lines"
+msgstr "Hon regels"
+
+#. module: nsm_hon
+#: field:hon.line,page_number:0
+msgid "Pgnr"
+msgstr "Pgnr"
+
+#. module: nsm_hon
+#: field:hon.line,partner_id:0 model:ir.model,name:nsm_hon.model_res_partner
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: nsm_hon
+#: selection:hon.issue,state:0
+msgid "Open"
+msgstr "Open"
+
+#. module: nsm_hon
+#: field:hon.issue,comment:0 field:partner.product.price,comment:0
+msgid "Additional Information"
+msgstr "Extra Informatie"

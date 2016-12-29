@@ -20,7 +20,7 @@
             <field name="priority">2</field>
             <field name="arch" type="xml">
                 <form string="Hon Issue" version="7.0">
-                    <sheet string="Hon Issue">
+                    <!--sheet string="Hon Issue"-->
                         <group>
                             <group>
                                 <field name="state" invisible="1"/>
@@ -38,13 +38,13 @@
                                         <field name="name"/>
                                         <field name="nr_of_columns"/>
                                         <field name="partner_id" required="True" on_change="partner_id_change(partner_id, context )"/>
-                                        <field name="employee" invisible="0"/>
+                                        <field name="employee" invisible="1"/>
                                         <field name="account_analytic_id" invisible="1"/>
                                         <field name="activity_id" invisible="0" required="True" domain="[('project_ids', 'in', parent.account_analytic_id)]"/>
                                         <field name="product_category_id" required="True"/>
-                                        <field name="product_id" on_change="product_id_change(product_id, partner_id, price_unit, company_id, context )"
+                                        <field name="product_id" on_change="product_id_change(product_id, partner_id, price_unit, context )"
                                                domain="[('categ_id', '=', product_category_id)]"/>
-                                        <field name="account_id" />
+                                        <field name="account_id" invisible="1"/>
                                         <field name="price_unit" attrs="{'invisible': [('employee','=',True)]}"/>
                                         <field name="quantity" attrs="{'invisible': [('employee','=',True)]}"/>
                                         <field name="price_subtotal" attrs="{'invisible': [('employee','=',True)]}"/>
@@ -60,7 +60,7 @@
                             </page>
 
                         </notebook>
-                    </sheet>
+                    <!--/sheet-->
                 </form>
             </field>
         </record>

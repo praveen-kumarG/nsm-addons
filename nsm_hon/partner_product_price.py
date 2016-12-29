@@ -37,7 +37,7 @@ class partner_product_price(orm.Model):
     }
 
     _defaults = {
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'hon.issue', context=c),
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'partner.product.price', context=c),
     }
 
 

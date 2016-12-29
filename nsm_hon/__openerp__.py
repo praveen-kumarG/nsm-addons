@@ -45,6 +45,7 @@ representing the Issue and to the products representing the type and price of th
     'depends' : ['nsm_supportal_extension',
     ],
     'data' : ['security/ir.model.access.csv',
+              "security/security.xml",
               "hon.xml",
               "partner_product_price.xml",
     ],
