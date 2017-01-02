@@ -26,7 +26,7 @@
                         <button name="%(action_view_hon_issue_line_make_invoice)d" string="Create Invoices" type="action" states="open" class="oe_highlight" groups="base.group_user"/>
                         <button name="cancel" states="draft,open" string="Cancel Issue" groups="base.group_user"/>
                         <button name="back_draft" states="open" string="back to Draft" type="workflow" groups="base.group_user"/>
-                        <!--button name="invoice_cancel" states="invoice_except" string="Cancel Issue" groups="base.group_user"/-->
+                        <button name="invoice_cancel" states="open,manual" string="Cancel Issue" groups="base.group_user"/-->
                         <field name="state" widget="statusbar" statusbar_visible="draft,open,manual,done" statusbar_colors='{"draft":"blue", "open":"red","manual":"blue"}'/>
                     </header>
 

@@ -27,7 +27,7 @@ class hon_issue_line_make_invoice(osv.osv_memory):
     _name = "hon.issue.line.make.invoice"
     _description = "Honorarium Issue Line Make_invoice"
 
-    def _prepare_invoice(self, cr, uid, partner, issue, lines, context=None):
+    def _prepare_invoice(self, cr, uid, partner, issue, category, lines, context=None):
 
         a = partner.property_account_payable.id
         if partner and partner.property_payment_term.id:
@@ -44,11 +44,12 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             'invoice_line': [(6, 0, lines)],
             'comment': issue.comment,
             'payment_term': pay_term,
+            'journal_id': issue.company_id.hon_journal and issue.company_id.hon_journal.id or False,
             'fiscal_position': partner.property_account_position.id,
             'user_id': uid,
             'company_id': issue.company_id and issue.company_id.id or False,
             'date_invoice': fields.date.today(),
-            #'product_category':
+            'product_category': category.id,
             'main_account_analytic_id': issue.account_analytic_id.parent_id.id
         }
 
@@ -70,7 +71,7 @@ class hon_issue_line_make_invoice(osv.osv_memory):
         res = False
         invoices = {}
 
-        def make_invoice(partner, issue, lines):
+        def make_invoice(partner, issue, category, lines):
             """
                  To make invoices.
 
@@ -80,7 +81,7 @@ class hon_issue_line_make_invoice(osv.osv_memory):
                  @return:
 
             """
-            inv = self._prepare_invoice(cr, uid, partner, issue, lines)
+            inv = self._prepare_invoice(cr, uid, partner, issue, category, lines)
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
             return inv_id
 
@@ -91,21 +92,22 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             for line in hon_issue_line_obj.browse(cr, uid, issue.hon_issue_line, context=context):
                 line_id = line.id
                 if (not line_id.invoiced) and (line_id.state not in ('draft', 'cancel')) and (not line_id.employee):
-                    if not (line_id.issue_id.id, line_id.partner_id.id) in invoices:
-                        invoices[(line_id.issue_id.id, line_id.partner_id.id)] = []
+                    if not (line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id) in invoices:
+                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)] = []
                     inv_line_id = hon_issue_line_obj.invoice_line_create(cr, uid, [line_id.id])
                     for lid in inv_line_id:
-                        invoices[(line_id.issue_id.id, line_id.partner_id.id)].append(lid)
+                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)].append(lid)
         if not invoices:
             raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Honorarium Issue Line due to one of the following reasons:\n1.The state of this hon issue line is either "draft" or "cancel"!\n2.The Honorarium Issue Line is Invoiced!'))
 
-        for issue_partner, il in invoices.items():
-            import pdb; pdb.set_trace()
-            issue_id = issue_partner[0]
-            partner_id = issue_partner[1]
-            issue = self.pool.get('hon.issue').browse(cr, uid, issue_id, context=context)
+        for issue_partner_category, il in invoices.items():
+            issue_id = issue_partner_category[0]
+            partner_id = issue_partner_category[1]
+            category_id = issue_partner_category[2]
+            issue = hon_issue_obj.browse(cr, uid, issue_id, context=context)
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-            res = make_invoice(partner, issue, il)
+            category = self.pool.get('product.category').browse(cr, uid, category_id, context=context)
+            res = make_invoice(partner, issue, category, il)
             cr.execute('INSERT INTO hon_issue_invoice_rel \
                     (issue_id,invoice_id) values (%s,%s)', (issue.id, res))
             flag = True
