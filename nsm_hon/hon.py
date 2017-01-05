@@ -524,7 +524,7 @@ class hon_issue_line(orm.Model):
 
         return res_final
 
-    def product_id_change(self, cr, uid, ids, product,  partner_id=False, price_unit=False, context=None ):
+    def product_id_change(self, cr, uid, ids, product,  partner_id=False, account_analytic_id=False, price_unit=False, context=None ):
         if context is None:
             context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -536,6 +536,8 @@ class hon_issue_line(orm.Model):
         if not product:
             raise osv.except_osv(_('No Product Defined!'),_("You must first select a Product!") )
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+        analytic_parent = self.pool.get('account.analytic.account').read(cr, uid, account_analytic_id, 'parent_id', context=context)
+
         if part.lang:
             context.update({'lang': part.lang})
         result = {}
@@ -543,7 +545,8 @@ class hon_issue_line(orm.Model):
         a = res.property_account_expense.id
         if a:
             result['account_id'] = a
-        pricelist = self.pool.get('partner.product.price').search(cr, uid, [('product_id','=',product), ('partner_id','=', partner_id), ('company_id','=', company_id )], context=context)
+        pricelist = self.pool.get('partner.product.price').search(cr, uid, [('product_id','=',product),
+                                 ('partner_id','=', partner_id), ('analytic_account_id','=', analytic_parent),('company_id','=', company_id )], context=context)
         if len(pricelist) >= 1 :
             price = self.pool.get('partner.product.price').browse(cr, uid, pricelist, context=context )
             if price :

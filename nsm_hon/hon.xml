@@ -26,7 +26,7 @@
                         <button name="%(action_view_hon_issue_line_make_invoice)d" string="Create Invoices" type="action" states="open" class="oe_highlight" groups="base.group_user"/>
                         <button name="cancel" states="draft,open" string="Cancel Issue" groups="base.group_user"/>
                         <button name="back_draft" states="open" string="back to Draft" type="workflow" groups="base.group_user"/>
-                        <button name="invoice_cancel" states="open,manual" string="Cancel Issue" groups="base.group_user"/-->
+                        <button name="invoice_cancel" states="open,manual" string="Cancel Issue" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,open,manual,done" statusbar_colors='{"draft":"blue", "open":"red","manual":"blue"}'/>
                     </header>
 
@@ -56,7 +56,7 @@
                                         <field name="account_analytic_id" invisible="1"/>
                                         <field name="activity_id" invisible="0" required="True" domain="[('project_ids', 'in', parent.account_analytic_id)]"/>
                                         <field name="product_category_id" required="True"/>
-                                        <field name="product_id" on_change="product_id_change(product_id, partner_id, price_unit, context )"
+                                        <field name="product_id" on_change="product_id_change(product_id, partner_id, parent.account_analytic_id, price_unit, context )"
                                                domain="[('categ_id', '=', product_category_id)]"/>
                                         <field name="account_id" invisible="1"/>
                                         <field name="price_unit" attrs="{'invisible': [('employee','=',True)]}"/>

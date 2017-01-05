@@ -31,4 +31,5 @@ import partner_product_price
 import wizard
 import account_invoice
 import res_company
+import account_analytic
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

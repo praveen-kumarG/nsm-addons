@@ -46,6 +46,8 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             'payment_term': pay_term,
             'journal_id': issue.company_id.hon_journal and issue.company_id.hon_journal.id or False,
             'fiscal_position': partner.property_account_position.id,
+            'supplier_invoice_number': "P%dHON%dD%d" % (partner.id, issue.id,fields.date.today()),
+            'section_id': issue.account_analytic_id.section_ids[0],
             'user_id': uid,
             'company_id': issue.company_id and issue.company_id.id or False,
             'date_invoice': fields.date.today(),

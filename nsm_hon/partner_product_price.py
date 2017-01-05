@@ -29,10 +29,11 @@ class partner_product_price(orm.Model):
     _name = "partner.product.price"
 
     _columns = {
-        'product_id': fields.many2one('product.product', 'Product', required=True,),
+        'product_id': fields.many2one('product.product', 'Product', ),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Title', required=True, domain=[('type','=','view'), ('portal_main', '=', True)]),
         'partner_id': fields.many2one('res.partner', 'Vendor', required=True,),
         'company_id': fields.many2one('res.company', 'Company', required=True,),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
+        'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Product Price')),
         'comment': fields.text('Additional Information'),
     }
 
@@ -49,7 +50,7 @@ class res_partner(orm.Model):
 
     _columns = {
 
-        'product_price_ids': fields.one2many('partner.product.price', 'partner_id','Product Price', ),
+        'product_price_ids': fields.one2many('partner.product.price', 'partner_id','Product Price per Title', ),
 
     }
 
