@@ -536,6 +536,8 @@ class hon_issue_line(orm.Model):
         if not product:
             raise osv.except_osv(_('No Product Defined!'),_("You must first select a Product!") )
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+        #import pdb;
+        #pdb.set_trace()
         analytic_parent = self.pool.get('account.analytic.account').read(cr, uid, account_analytic_id, 'parent_id', context=context)
 
         if part.lang:
@@ -546,7 +548,7 @@ class hon_issue_line(orm.Model):
         if a:
             result['account_id'] = a
         pricelist = self.pool.get('partner.product.price').search(cr, uid, [('product_id','=',product),
-                                 ('partner_id','=', partner_id), ('analytic_account_id','=', analytic_parent),('company_id','=', company_id )], context=context)
+                                 ('partner_id','=', partner_id), ('analytic_account_id','=', analytic_parent['id']),('company_id','=', company_id )], context=context)
         if len(pricelist) >= 1 :
             price = self.pool.get('partner.product.price').browse(cr, uid, pricelist, context=context )
             if price :
