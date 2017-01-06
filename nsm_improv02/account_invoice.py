@@ -34,24 +34,49 @@ class account_invoice(osv.osv):
     _inherit = 'account.invoice'
 
     def _amount_all(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        for invoice in self.browse(cr, uid, ids, context=context):
-            res[invoice.id] = {
-                'amount_untaxed': 0.0,
-                'amount_tax': 0.0,
-                'amount_total': 0.0,
-                'verif_tresh_exceeded': None,
-            }
-            for line in invoice.invoice_line:
-                res[invoice.id]['amount_untaxed'] += line.price_subtotal
-            for line in invoice.tax_line:
-                res[invoice.id]['amount_tax'] += line.amount
+        if context is None:
+            context = {}
 
-            res[invoice.id]['amount_total'] = res[invoice.id]['amount_tax'] + res[invoice.id]['amount_untaxed']
-            if invoice.company_id.verify_setting < res[invoice.id]['amount_untaxed']:
-                res[invoice.id]['verif_tresh_exceeded'] = True
-            else:
-                res[invoice.id]['verif_tresh_exceeded'] = False
+        res = {}
+        if context.get('verif_setting_change'):
+            company_ids = context.get('company_ids', [])
+            company_obj = self.pool['res.company'].browse(cr, uid, company_ids, context=context)
+            for company in company_obj:
+                treshold = company.verify_setting
+                company_id = company.id
+
+                cr.execute("""UPDATE account_invoice
+                            SET verif_tresh_exceeded=True
+                            WHERE amount_untaxed > %s
+                            AND company_id= %s
+                            AND type='in_invoice'
+                            AND state!='paid';
+                            UPDATE account_invoice
+                            SET verif_tresh_exceeded=False
+                            WHERE amount_untaxed <= %s
+                            AND company_id= %s
+                            AND type='in_invoice'
+                            AND state!='paid'
+                            """, ( treshold, company_id, treshold, company_id,))
+
+        else:
+            for invoice in self.browse(cr, uid, ids, context=context):
+                res[invoice.id] = {
+                    'amount_untaxed': 0.0,
+                    'amount_tax': 0.0,
+                    'amount_total': 0.0,
+                    'verif_tresh_exceeded': None,
+                }
+                for line in invoice.invoice_line:
+                    res[invoice.id]['amount_untaxed'] += line.price_subtotal
+                for line in invoice.tax_line:
+                    res[invoice.id]['amount_tax'] += line.amount
+
+                res[invoice.id]['amount_total'] = res[invoice.id]['amount_tax'] + res[invoice.id]['amount_untaxed']
+                if invoice.company_id.verify_setting < res[invoice.id]['amount_untaxed']:
+                    res[invoice.id]['verif_tresh_exceeded'] = True
+                else:
+                    res[invoice.id]['verif_tresh_exceeded'] = False
         return res
 
     def _get_invoice_line(self, cr, uid, ids, context=None):
@@ -69,23 +94,11 @@ class account_invoice(osv.osv):
 
 
     def _setting_change(self, cr, uid, ids, context=None):
-        res = {}
-        for i in ids:
-            company_obj = self.pool['res.company'].browse(cr, uid, i, context=context)
-            treshold = company_obj.verify_setting
-
-            res[i]=cr.execute("""UPDATE account_invoice
-                    SET verif_tresh_exceeded=True
-                    WHERE amount_untaxed > %s
-                    AND type='in_invoice'
-                    AND state!='paid';
-                    UPDATE account_invoice
-                    SET verif_tresh_exceeded=False
-                    WHERE amount_untaxed < %s
-                    AND type='in_invoice'
-                    AND state!='paid'
-                    """, ( treshold, treshold,))
-
+        if context is None:
+            context = {}
+        context['company_ids'] = ids
+        context['verif_setting_change'] = True
+        res = ids
         return res
 
     _columns = {
@@ -130,9 +143,8 @@ class account_invoice(osv.osv):
         'verif_tresh_exceeded': fields.function(_amount_all,  type="boolean", string="Verification Treshold", track_visibility='always',
             store={
                 'account.invoice':(lambda self, cr, uid, ids, c={}: ids,['invoice_line'], 20),
-                'account.invoice.tax': (_get_invoice_tax, None, 20),
-                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount','invoice_id'], 20),
-                'res.company': (_setting_change, ['verify_setting'], 20),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','quantity','discount','invoice_id'], 20),
+                'res.company': (_setting_change, ['verify_setting'], 10),
             },
             multi='all'),
 
