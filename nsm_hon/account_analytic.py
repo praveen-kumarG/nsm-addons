@@ -25,8 +25,6 @@ class account_analytic(osv.osv):
     _inherit = 'account.analytic.account'
 
     def _supplier_analytic_search(self, cr, uid, obj, name, args,  context=None):
-        import pdb;
-        pdb.set_trace()
         if not args or not isinstance(args[0][2], (int, long)) or not args[0][2]:
             return [('id', '=', False)]  # maybe raise NotImplemented?
         user = self.pool['res.users'].browse(cr, uid, args[0][2], context=context)

@@ -205,7 +205,7 @@ class hon_issue(orm.Model):
         if len(inv_ids)>1:
             result['domain'] = "[('id','in',["+','.join(map(str, inv_ids))+"])]"
         else:
-            res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+            res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
             result['views'] = [(res and res[1] or False, 'form')]
             result['res_id'] = inv_ids and inv_ids[0] or False
         return result
@@ -366,6 +366,7 @@ class hon_issue_line(orm.Model):
         'company_id': fields.related('issue_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'price_subtotal': fields.function(_amount_line, string='Amount', type="float",
             digits_compute= dp.get_precision('Account'), store=True),
+        'estimated_price': fields.float('Estimate',),
         'invoice_lines': fields.many2many('account.invoice.line', 'hon_issue_line_invoice_rel', 'hon_issue_line_id',
                                           'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.function(_fnct_line_invoiced, string='Invoiced', type='boolean',
@@ -536,10 +537,8 @@ class hon_issue_line(orm.Model):
         if not product:
             raise osv.except_osv(_('No Product Defined!'),_("You must first select a Product!") )
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-        #import pdb;
-        #pdb.set_trace()
-        analytic_parent = self.pool.get('account.analytic.account').read(cr, uid, account_analytic_id, 'parent_id', context=context)
-
+        aap = self.pool.get('account.analytic.account').read(cr, uid, account_analytic_id, ['parent_id'], context=context)
+        analytic_parent = aap['parent_id']
         if part.lang:
             context.update({'lang': part.lang})
         result = {}
@@ -548,7 +547,7 @@ class hon_issue_line(orm.Model):
         if a:
             result['account_id'] = a
         pricelist = self.pool.get('partner.product.price').search(cr, uid, [('product_id','=',product),
-                                 ('partner_id','=', partner_id), ('analytic_account_id','=', analytic_parent['id']),('company_id','=', company_id )], context=context)
+                                 ('partner_id','=', partner_id), ('analytic_account_id','in', [analytic_parent[0]]),('company_id','=', company_id )], context=context)
         if len(pricelist) >= 1 :
             price = self.pool.get('partner.product.price').browse(cr, uid, pricelist, context=context )
             if price :

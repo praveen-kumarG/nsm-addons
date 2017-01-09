@@ -29,6 +29,7 @@ class partner_product_price(orm.Model):
     _name = "partner.product.price"
 
     _columns = {
+        'name': fields.char('Description', size=64, ),
         'product_id': fields.many2one('product.product', 'Product', ),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Title', required=True, domain=[('type','=','view'), ('portal_main', '=', True)]),
         'partner_id': fields.many2one('res.partner', 'Vendor', required=True,),

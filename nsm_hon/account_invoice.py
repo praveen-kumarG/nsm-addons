@@ -29,5 +29,5 @@ class account_invoice_line(orm.Model):
 
 
     _columns = {
-        'activity': fields.many2one('project.activity_al', 'Activity'),
+        'activity_id': fields.many2one('project.activity_al', 'Activity'),
     }

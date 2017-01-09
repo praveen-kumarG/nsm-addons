@@ -61,6 +61,7 @@
                                         <field name="account_id" invisible="1"/>
                                         <field name="price_unit" attrs="{'invisible': [('employee','=',True)]}"/>
                                         <field name="quantity" attrs="{'invisible': [('employee','=',True)]}"/>
+                                        <field name="estimated_price" attrs="{'invisible': [('employee','=',True)]}"/>
                                         <field name="price_subtotal" attrs="{'invisible': [('employee','=',True)]}"/>
                                     </tree>
                                 </field>
