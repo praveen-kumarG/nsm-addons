@@ -144,7 +144,8 @@ class hon_issue(orm.Model):
         if not ids:
             return res
         iss_obj = self.browse(cr,uid,ids)
-        analytic_account = self.pool.get('account.analytic.account').browse(cr, uid, analytic, context)
+        analytic_account = self.pool['account.analytic.account'].browse(cr, uid, analytic, context)
+        res['name'] = analytic_account.name
         llist = []
         if iss_obj[0].hon_issue_line:
             for line in iss_obj[0].hon_issue_line:
@@ -153,7 +154,6 @@ class hon_issue(orm.Model):
                     res['hon_issue_line'] = llist
                     war['title'] = 'Let op!'
                     war['message'] = 'U heeft de Titel/Nummer aangepast. Nu moet u opnieuw Redacties selecteren in de HONregel(s)'
-        res['name'] = analytic_account.name
         return {'value': res, 'warning': war}
 
     """def manual_invoice(self, cr, uid, ids, context=None):
@@ -525,7 +525,23 @@ class hon_issue_line(orm.Model):
 
         return res_final
 
-    def product_id_change(self, cr, uid, ids, product,  partner_id=False, account_analytic_id=False, price_unit=False, context=None ):
+    def price_quantity_change(self, cr, uid, ids, partner_id=False, price_unit=False, quantity=False, price_subtotal=False, context=None):
+        if context is None:
+            context = {}
+        if not partner_id :
+            raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
+        result = {}
+        if price_unit :
+            if quantity :
+                price = price_unit * quantity
+            result['price_subtotal'] = price
+        else:
+            result['price_subtotal'] = price_subtotal
+        res_final = {'value':result,}
+        return res_final
+
+
+    def product_id_change(self, cr, uid, ids, product,  partner_id=False, price_unit=False, context=None ):
         if context is None:
             context = {}
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -537,8 +553,6 @@ class hon_issue_line(orm.Model):
         if not product:
             raise osv.except_osv(_('No Product Defined!'),_("You must first select a Product!") )
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-        aap = self.pool.get('account.analytic.account').read(cr, uid, account_analytic_id, ['parent_id'], context=context)
-        analytic_parent = aap['parent_id']
         if part.lang:
             context.update({'lang': part.lang})
         result = {}
@@ -547,7 +561,7 @@ class hon_issue_line(orm.Model):
         if a:
             result['account_id'] = a
         pricelist = self.pool.get('partner.product.price').search(cr, uid, [('product_id','=',product),
-                                 ('partner_id','=', partner_id), ('analytic_account_id','in', [analytic_parent[0]]),('company_id','=', company_id )], context=context)
+                                 ('partner_id','=', partner_id), ('company_id','=', company_id )], context=context)
         if len(pricelist) >= 1 :
             price = self.pool.get('partner.product.price').browse(cr, uid, pricelist, context=context )
             if price :

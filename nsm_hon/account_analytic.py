@@ -30,11 +30,7 @@ class account_analytic(osv.osv):
         user = self.pool['res.users'].browse(cr, uid, args[0][2], context=context)
         supplier = user.partner_id  # partner_id is required on users
         if not supplier.analytic_account_ids:
-            if not supplier.product_price_ids:
-                return [('id', '=', False)]
-            ppp_ids = self.pool.get('partner.product.price').browse(cr, user.id, supplier.product_price_ids, context=context)
-            acc_ids = [ppp.id.analytic_account_id.id for ppp in ppp_ids]
-            return [('id', 'in', acc_ids)]
+            return [('id', '=', False)]
         acc_ids = [acc.id for acc in supplier.analytic_account_ids]
         return [('id', 'in', acc_ids)]
 

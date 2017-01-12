@@ -56,11 +56,11 @@
                                         <field name="account_analytic_id" invisible="1"/>
                                         <field name="activity_id" invisible="0" required="True" domain="[('project_ids', 'in', parent.account_analytic_id)]"/>
                                         <field name="product_category_id" required="True"/>
-                                        <field name="product_id" on_change="product_id_change(product_id, partner_id, parent.account_analytic_id, price_unit, context )"
+                                        <field name="product_id" on_change="product_id_change(product_id, partner_id, price_unit, context )"
                                                domain="[('categ_id', '=', product_category_id)]"/>
                                         <field name="account_id" invisible="1"/>
-                                        <field name="price_unit" attrs="{'invisible': [('employee','=',True)]}"/>
-                                        <field name="quantity" attrs="{'invisible': [('employee','=',True)]}"/>
+                                        <field name="price_unit" on_change="price_quantity_change(partner_id, price_unit, quantity, price_subtotal, context )" attrs="{'invisible': [('employee','=',True)]}"/>
+                                        <field name="quantity" on_change="price_quantity_change(partner_id, price_unit, quantity, price_subtotal, context )" attrs="{'invisible': [('employee','=',True)]}"/>
                                         <field name="estimated_price" attrs="{'invisible': [('employee','=',True)]}"/>
                                         <field name="price_subtotal" attrs="{'invisible': [('employee','=',True)]}"/>
                                     </tree>
