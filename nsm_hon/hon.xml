@@ -40,6 +40,7 @@
                             <group col="2" colspan="2" >
                                 <field name="company_id" invisible="1"/>
                                 <field name="account_analytic_id"  on_change="onchange_analytic_ac(account_analytic_id, context)"/>
+                                <field name="date_publish"/>
                             </group>
                         </group>
                         <notebook>
@@ -128,20 +129,20 @@
         <menuitem name="Hon"
                   id="menu_action_hon_main"
                   sequence="20"
-                  groups="nsm_supplier_portal.group_module_supplier_portal"
+                  groups="nsm_hon.group_module_hon_user"
                   />
         <menuitem name="Hon"
                   id="menu_action_hon"
                   parent="menu_action_hon_main"
                   sequence="10"
-                  groups="nsm_supplier_portal.group_module_supplier_portal"
+                  groups="nsm_hon.group_module_hon_user"
                   />
         <menuitem action="action_hon_issue"
                   name="Hon Issues"
                   id="menu_action_hon_detail"
                   parent="menu_action_hon"
                   sequence="1"
-                  groups="nsm_supplier_portal.group_module_supplier_portal"
+                  groups="nsm_hon.group_module_hon_user"
                   />
 
     </data>

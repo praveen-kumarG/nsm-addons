@@ -29,6 +29,7 @@
 import hon
 import partner_product_price
 import wizard
+import report
 import account_invoice
 import res_company
 import account_analytic

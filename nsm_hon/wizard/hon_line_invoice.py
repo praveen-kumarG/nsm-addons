@@ -36,13 +36,15 @@ class hon_issue_line_make_invoice(osv.osv_memory):
         else:
             pay_term = False
         return {
-            'name': issue.name or '',
+            'name': lines['name'] or '',
+            'hon': True,
             'origin': issue.account_analytic_id.name,
             'type': 'in_invoice',
             'reference': "P%dHON%d" % (partner.id, issue.id),
+            'date_publish': issue.date_publish,
             'account_id': a,
             'partner_id': partner.id,
-            'invoice_line': [(6, 0, lines)],
+            'invoice_line': [(6, 0, lines['lines'])],
             'comment': issue.comment,
             'payment_term': pay_term,
             'journal_id': issue.company_id.hon_journal and issue.company_id.hon_journal.id or False,
@@ -52,7 +54,9 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             'user_id': uid,
             'company_id': issue.company_id and issue.company_id.id or False,
             'date_invoice': fields.date.today(),
+            'partner_bank_id': partner.bank_ids[0].id,
             'product_category': category.id,
+            'check_total': lines['subtotal'],
             'main_account_analytic_id': issue.account_analytic_id.parent_id.id
         }
 
@@ -96,10 +100,13 @@ class hon_issue_line_make_invoice(osv.osv_memory):
                 line_id = line.id
                 if (not line_id.invoiced) and (line_id.state not in ('draft', 'cancel')) and (not line_id.employee):
                     if not (line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id) in invoices:
-                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)] = []
+                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)] = {'lines':[],'subtotal':0, 'name': ''}
                     inv_line_id = hon_issue_line_obj.invoice_line_create(cr, uid, [line_id.id])
                     for lid in inv_line_id:
-                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)].append(lid)
+                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)]['lines'].append(lid)
+                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)]['subtotal'] += line_id.price_subtotal
+                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)]['name'] = line_id.name
+
         if not invoices:
             raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Honorarium Issue Line due to one of the following reasons:\n1.The state of this hon issue line is either "draft" or "cancel"!\n2.The Honorarium Issue Line is Invoiced!'))
 

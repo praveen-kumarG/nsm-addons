@@ -101,7 +101,7 @@ class hon_issue(orm.Model):
     _columns = {
         'account_analytic_id': fields.many2one('account.analytic.account', 'Title/Issue', required=True, readonly=True, states = {'draft': [('readonly', False)]},
                                                 domain=[('type','!=','view'), ('portal_sub', '=', True)]),
-
+        'date_publish': fields.related('account_analytic_id','date_publish',type='date',relation='account.analytic.account',string='Publishing Date', store=True, readonly=True),
         'name': fields.char('Description', size=64, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
         'hon_issue_line': fields.one2many('hon.issue.line', 'issue_id', 'Hon Lines', readonly=True, states={'draft':[('readonly',False)]}),
@@ -132,6 +132,7 @@ class hon_issue(orm.Model):
         'company_id': lambda self,cr,uid,c:
             self.pool.get('res.company')._company_default_get(cr, uid, 'hon.issue', context=c),
         'state': 'draft',
+        'account_analytic_id': False,
     }
     _sql_constraints = [
         ('account_analytic_company_uniq', 'unique (account_analytic_id, company_id)', 'The Issue must be unique per company !'),
@@ -146,6 +147,7 @@ class hon_issue(orm.Model):
         iss_obj = self.browse(cr,uid,ids)
         analytic_account = self.pool['account.analytic.account'].browse(cr, uid, analytic, context)
         res['name'] = analytic_account.name
+        res['date_publish'] = analytic_account.date_publish
         llist = []
         if iss_obj[0].hon_issue_line:
             for line in iss_obj[0].hon_issue_line:
@@ -401,6 +403,7 @@ class hon_issue_line(orm.Model):
         'account_id': _default_account_id,
         'state': 'draft',
         'price_unit': 0.0,
+        'employee': False,
     }
 
     #def _get_line_qty(self, cr, uid, line, context=None):
@@ -528,8 +531,8 @@ class hon_issue_line(orm.Model):
     def price_quantity_change(self, cr, uid, ids, partner_id=False, price_unit=False, quantity=False, price_subtotal=False, context=None):
         if context is None:
             context = {}
-        if not partner_id :
-            raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
+        #if not partner_id :
+        #   raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
         result = {}
         if price_unit :
             if quantity :
