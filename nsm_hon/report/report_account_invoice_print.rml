@@ -5,7 +5,7 @@
             <frame id="first" x1="1.4cm" y1="0.5cm" height="22.2cm" width="18.0cm"/>
             <pageGraphics>
                 <image x="0.30cm" y="0.10cm" height="28cm" width="25cm" >[[ (o.company_id and o.company_id.report_background_image) or removeParentNode('para') ]] </image>
-                <place x="2.5cm" y="18.4cm" height="6.0cm" width="19.0cm">
+                <place x="2.5cm" y="18.4cm" height="4.0cm" width="19.0cm">
                 <blockTable colWidths="320.0,210.0" style="Tableau2">
                       <tr>
                         <td>
@@ -19,18 +19,18 @@
                           <para style="Standard_bold">[[ o.partner_id.is_company == True and (o.partner_id.country_id and o.partner_id.country_id.name) or '' ]]</para>
                           <!-- not directly to company -->
                           <para style="Standard_bold">[[ o.partner_id.is_company != True and (o.partner_id and o.partner_id.parent_id and o.partner_id.parent_id.name) or '' ]]</para>
-                          <para style="Standard_bold">T.a.v.: [[ o.partner_id.is_company != True and (o.partner_id and o.partner_id.name) or removeParentNode('para') and '' ]]</para>
+                          <para style="Standard_bold">[[ o.partner_id.is_company != True and (o.partner_id and o.partner_id.name) or removeParentNode('para') and '' ]]</para>
                           <para style="Standard_bold">[[ o.partner_id.is_company != True  and (o.partner_id and o.partner_id.street) or '' ]]</para>
                           <para style="Standard_bold">[[ o.partner_id.is_company != True  and (o.partner_id and o.partner_id.street2) or removeParentNode('para') ]]</para>
                           <para style="Standard_bold">[[ o.partner_id.is_company != True  and (o.partner_id and o.partner_id.zip) ]] [[ o.partner_id.is_company != True and (o.partner_id  and o.partner_id.city) or '' ]] </para>
                           <para style="Standard_bold">[[ o.partner_id.is_company != True  and (o.partner_id and o.partner_id.country_id and  o.partner_id.country_id.name) or removeParentNode('para') ]]</para>
                         </td>
                         <td>
-                          <para style="terp_default_8"><font color="white">[[ "Extra Space" ]]</font></para>
+                          <para style="terp_default_8"><font color="white"></font></para>
                         </td>
                       </tr>
-                 </blockTable>
-     </place>
+                </blockTable>
+                </place>
             </pageGraphics>
         </pageTemplate>
     </template>
@@ -74,7 +74,6 @@
         <para style="Standard">[[ repeatIn(objects,'o') ]]</para>
         <para style="Standard">[[ setLang(o.partner_id.lang) ]]</para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
-
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
@@ -109,60 +108,8 @@
             <tr>
                 <td>
                     <para style="Standard">gepubliceerd in [[  (o.origin) or '']] d.d. [[  get_date(o.date_publish) or '' ]]</para>
-                    <para style="Standard">ontvangt u binnenkort op uw IBAN nummer [[  (o.partner_bank_id) or '']] </para>
-                </td>
-            </tr>
-        </blockTable>
-
-        <para style="Standard"><font color="white">[[ "e" ]]</font></para>
-        <para style="Standard"><font color="white">[[ "e" ]]</font></para>
-        <para style="Standard"><font color="white">[[ "e" ]]</font></para>
-        <para style="Standard"><font color="white">[[ "e" ]]</font></para>
-
-
-
-        <blockTable colWidths="100.0,100.0,100.0,150.0" style="Table1">
-            <tr>
-                <td>
-                    <para style="Standard">Invoice Number</para>
-                </td>
-                <td>
-                    <para style="Standard">[[ (o.number) or '' ]]</para>
-                </td>
-                <td>
-                    <para style="Standard">Our Reference</para>
-                </td>
-                <td>
-                    <para style="Standard">[[ (o.origin) or '' ]]</para>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <para style="Standard">Invoice Date</para>
-                </td>
-                <td>
-                    <para style="Standard">[[ get_date(o.date_invoice) or '' ]]</para>
-                </td>
-                <td>
-                    <para style="Standard">Your Reference</para>
-                </td>
-                <td>
-                    <para style="Standard">[[ o.name or '' ]]</para>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <para style="Standard">Expiry Date</para>
-                </td>
-                <td>
-                    <para style="Standard">[[ new_date(o.date_due) or '' ]]</para>
-                </td>
-                <td>
-                    <para style="Standard">IBAN</para>
-                </td>
-                <td>
-                    <para style="Standard">[[ repeatIn(o.company_id.bank_ids,'b') ]]</para>
-                    <para style="Standard">[[ b.footer != True and removeParentNode('tr') ]][[ b.footer == True and (b.acc_number) or '' ]]</para>
+                    <para style="Standard">ontvangt u binnenkort op uw IBAN nummer [[  (o.partner_bank_id.acc_number) or '']] </para>
+                    <para style="Standard">het volgende bedrag: </para>
                 </td>
             </tr>
         </blockTable>
@@ -171,14 +118,7 @@
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
 
-        <blockTable colWidths="450.0" style="Tableau2">
-            [[ (o.invoice_description != False or removeParentNode('blockTable')) and '']]
-            <tr>
-                <td>
-                    <para style="Standard_bold">[[ o.invoice_description or '']]</para>
-                </td>
-            </tr>
-        </blockTable>
+
 
         <section>
             <para style="Standard">[[ repeatIn(o.invoice_line,'l') ]]</para>
@@ -186,16 +126,13 @@
             <blockTable colWidths="190.0,30.0,75.0,55.0,35.0,65.0" style="Tableau2">
                 <tr>
                     <td>
-                        <para style="Standard">[[ not o.invoice_description and l.name or removeParentNode('section') ]]</para>
+                        <para style="Standard">[[ l.product_id.description or removeParentNode('section') ]]</para>
                     </td>
                     <td>
-                        <para style="terp_default_Right_9">[[ formatLang(not o.invoice_description and l.quantity, digits=0) or "" ]]</para>
                     </td>
                     <td>
-                        <para style="terp_default_Right_9">[[ o.currency_id.symbol or "" ]] [[ formatLang(not o.invoice_description and l.price_unit, digits=get_digits(dp='Account')) or "" ]]</para>
                     </td>
                     <td>
-                        <para style="terp_default_Right_9">[[ not o.invoice_description and ', '.join([x.description  for x in l.invoice_line_tax_id if x.description]) or "" ]]</para>
                     </td>
                     <td>
                         <para style="Standard">[[ o.currency_id.symbol or "" ]]</para>
@@ -207,62 +144,9 @@
             </blockTable>
         </section>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
-        <para style="Standard"><font color="white">[[ "e" ]]</font></para>
-        <para style="Standard"><font color="white">[[ "e" ]]</font></para>
-        <blockTable colWidths="450.0">
-            <tr>
-                <td>
-                    <hr/>
-                </td>
-            </tr>
-        </blockTable>
-        <blockTable colWidths="190.0,30.0,75.0,55.0,35.0,65.0" style="Tableau2">
-            <tr>
-                <td>
-                    <para style="Standard"></para>
-                </td>
-                <td>
-                    <para style="terp_default_Right_9">Subtotal</para>
-                </td>
-                <td>
-                    <para style="Standard"></para>
-                </td>
-                <td>
-                    <para style="terp_default_Right_9"></para>
-                </td>
-                <td>
-                    <para style="Standard">[[ o.currency_id.symbol or "" ]]</para>
-                </td>
-                <td>
-                    <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed, digits=get_digits(dp='Account')) or '' ]]</para>
-                </td>
-            </tr>
-         </blockTable>
-         <section>
-         <para style="Standard">[[ repeatIn(o.tax_line,'t') ]]</para>
-         <blockTable colWidths="20.0,200.0,40.0,90.0,35.0,65.0" style="Tableau2">
-              <tr>
-                <td>
-                    <para style="terp_default_Right_9"></para>
-                </td>
-                <td>
-                    <para style="terp_default_Right_9">[[ t.name ]]</para>
-                </td>
-                <td>
-                    <para style="Standard"></para>
-                </td>
-                <td>
-                    <para style="terp_default_Right_9">[[ o.currency_id.symbol or "" ]] [[ formatLang(t.base, digits=get_digits(dp='Account')) ]]</para>
-                </td>
-                <td>
-                    <para style="Standard">[[ o.currency_id.symbol or "" ]]</para>
-                </td>
-                <td>
-                    <para style="terp_default_Right_9">[[ formatLang(t.amount, digits=get_digits(dp='Account')) or '' ]]</para>
-                </td>
-              </tr>
-          </blockTable>
-        </section>
+
+
+
         <blockTable colWidths="190.0,30.0,75.0,55.0,35.0,65.0" style="Tableau2">
             <tr>
                 <td>
@@ -286,10 +170,10 @@
             </tr>
             <tr>
                 <td>
-                    <para style="Standard"></para>
+                    <para style="terp_default_Right_9_bold">Total</para>
                 </td>
                 <td>
-                    <para style="terp_default_Right_9_bold">Total</para>
+
                 </td>
                 <td>
                     <para style="Standard"></para>
@@ -304,37 +188,9 @@
                     <para style="terp_default_Right_9_bold">[[ formatLang(o.amount_total, digits=get_digits(dp='Account')) or '' ]]</para>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <para style="Standard"></para>
-                </td>
-                <td>
-                    <para style="Standard"></para>
-                </td>
-                <td>
-                    <para style="Standard"></para>
-                </td>
-                <td>
-                    <para style="terp_default_Right_9_bold"></para>
-                </td>
-                <td>
-                    <para style="Standard"></para>
-                </td>
-                <td>
-                    <hr/>
-                    <hr/>
-                </td>
-            </tr>
+
         </blockTable>
-        <para style="Standard"><font color="white">[[ "e" ]]</font></para>
-        <para style="Standard"><font color="white">[[ "e" ]]</font></para>
-        <blockTable colWidths="450.0" style="Tableau2">
-            <tr>
-                <td>
-                    <hr/>
-                </td>
-            </tr>
-        </blockTable>
+
 
     </story>
 </document>
