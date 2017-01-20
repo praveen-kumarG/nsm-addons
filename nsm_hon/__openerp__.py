@@ -53,6 +53,7 @@ representing the Issue and to the products representing the type and price of th
               "hon.xml",
               "hon_workflow.xml",
               "res_company_view.xml",
+              "product_category_view.xml",
               "partner_product_price.xml",
               "account_invoice_report.xml",
     ],

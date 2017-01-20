@@ -33,7 +33,7 @@
                     <h1>
                         <!--label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/-->
                         <label string="Honoraria Editie " />
-                        <field name="name" class="oe_inline" readonly="0"/>
+                        <field name="name" class="oe_inline" readonly="1"/>
                     </h1>
                     <!--sheet string="Hon Issue"-->
                         <group>

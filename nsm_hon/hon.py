@@ -141,21 +141,23 @@ class hon_issue(orm.Model):
 
     def onchange_analytic_ac(self, cr, uid, ids, analytic, context={}):
         res = {}
-        war = {}
-        if not ids:
+        if not ids and not analytic :
             return res
-        iss_obj = self.browse(cr,uid,ids)
+        war = {}
+
         analytic_account = self.pool['account.analytic.account'].browse(cr, uid, analytic, context)
         res['name'] = analytic_account.name
         res['date_publish'] = analytic_account.date_publish
         llist = []
-        if iss_obj[0].hon_issue_line:
-            for line in iss_obj[0].hon_issue_line:
-                if line.activity_id:
-                    llist.append((1, line.id, {'activity_id': [],}))
-                    res['hon_issue_line'] = llist
-                    war['title'] = 'Let op!'
-                    war['message'] = 'U heeft de Titel/Nummer aangepast. Nu moet u opnieuw Redacties selecteren in de HONregel(s)'
+        if ids:
+            iss_obj = self.browse(cr,uid,ids)
+            if iss_obj[0].hon_issue_line:
+                for line in iss_obj[0].hon_issue_line:
+                    if line.activity_id:
+                        llist.append((1, line.id, {'activity_id': [],}))
+                        res['hon_issue_line'] = llist
+                        war['title'] = 'Let op!'
+                        war['message'] = 'U heeft de Titel/Nummer aangepast. Nu moet u opnieuw Redacties selecteren in de HONregel(s)'
         return {'value': res, 'warning': war}
 
     """def manual_invoice(self, cr, uid, ids, context=None):

@@ -4,8 +4,8 @@
         <pageTemplate id="first">
             <frame id="first" x1="1.4cm" y1="0.5cm" height="22.2cm" width="18.0cm"/>
             <pageGraphics>
-                <image x="0.30cm" y="0.10cm" height="28cm" width="25cm" >[[ (o.company_id and o.company_id.report_background_image) or removeParentNode('para') ]] </image>
-                <place x="2.5cm" y="18.4cm" height="4.0cm" width="19.0cm">
+                <image x="0.00cm" y="0.00cm" height="29.7cm" width="21cm" >[[ (o.company_id and o.company_id.report_background_image) or removeParentNode('para') ]] </image>
+                <place x="2.5cm" y="18.4cm" height="4.5cm" width="19.0cm">
                 <blockTable colWidths="320.0,210.0" style="Tableau2">
                       <tr>
                         <td>
@@ -97,12 +97,9 @@
             <tr></tr>
             <tr>
                 <td>
-                    <para style="Standard">Voor uw artikel</para>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <para style="Standard">[[  (o.name) or '' ]]</para>
+                    <para style="Standard">[[ o.product_category.hon_type == "letter_a" and 'Voor onderstaand(e) artikel(en)' or removeParentNode('para') ]] </para>
+                    <para style="Standard">[[ o.product_category.hon_type == "letter_b" and 'Hierbij verzoeken wij u ons een rekening te zenden voor de' or removeParentNode('para') ]] </para>
+                    <para style="Standard">[[ o.product_category.hon_type == "letter_b" and 'Hierbij verzoeken wij u ons een rekening te zenden voor de' or removeParentNode('para') ]] </para>
                 </td>
             </tr>
             <tr>
