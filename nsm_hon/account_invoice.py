@@ -133,4 +133,5 @@ class account_invoice_line(orm.Model):
 
     _columns = {
         'activity_id': fields.many2one('project.activity_al', 'Activity'),
+        'hon_issue_line_id': fields.many2one('hon.issue.line', 'Hon Issue Line')
     }

@@ -4,7 +4,7 @@
         <pageTemplate id="first">
             <frame id="first" x1="1.4cm" y1="0.5cm" height="22.2cm" width="18.0cm"/>
             <pageGraphics>
-                <image x="0.00cm" y="0.00cm" height="29.7cm" width="21cm" >[[ (o.company_id and o.company_id.report_background_image) or removeParentNode('para') ]] </image>
+                <image x="0.00cm" y="0.00cm" height="29.7cm" width="21cm" >[[ (o.company_id and o.company_id.report_background_image1) or removeParentNode('para') ]] </image>
                 <place x="2.5cm" y="18.4cm" height="4.5cm" width="19.0cm">
                 <blockTable colWidths="320.0,210.0" style="Tableau2">
                       <tr>
@@ -31,6 +31,12 @@
                       </tr>
                 </blockTable>
                 </place>
+            </pageGraphics>
+        </pageTemplate>
+        <pageTemplate id="second">
+            <frame id="second" x1="1.4cm" y1="0.5cm" height="22.2cm" width="18.0cm"/>
+            <pageGraphics>
+                <image x="0.00cm" y="0.00cm" height="29.7cm" width="21cm" >[[ (o.company_id and o.company_id.report_background_image2) or removeParentNode('para') ]] </image>
             </pageGraphics>
         </pageTemplate>
     </template>
@@ -71,6 +77,7 @@
     </stylesheet>
 
     <story>
+        <setNextTemplate name="second"/>
         <para style="Standard">[[ repeatIn(objects,'o') ]]</para>
         <para style="Standard">[[ setLang(o.partner_id.lang) ]]</para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
@@ -97,35 +104,52 @@
             <tr></tr>
             <tr>
                 <td>
-                    <para style="Standard">[[ o.product_category.hon_type == "letter_a" and 'Voor onderstaand(e) artikel(en)' or removeParentNode('para') ]] </para>
+                    <para style="Standard">[[ (o.product_category.hon_type == "letter_a" and 'Voor onderstaand(e) artikel(en)') or removeParentNode('para') ]] </para>
                     <para style="Standard">[[ o.product_category.hon_type == "letter_b" and 'Hierbij verzoeken wij u ons een rekening te zenden voor de' or removeParentNode('para') ]] </para>
-                    <para style="Standard">[[ o.product_category.hon_type == "letter_b" and 'Hierbij verzoeken wij u ons een rekening te zenden voor de' or removeParentNode('para') ]] </para>
+                    <para style="Standard">[[ o.product_category.hon_type == "letter_b" and 'hieronder vermelde illustratie(s)' or removeParentNode('para') ]] </para>
+                    <para style="Standard">gepubliceerd in [[ (o.origin or '') ]] d.d. [[ get_date(o.date_publish) or '' ]]</para>
+                    <para style="Standard">[[ o.product_category.hon_type == "letter_a" and 'ontvangt u binnenkort op uw IBAN nummer' or removeParentNode('para')]] [[ (o.partner_bank_id.acc_number or '') ]] </para>
+                    <para style="Standard">[[ o.product_category.hon_type == "letter_a" and 'het volgende bedrag:' or removeParentNode('para')]] </para>
                 </td>
             </tr>
-            <tr>
-                <td>
-                    <para style="Standard">gepubliceerd in [[  (o.origin) or '']] d.d. [[  get_date(o.date_publish) or '' ]]</para>
-                    <para style="Standard">ontvangt u binnenkort op uw IBAN nummer [[  (o.partner_bank_id.acc_number) or '']] </para>
-                    <para style="Standard">het volgende bedrag: </para>
-                </td>
-            </tr>
+
         </blockTable>
 
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
 
-
+            <blockTable colWidths="50.0,170.0,75.0,55.0,35.0,65.0" style="Tableau2">
+                <tr>
+                    <td>
+                         <para style="Standard">[[ o.product_category.hon_type == "letter_b" and 'Pagina nr.' or removeParentNode('blockTable')]]</para>
+                    </td>
+                    <td>
+                         <para style="Standard">Omschrijving</para>
+                    </td>
+                     <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                    </td>
+                    <td>
+                        <para style="Standard">Publicatie rechten</para>
+                    </td>
+                </tr>
+            </blockTable>
 
         <section>
             <para style="Standard">[[ repeatIn(o.invoice_line,'l') ]]</para>
-
-            <blockTable colWidths="190.0,30.0,75.0,55.0,35.0,65.0" style="Tableau2">
+            <condPageBreak height="5cm"/>
+            <blockTable colWidths="50.0,170.0,75.0,55.0,35.0,65.0" style="Tableau2">
                 <tr>
                     <td>
-                        <para style="Standard">[[ l.product_id.description or removeParentNode('section') ]]</para>
+                        <para style="Standard">[[ o.product_category.hon_type == "letter_b" and (l.hon_issue_line_id.page_number or '') or removeParentNode('para')]]</para>
+                        <para style="Standard">[[ o.product_category.hon_type == "letter_a" and (l.product_id.description or '') or removeParentNode('para')]] [[ (l.name or '') ]]</para>
                     </td>
                     <td>
+                        <para style="Standard">[[ o.product_category.hon_type == "letter_b" and (l.name or '') or removeParentNode('para')]]</para>
                     </td>
                     <td>
                     </td>
@@ -140,11 +164,11 @@
                 </tr>
             </blockTable>
         </section>
-        <para style="Standard"><font color="white">[[ "e" ]]</font></para>
 
 
 
-        <blockTable colWidths="190.0,30.0,75.0,55.0,35.0,65.0" style="Tableau2">
+
+        <blockTable colWidths="50.0,170.0,75.0,55.0,35.0,65.0" style="Tableau2">
             <tr>
                 <td>
                     <para style="Standard"></para>
@@ -167,7 +191,7 @@
             </tr>
             <tr>
                 <td>
-                    <para style="terp_default_Right_9_bold">Total</para>
+                    <para style="terp_default_Left_9_bold">Totaal</para>
                 </td>
                 <td>
 

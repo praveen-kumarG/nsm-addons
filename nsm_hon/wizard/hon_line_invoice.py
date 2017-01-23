@@ -98,7 +98,7 @@ class hon_issue_line_make_invoice(osv.osv_memory):
         for issue in hon_issue_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             for line in hon_issue_line_obj.browse(cr, uid, issue.hon_issue_line, context=context):
                 line_id = line.id
-                if (not line_id.invoiced) and (line_id.state not in ('draft', 'cancel')) and (not line_id.employee):
+                if (not line_id.invoice_line_id) and (line_id.state not in ('draft', 'cancel')) and (not line_id.employee):
                     if not (line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id) in invoices:
                         invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)] = {'lines':[],'subtotal':0, 'name': ''}
                     inv_line_id = hon_issue_line_obj.invoice_line_create(cr, uid, [line_id.id])
@@ -123,7 +123,7 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             flag = True
             data_hon = hon_issue_obj.browse(cr, uid, issue.id, context=context)
             for line in data_hon.hon_issue_line:
-                if not line.invoiced and not line.employee :
+                if not line.invoice_line_id and not line.employee :
                     flag = False
                     break
             if flag:

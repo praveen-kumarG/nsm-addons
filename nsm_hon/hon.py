@@ -160,18 +160,18 @@ class hon_issue(orm.Model):
                         war['message'] = 'U heeft de Titel/Nummer aangepast. Nu moet u opnieuw Redacties selecteren in de HONregel(s)'
         return {'value': res, 'warning': war}
 
-    """def manual_invoice(self, cr, uid, ids, context=None):
-            #create invoices for the given sales orders (ids), and open the form
+    def manual_invoice(self, cr, uid, ids, context=None):
+            #create invoices for the given hon issues (ids), and open the form
             #view of one of the newly created invoices
 
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
 
-        # create invoices through the sales orders' workflow
-        inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
+        # create invoices through the hon issues' workflow
+        inv_ids0 = set(inv.id for issue in self.browse(cr, uid, ids, context) for inv in issue.invoice_ids)
         for id in ids:
-            wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
-        inv_ids1 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
+            wf_service.trg_validate(uid, 'hon.issue', id, 'manual_invoice', cr)
+        inv_ids1 = set(inv.id for issue in self.browse(cr, uid, ids, context) for inv in issue.invoice_ids)
         # determine newly created invoices
         new_inv_ids = list(inv_ids1 - inv_ids0)
 
@@ -189,7 +189,7 @@ class hon_issue(orm.Model):
             'nodestroy': True,
             'target': 'current',
             'res_id': new_inv_ids and new_inv_ids[0] or False,
-        }"""
+        }
 
     def action_view_invoice(self, cr, uid, ids, context=None):
         '''
@@ -336,20 +336,6 @@ class hon_issue_line(orm.Model):
             res[line.id] = price
         return res
 
-    def _fnct_line_invoiced(self, cr, uid, ids, field_name, args, context=None):
-        res = dict.fromkeys(ids, False)
-        for this in self.browse(cr, uid, ids, context=context):
-            res[this.id] = this.invoice_lines and \
-                all(iline.invoice_id.state != 'cancel' for iline in this.invoice_lines)
-        return res
-
-    def _hon_issue_lines_from_invoice(self, cr, uid, ids, context=None):
-        # direct access to the m2m table is the less convoluted way to achieve this (and is ok ACL-wise)
-        cr.execute("""SELECT DISTINCT hil.id FROM hon_issue_invoice_rel rel JOIN
-                                                  hon_issue_line hil ON (hil.issue_id = rel.issue_id)
-                                    WHERE rel.invoice_id = ANY(%s)""", (list(ids),))
-        return [i[0] for i in cr.fetchall()]
-
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence of this line when displaying the honorarium issue."),
         'name': fields.char('Description', required=True, size=64),
@@ -371,11 +357,7 @@ class hon_issue_line(orm.Model):
         'price_subtotal': fields.function(_amount_line, string='Amount', type="float",
             digits_compute= dp.get_precision('Account'), store=True),
         'estimated_price': fields.float('Estimate',),
-        'invoice_lines': fields.many2many('account.invoice.line', 'hon_issue_line_invoice_rel', 'hon_issue_line_id',
-                                          'invoice_id', 'Invoice Lines', readonly=True),
-        'invoiced': fields.function(_fnct_line_invoiced, string='Invoiced', type='boolean',
-                        store={'account.invoice': (_hon_issue_lines_from_invoice, ['state'], 10),
-                               'hon.issue.line': (lambda self, cr, uid, ids, ctx=None: ids, ['invoice_lines'], 10)}),
+        'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Lines', readonly=True),
         'state': fields.selection(
             [('cancel', 'Cancelled'),
              ('draft', 'Draft'),
@@ -427,7 +409,7 @@ class hon_issue_line(orm.Model):
            :return: dict of values to create() the invoice line
         """
         res = {}
-        if not line.invoiced:
+        if not line.invoice_line_id:
             if not account_id:
                 if line.product_id:
                     account_id = line.product_id.property_account_expense.id
@@ -453,6 +435,7 @@ class hon_issue_line(orm.Model):
                 raise osv.except_osv(_('Error!'),
                             _('There is no Fiscal Position defined or Expense category account defined for default properties of Product categories.'))
             res = {
+                'hon_issue_line_id': line.id,
                 'name': line.name,
                 'sequence': line.sequence,
                 'origin': line.issue_id.name,
@@ -478,7 +461,7 @@ class hon_issue_line(orm.Model):
             vals = self._prepare_hon_issue_line_invoice_line(cr, uid, line, False, context)
             if vals:
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, vals, context=context)
-                self.write(cr, uid, [line.id], {'invoice_lines': [(4, inv_id)]}, context=context)
+                self.write(cr, uid, [line.id], {'invoice_line_id': inv_id}, context=context)
                 hon.add(line.issue_id.id)
                 create_ids.append(inv_id)
         # Trigger workflow events
