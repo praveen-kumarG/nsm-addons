@@ -121,14 +121,12 @@
 			<field name="model">sale.advertising.proof</field>
 			<field name="arch" type="xml">
 				<form string="Advertising proof">
-					<sheet>
 					<group>
 						<field name="name" />
 						<field name="address_id" />
 						<field name="number" />
 						<field name="target_id" />
 					</group>
-					</sheet>
 				</form>
 			</field>
 		</record>
