@@ -76,7 +76,6 @@
 			<field name="model">sale.advertising.issue</field>
 			<field name="arch" type="xml">
 				<form string="Advertising issue">
-					<sheet>
 					<group>
 						<field name="name" string="Name"/>
 						<field name="analytic_account_id" string="Related Analytic Account"/>
@@ -85,7 +84,6 @@
 						<field name="default_note" string="Default Note" colspan="4"/>
 						<field name="state" string="State" />
 					</group>
-					</sheet>
 				</form>
 			</field>
 		</record>
