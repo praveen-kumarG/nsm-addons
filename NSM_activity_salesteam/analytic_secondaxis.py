@@ -21,25 +21,14 @@
 from openerp.osv import osv
 from openerp.osv import fields
 
-class account_analytic(osv.osv):
-    _inherit = 'account.analytic.account'
+#   Adaptation to link Sales Team on Activity for workflow purposes. Register in __ini__.py for deployment
 
-    def _supplier_analytic_search(self, cr, uid, obj, name, args,  context=None):
-        if not args or not isinstance(args[0][2], (int, long)) or not args[0][2]:
-            return [('id', '=', False)]  # maybe raise NotImplemented?
-        user = self.pool['res.users'].browse(cr, uid, args[0][2], context=context)
-        supplier = user.partner_id  # partner_id is required on users
-        if not supplier.analytic_account_ids:
-            return [('id', '=', False)]
-        acc_ids = [acc.id for acc in supplier.analytic_account_ids]
-        return [('id', 'in', acc_ids)]
+class project_activity_al(osv.osv):
+    _inherit = 'project.activity_al'
 
     _columns = {
-            'supp_analytic_accids': fields.function(lambda self, cr, uid, ids, field_name, arg, context=None: dict.fromkeys(ids, True), fnct_search=_supplier_analytic_search, type='integer', method=True,),
+            'sales_team_id': fields.many2one('crm.case.section', 'Sales Team' ),
     }
-
-
-account_analytic()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

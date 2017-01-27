@@ -32,6 +32,5 @@ import wizard
 import report
 import account_invoice
 import res_company
-import account_analytic
 import product_category
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

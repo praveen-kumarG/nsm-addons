@@ -104,7 +104,7 @@ class hon_issue(orm.Model):
         'date_publish': fields.related('account_analytic_id','date_publish',type='date',relation='account.analytic.account',string='Publishing Date', store=True, readonly=True),
         'name': fields.char('Description', size=64, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'hon_issue_line': fields.one2many('hon.issue.line', 'issue_id', 'Hon Lines', readonly=True, states={'draft':[('readonly',False)]}),
+        'hon_issue_line': fields.one2many('hon.issue.line', 'issue_id', 'Hon Lines', readonly=False, states={'draft':[('readonly',False)]}),
         'state': fields.selection([
             ('draft','Draft'),
             ('open','Open'),
@@ -118,9 +118,10 @@ class hon_issue(orm.Model):
         'comment': fields.text('Additional Information'),
         'invoice_ids': fields.many2many('account.invoice', 'hon_issue_invoice_rel', 'issue_id', 'invoice_id',
                                         'Invoices', readonly=True,
-                                        help="This is the list of invoices that have been generated for this issue. The same issue may have been invoiced in several times (by line for example)."),
+                                        help="This is the list of invoices that have been generated for this issue. "
+                                             "The same issue may have been invoiced in several times (by line for example)."),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced Ratio', type='float'),
-        'invoiced': fields.function(_invoiced, string='Paid',
+        'invoiced': fields.function(_invoiced, string='Invoiced',
                                     fnct_search=_invoiced_search, type='boolean',
                                     help="It indicates that an invoice has been paid."),
         'invoice_exists': fields.function(_invoice_exists, string='Invoiced',
@@ -161,35 +162,35 @@ class hon_issue(orm.Model):
         return {'value': res, 'warning': war}
 
     def manual_invoice(self, cr, uid, ids, context=None):
-            #create invoices for the given hon issues (ids), and open the form
-            #view of one of the newly created invoices
+           #create invoices for the given hon issues (ids), and open the form
+           #view of one of the newly created invoices
 
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
 
-        # create invoices through the hon issues' workflow
+           # create invoices through the hon issues' workflow
         inv_ids0 = set(inv.id for issue in self.browse(cr, uid, ids, context) for inv in issue.invoice_ids)
         for id in ids:
-            wf_service.trg_validate(uid, 'hon.issue', id, 'manual_invoice', cr)
+           wf_service.trg_validate(uid, 'hon.issue', id, 'manual_invoice', cr)
         inv_ids1 = set(inv.id for issue in self.browse(cr, uid, ids, context) for inv in issue.invoice_ids)
-        # determine newly created invoices
+            # determine newly created invoices
         new_inv_ids = list(inv_ids1 - inv_ids0)
 
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
         res_id = res and res[1] or False,
 
         return {
-            'name': _('Customer Invoices'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': [res_id],
-            'res_model': 'account.invoice',
-            'context': "{'type':'out_invoice'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-            'res_id': new_inv_ids and new_inv_ids[0] or False,
-        }
+           'name': _('Supplier Invoices'),
+           'view_type': 'form',
+           'view_mode': 'form',
+           'view_id': [res_id],
+           'res_model': 'account.invoice',
+           'context': "{'type':'in_invoice'}",
+           'type': 'ir.actions.act_window',
+           'nodestroy': True,
+           'target': 'current',
+           'res_id': new_inv_ids and new_inv_ids[0] or False,
+            }
 
     def action_view_invoice(self, cr, uid, ids, context=None):
         '''
@@ -214,72 +215,24 @@ class hon_issue(orm.Model):
             result['res_id'] = inv_ids and inv_ids[0] or False
         return result
 
-    """def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_invoice = False, context=None):
-        if states is None:
-            states = ['confirmed', 'done', 'exception']
-        res = False
-        invoices = {}
-        invoice_ids = []
-        invoice = self.pool.get('account.invoice')
-        obj_sale_order_line = self.pool.get('sale.order.line')
-        partner_currency = {}
+    def action_invoice_create(self, cr, uid, ids, date_invoice = False, context=None):
         if context is None:
             context = {}
-        # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
+        # If date was specified, use it as date invoiced, useful when invoices are generated this month and put the
         # last day of the last month as invoice date
         if date_invoice:
             context['date_invoice'] = date_invoice
-        for o in self.browse(cr, uid, ids, context=context):
-            currency_id = o.pricelist_id.currency_id.id
-            if (o.partner_id.id in partner_currency) and (partner_currency[o.partner_id.id] <> currency_id):
-                raise osv.except_osv(
-                    _('Error!'),
-                    _('You cannot group sales having different currencies for the same partner.'))
-
-            partner_currency[o.partner_id.id] = currency_id
-            lines = []
-            for line in o.order_line:
-                if line.invoiced:
-                    continue
-                elif (line.state in states):
-                    lines.append(line.id)
-            created_lines = obj_sale_order_line.invoice_line_create(cr, uid, lines)
-            if created_lines:
-                invoices.setdefault(o.partner_invoice_id.id or o.partner_id.id, []).append((o, created_lines))
-        if not invoices:
-            for o in self.browse(cr, uid, ids, context=context):
-                for i in o.invoice_ids:
-                    if i.state == 'draft':
-                        return i.id
-        for val in invoices.values():
-            if grouped:
-                res = self._make_invoice(cr, uid, val[0][0], reduce(lambda x, y: x + y, [l for o, l in val], []), context=context)
-                invoice_ref = ''
-                origin_ref = ''
-                for o, l in val:
-                    invoice_ref += (o.client_order_ref or o.name) + '|'
-                    origin_ref += (o.origin or o.name) + '|'
-                    self.write(cr, uid, [o.id], {'state': 'progress'})
-                    cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
-                #remove last '|' in invoice_ref
-                if len(invoice_ref) >= 1:
-                    invoice_ref = invoice_ref[:-1]
-                if len(origin_ref) >= 1:
-                    origin_ref = origin_ref[:-1]
-                invoice.write(cr, uid, [res], {'origin': origin_ref, 'name': invoice_ref})
-            else:
-                for order, il in val:
-                    res = self._make_invoice(cr, uid, order, il, context=context)
-                    invoice_ids.append(res)
-                    self.write(cr, uid, [order.id], {'state': 'progress'})
-                    cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
-        return res"""
+        if ids:
+            context['active_ids'] = ids
+        himi = self.pool['hon.issue.make.invoice']
+        himi.make_invoices_from_issues(cr, uid, ids, context=context)
+        return True
 
     def action_invoice_end(self, cr, uid, ids, context=None):
         for this in self.browse(cr, uid, ids, context=context):
             for line in this.hon_issue_line:
                 if line.state == 'confirmed':
-                    line.write({'state': 'progress'})
+                    line.write({'state': 'invoiced'})
     #        if this.state == 'invoice_except':
     #            this.write({'state': 'progress'})
         return True
@@ -344,25 +297,29 @@ class hon_issue_line(orm.Model):
         'issue_id': fields.many2one('hon.issue', 'Issue Reference', ondelete='cascade', select=True),
         'partner_id': fields.many2one('res.partner', 'Partner',),
         'employee': fields.boolean('Employee',  help="It indicates that the partner is an employee."),
-        'product_category_id': fields.many2one('product.category', 'Page Type',domain=[('parent_id.supportal', '=', True)]),
+        'product_category_id': fields.many2one('product.category', 'T/B',domain=[('parent_id.supportal', '=', True)]),
         'product_id': fields.many2one('product.product', 'Product', required=True,),
         'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')],
                                       help="The income or expense account related to the selected product."),
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null', select=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),
-        'account_analytic_id': fields.related('issue_id','account_analytic_id',type='many2one',relation='account.analytic.account', string='Editie',store=True, readonly=True ),
-        'activity_id': fields.many2one('project.activity_al', 'Redactie',  ondelete='set null', select=True),
+        'account_analytic_id': fields.related('issue_id','account_analytic_id',type='many2one', relation='account.analytic.account', string='Issue',store=True, readonly=True ),
+        'parent_analytic_id': fields.related('account_analytic_id', 'parent_id', type='many2one',
+                                              relation='account.analytic.account', string='Title', store=True,
+                                              readonly=True),
+        'activity_id': fields.many2one('project.activity_al', 'Page Type',  ondelete='set null', select=True),
         'company_id': fields.related('issue_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'price_subtotal': fields.function(_amount_line, string='Amount', type="float",
             digits_compute= dp.get_precision('Account'), store=True),
         'estimated_price': fields.float('Estimate',),
-        'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Lines', readonly=True),
+        'invoice_line_id': fields.many2one('account.invoice.line', 'Invoice Line', readonly=True),
+        'invoice_id': fields.related('invoice_line_id', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
         'state': fields.selection(
             [('cancel', 'Cancelled'),
              ('draft', 'Draft'),
              ('confirmed', 'Confirmed'),
-             ('progress', 'Invoiced'),
+             ('invoiced', 'Invoiced'),
              ('done', 'Done')],
             'Status', required=True, readonly=True,
             help='* The \'Draft\' status is set when the related hon issue in draft status. \
@@ -390,11 +347,6 @@ class hon_issue_line(orm.Model):
         'employee': False,
     }
 
-    #def _get_line_qty(self, cr, uid, line, context=None):
-    #    if (line.issue_id.invoice_quantity=='order'):
-    #        if line.product_uos:
-    #            return line.product_uos_qty or 0.0
-    #   return line.product_uom_qty
 
 
     def _prepare_hon_issue_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
@@ -425,10 +377,6 @@ class hon_issue_line(orm.Model):
                             context=context)
                     account_id = prop and prop.id or False
             qty = line.quantity
-            #pu = 0.0
-            #if qty:
-            #    pu = round(line.price_unit * line.quantity,
-            #            self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Price'))
             fpos = line.partner_id.property_account_position or False
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
             if not account_id:
@@ -444,8 +392,6 @@ class hon_issue_line(orm.Model):
                 'quantity': qty,
                 'uos_id': line.uos_id,
                 'product_id': line.product_id.id or False,
-                #'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
-                'account_analytic_id': line.issue_id.account_analytic_id and line.issue_id.account_analytic_id.id or False,
                 'activity_id': line.activity_id and line.activity_id.id or False,
             }
 
@@ -461,7 +407,7 @@ class hon_issue_line(orm.Model):
             vals = self._prepare_hon_issue_line_invoice_line(cr, uid, line, False, context)
             if vals:
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, vals, context=context)
-                self.write(cr, uid, [line.id], {'invoice_line_id': inv_id}, context=context)
+                self.write(cr, uid, [line.id], {'invoice_line_id': inv_id, 'state': 'invoiced'}, context=context)
                 hon.add(line.issue_id.id)
                 create_ids.append(inv_id)
         # Trigger workflow events
@@ -472,7 +418,7 @@ class hon_issue_line(orm.Model):
 
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
-            if line.invoiced:
+            if line.invoice_line_id:
                 raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a Hon line that has already been invoiced.'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
@@ -509,9 +455,13 @@ class hon_issue_line(orm.Model):
             result['employee'] = True
         else:
             result['employee'] = False
-        res_final = {'value':result,}
-
+        #import pdb; pdb.set_trace()
+        if part.product_category_ids:
+            result['product_category_id'] = part.product_category_ids[0].id
+        res_final = {'value':result}
         return res_final
+
+
 
     def price_quantity_change(self, cr, uid, ids, partner_id=False, price_unit=False, quantity=False, price_subtotal=False, context=None):
         if context is None:

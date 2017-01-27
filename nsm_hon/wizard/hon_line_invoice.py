@@ -24,6 +24,17 @@ from openerp.tools.translate import _
 from openerp import netsvc
 import time
 
+class hon_issue_make_invoice(osv.osv_memory):
+    _name = "hon.issue.make.invoice"
+    _description = "Honorarium Issue Make_invoice"
+
+    def make_invoices_from_issues(self, cr, uid, ids, context=None):
+        issue_ids = context.get('active_ids', [])
+        his_obj = self.pool.get('hon.issue.line.make.invoice')
+        lines = self.pool['hon.issue.line'].search(cr, uid, [('issue_id','in', [issue_ids])], context=context)
+        his_obj.make_invoices_from_lines(cr, uid, lines, context=context)
+        return True
+
 class hon_issue_line_make_invoice(osv.osv_memory):
     _name = "hon.issue.line.make.invoice"
     _description = "Honorarium Issue Line Make_invoice"
@@ -53,7 +64,7 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             'section_id': issue.account_analytic_id.section_ids[0] and issue.account_analytic_id.section_ids[0].id or False,
             'user_id': uid,
             'company_id': issue.company_id and issue.company_id.id or False,
-            'date_invoice': fields.date.today(),
+            'date_invoice': context.get('date_invoice', []) or fields.date.today(),
             'partner_bank_id': partner.bank_ids and partner.bank_ids[0].id or False,
             'product_category': category.id,
             'check_total': lines['subtotal'],
@@ -61,7 +72,7 @@ class hon_issue_line_make_invoice(osv.osv_memory):
         }
 
     
-    def make_invoices(self, cr, uid, ids, context=None):
+    def make_invoices_from_lines(self, cr, uid, ids, context=None):
         """
              To make invoices.
 
@@ -75,10 +86,14 @@ class hon_issue_line_make_invoice(osv.osv_memory):
 
         """
         if context is None: context = {}
+        if not context.get('active_ids', []):
+            raise osv.except_osv(_('Warning!'), _(
+                'No Issue lines are selected for invoicing:\n'))
+        else: lids = context.get('active_ids', [])
         res = False
         invoices = {}
 
-        def make_invoice(partner, issue, category, lines):
+        def make_invoice(partner, issue, category, lines, context=context):
             """
                  To make invoices.
 
@@ -88,27 +103,28 @@ class hon_issue_line_make_invoice(osv.osv_memory):
                  @return:
 
             """
-            inv = self._prepare_invoice(cr, uid, partner, issue, category, lines)
+            inv = self._prepare_invoice(cr, uid, partner, issue, category, lines, context=context)
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
             return inv_id
 
         hon_issue_line_obj = self.pool.get('hon.issue.line')
         hon_issue_obj = self.pool.get('hon.issue')
         wf_service = netsvc.LocalService('workflow')
-        for issue in hon_issue_obj.browse(cr, uid, context.get('active_ids', []), context=context):
-            for line in hon_issue_line_obj.browse(cr, uid, issue.hon_issue_line, context=context):
-                line_id = line.id
-                if (not line_id.invoice_line_id) and (line_id.state not in ('draft', 'cancel')) and (not line_id.employee):
-                    if not (line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id) in invoices:
-                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)] = {'lines':[],'subtotal':0, 'name': ''}
-                    inv_line_id = hon_issue_line_obj.invoice_line_create(cr, uid, [line_id.id])
-                    for lid in inv_line_id:
-                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)]['lines'].append(lid)
-                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)]['subtotal'] += line_id.price_subtotal
-                        invoices[(line_id.issue_id.id, line_id.partner_id.id, line_id.product_category_id.id)]['name'] += str(line_id.name)+' / '
+        import pdb; pdb.set_trace()
+        for line in hon_issue_line_obj.browse(cr, uid, lids, context=context):
+            if (not line.invoice_line_id) and (line.state not in ('draft', 'cancel')) and (not line.employee):
+                if not (line.issue_id.id, line.partner_id.id, line.product_category_id.id) in invoices:
+                    invoices[(line.issue_id.id, line.partner_id.id, line.product_category_id.id)] = {'lines':[],'subtotal':0, 'name': ''}
+                inv_line_id = hon_issue_line_obj.invoice_line_create(cr, uid, [line.id])
+                for lid in inv_line_id:
+                    invoices[(line.issue_id.id, line.partner_id.id, line.product_category_id.id)]['lines'].append(lid)
+                    invoices[(line.issue_id.id, line.partner_id.id, line.product_category_id.id)]['subtotal'] += line.price_subtotal
+                    invoices[(line.issue_id.id, line.partner_id.id, line.product_category_id.id)]['name'] += str(line.name)+' / '
 
         if not invoices:
-            raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Honorarium Issue Line due to one of the following reasons:\n1.The state of this hon issue line is either "draft" or "cancel"!\n2.The Honorarium Issue Line is Invoiced!'))
+            raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Honorarium Issue Line due to one of the following reasons:\n'
+                                                  '1.The state of this hon issue line is either "draft" or "cancel"!\n'
+                                                  '2.The Honorarium Issue Line is Invoiced!'))
 
         for issue_partner_category, il in invoices.items():
             issue_id = issue_partner_category[0]
@@ -117,9 +133,7 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             issue = hon_issue_obj.browse(cr, uid, issue_id, context=context)
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             category = self.pool.get('product.category').browse(cr, uid, category_id, context=context)
-            res = make_invoice(partner, issue, category, il)
-            cr.execute('INSERT INTO hon_issue_invoice_rel \
-                    (issue_id,invoice_id) values (%s,%s)', (issue.id, res))
+            res = make_invoice(partner, issue, category, il, date_invoice)
             flag = True
             data_hon = hon_issue_obj.browse(cr, uid, issue.id, context=context)
             for line in data_hon.hon_issue_line:
@@ -131,10 +145,10 @@ class hon_issue_line_make_invoice(osv.osv_memory):
                 wf_service.trg_validate(uid, 'hon.issue', issue.id, 'all_lines', cr)
 
         if context.get('open_invoices', False):
-            return self.open_invoices(cr, uid, ids, res, context=context)
+            return self.open_invoices(cr, uid, res, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
-    def open_invoices(self, cr, uid, ids, invoice_ids, context=None):
+    def open_invoices(self, cr, uid, invoice_ids, context=None):
         """ open a view on one of the given invoice_ids """
         ir_model_data = self.pool.get('ir.model.data')
         form_res = ir_model_data.get_object_reference(cr, uid, 'account', 'invoice_form')
