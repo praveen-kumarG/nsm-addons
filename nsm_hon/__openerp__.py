@@ -57,6 +57,7 @@ representing the Issue and to the products representing the type and price of th
               "product_category_view.xml",
               "partner_product_price.xml",
               "account_invoice_report.xml",
+              "account_analytic_view.xml",
     ],
     'demo' : [],
     'installable': True,
