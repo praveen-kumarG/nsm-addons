@@ -20,5 +20,35 @@
             </field>
         </record>
 
+        <!--record id="view_custom_supplier_invoice_submited_form_hon" model="ir.ui.view">
+            <field name="name">account.invoice.form.hon</field>
+            <field name="model">account.invoice</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="nsm_supportal_extension.view_custom_supplier_invoice_submited_form_ext"/>
+            <field name="arch" type="xml">
+                <data>
+                    <button name="portalback" position="attributes">
+                            <attribute name="attrs" >{'invisible': ['|','|',('state','!=','draft'),('topf','=',True),('product_category','=', %(nsm_hon.hon_categoryT)d )]}</attribute>
+                    </button>
+                </data>
+            </field>
+        </record-->
+
+        <record id="invoice_supplier_form_NSM_HON" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form.NSM_hon</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="nsm_supportal_extension.invoice_supplier_form_NSM_ext"/>
+            <field name="arch" type="xml">
+                <data>
+                        <button name="portalback" position="attributes">
+                            <attribute name="attrs" >{'invisible': ['|',('product_category','=', %(nsm_hon.hon_categoryT)d )]}</attribute>
+                        </button>
+                        <field name="state" position="after">
+                            <field name="product_category" invisible="1"/>
+                        </field>
+                </data>
+            </field>
+        </record>
+
     </data>
 </openerp>

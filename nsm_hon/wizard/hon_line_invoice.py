@@ -110,9 +110,9 @@ class hon_issue_line_make_invoice(osv.osv_memory):
         hon_issue_line_obj = self.pool.get('hon.issue.line')
         hon_issue_obj = self.pool.get('hon.issue')
         wf_service = netsvc.LocalService('workflow')
-        import pdb; pdb.set_trace()
+        #import pdb; pdb.set_trace()
         for line in hon_issue_line_obj.browse(cr, uid, lids, context=context):
-            if (not line.invoice_line_id) and (line.state not in ('draft', 'cancel')) and (not line.employee):
+            if (not line.invoice_line_id) and (line.state not in ('draft', 'cancel')) and (not line.employee) and (not line.gratis):
                 if not (line.issue_id.id, line.partner_id.id, line.product_category_id.id) in invoices:
                     invoices[(line.issue_id.id, line.partner_id.id, line.product_category_id.id)] = {'lines':[],'subtotal':0, 'name': ''}
                 inv_line_id = hon_issue_line_obj.invoice_line_create(cr, uid, [line.id])
@@ -133,7 +133,7 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             issue = hon_issue_obj.browse(cr, uid, issue_id, context=context)
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             category = self.pool.get('product.category').browse(cr, uid, category_id, context=context)
-            res = make_invoice(partner, issue, category, il, date_invoice)
+            res = make_invoice(partner, issue, category, il,)
             flag = True
             data_hon = hon_issue_obj.browse(cr, uid, issue.id, context=context)
             for line in data_hon.hon_issue_line:

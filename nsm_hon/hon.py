@@ -98,18 +98,23 @@ class hon_issue(orm.Model):
             return [('id', '=', 0)]
         return [('id', 'in', [x[0] for x in res])]
 
+
     _columns = {
-        'account_analytic_id': fields.many2one('account.analytic.account', 'Title/Issue', required=True, readonly=True, states = {'draft': [('readonly', False)]},
-                                                domain=[('type','!=','view'), ('portal_sub', '=', True)]),
-        'date_publish': fields.related('account_analytic_id','date_publish',type='date',relation='account.analytic.account',string='Publishing Date', store=True, readonly=True),
-        'name': fields.char('Description', size=64, readonly=True, states={'draft':[('readonly',False)]}),
+        'account_analytic_id': fields.many2one('account.analytic.account', 'Title/Issue',
+                                               required=True, readonly=True, states = {'draft': [('readonly', False)]},
+                                                domain=[('type','!=','view'), ('portal_sub', '=', True), ('parent_id.is_hon', '=', True)]),
+        'date_publish': fields.related('account_analytic_id','date_publish',type='date',
+                                       relation='account.analytic.account',string='Publishing Date', store=True, readonly=True),
+        'name': fields.related('account_analytic_id', 'name', type='char',
+                                       relation='account.analytic.account', string='Name', store=True,
+                                       readonly=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
         'hon_issue_line': fields.one2many('hon.issue.line', 'issue_id', 'Hon Lines', readonly=False, states={'draft':[('readonly',False)]}),
         'state': fields.selection([
+            ('cancel', 'Cancelled'),
             ('draft','Draft'),
             ('open','Open'),
-            ('manual', 'Invoiced'),
-            ('cancel','Cancelled'),
+            ('manual', 'Partly Invoiced'),
             ('done', 'Done'),
             ],'Status', select=True, readonly=True,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Honorarium Issue. \
@@ -215,7 +220,7 @@ class hon_issue(orm.Model):
             result['res_id'] = inv_ids and inv_ids[0] or False
         return result
 
-    def action_invoice_create(self, cr, uid, ids, date_invoice = False, context=None):
+    def action_invoice_create(self, cr, uid, ids, date_invoice=False, context=None):
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, useful when invoices are generated this month and put the
@@ -297,7 +302,7 @@ class hon_issue_line(orm.Model):
         'issue_id': fields.many2one('hon.issue', 'Issue Reference', ondelete='cascade', select=True),
         'partner_id': fields.many2one('res.partner', 'Partner',),
         'employee': fields.boolean('Employee',  help="It indicates that the partner is an employee."),
-        'product_category_id': fields.many2one('product.category', 'T/B',domain=[('parent_id.supportal', '=', True)]),
+        'product_category_id': fields.many2one('product.category', 'T/B',required=True, domain=[('parent_id.supportal', '=', True)]),
         'product_id': fields.many2one('product.product', 'Product', required=True,),
         'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')],
                                       help="The income or expense account related to the selected product."),
@@ -327,6 +332,7 @@ class hon_issue_line(orm.Model):
                         \n* The \'Exception\' status is set when the related hon issue is set as exception. \
                         \n* The \'Done\' status is set when the hon line has been picked. \
                         \n* The \'Cancelled\' status is set when a user cancel the hon issue related.'),
+        'gratis': fields.boolean('Gratis',  help="It indicates that no letter/invoice is generated.")
     }
 
     def _default_account_id(self, cr, uid, context=None):
@@ -384,6 +390,7 @@ class hon_issue_line(orm.Model):
                             _('There is no Fiscal Position defined or Expense category account defined for default properties of Product categories.'))
             res = {
                 'hon_issue_line_id': line.id,
+                'account_analytic_id': line.account_analytic_id and line.account_analytic_id.id or False,
                 'name': line.name,
                 'sequence': line.sequence,
                 'origin': line.issue_id.name,
@@ -461,13 +468,21 @@ class hon_issue_line(orm.Model):
         res_final = {'value':result}
         return res_final
 
+    def product_category_change(self, cr, uid, ids, product_category=False, product=False, context=None):
+        result = {}
+        if product:
+            prod_obj = self.pool['product.product'].browse(cr, uid, product, context=context)
+        if product_category is not prod_obj.categ_id:
+            result['product_id'] = []
+        else:
+            result['product_id'] = product
+        return {'value': result}
 
 
     def price_quantity_change(self, cr, uid, ids, partner_id=False, price_unit=False, quantity=False, price_subtotal=False, context=None):
         if context is None:
             context = {}
-        #if not partner_id :
-        #   raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
+
         result = {}
         if price_unit :
             if quantity :
@@ -505,7 +520,7 @@ class hon_issue_line(orm.Model):
             if price :
                 result.update( {'price_unit': price[0].price_unit} )
         else:
-            result.update( {'price_unit': price_unit} )
+            result.update( {'price_unit': 0 } )
 
         res_final = {'value':result,}
 

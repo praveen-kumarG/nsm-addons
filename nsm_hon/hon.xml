@@ -9,6 +9,7 @@
             <field name="arch" type="xml">
                 <tree string="Hon Issues">
                     <field name="account_analytic_id"/>
+                    <field name="date_publish"/>
                     <field name="state" invisible="0"/>
                 </tree>
             </field>
@@ -48,28 +49,31 @@
                                     <tree string="Hon Issue lines" editable="bottom">
                                         <field name="company_id" invisible="1"/>
                                         <field name="sequence" widget="handle" />
-                                        <field name="partner_id" required="True" on_change="partner_id_change(partner_id, context )"/>
-                                        <field name="product_category_id" required="True" domain="['|',('id', '=',  %(nsm_hon.hon_categoryT)d),('id', '=',  %(nsm_hon.hon_categoryB)d)]"/>
+                                        <field name="partner_id"  domain="['|',('employee','=', True),('category_id', '=',  %(nsm_hon.hon_partner_category)d)]"
+                                               on_change="partner_id_change(partner_id, context )"/>
+                                        <field name="product_category_id"  onchange="product_category_change(product_category_id, product, context)"
+                                               domain="['|',('id', '=',  %(nsm_hon.hon_categoryT)d),('id', '=',  %(nsm_hon.hon_categoryB)d)]"/>
                                         <field name="page_number"/>
-                                        <field name="activity_id" invisible="0" required="True" />
+                                        <field name="activity_id" invisible="0"  />
                                         <field name="product_id" on_change="product_id_change(product_id, partner_id, price_unit, context )"
                                                domain="[('categ_id', '=', product_category_id)]"/>
-                                        <field name="quantity" on_change="price_quantity_change(partner_id, price_unit, quantity, price_subtotal, context )" attrs="{'invisible': [('employee','=',True)]}"/>
+                                        <field name="quantity" on_change="price_quantity_change(partner_id, price_unit, quantity, price_subtotal, context )"
+                                               attrs="{'invisible': [('employee','=',True)]}"/>
                                         <field name="nr_of_columns"/>
                                         <field name="employee" invisible="1"/>
                                         <field name="account_analytic_id" invisible="1"/>
                                         <field name="parent_analytic_id" invisible="1"/>
                                         <field name="account_id" invisible="1"/>
-                                        <field name="price_unit" on_change="price_quantity_change(partner_id, price_unit, quantity, price_subtotal, context )" attrs="{'invisible': [('employee','=',True)]}"/>
+                                        <field name="price_unit" on_change="price_quantity_change(partner_id, price_unit, quantity, price_subtotal, context )"
+                                               attrs="{'invisible': [('employee','=',True)]}"/>
                                         <field name="name"/>
+                                        <field name="gratis" attrs="{'invisible': [('employee','=',True)]}"/>
                                         <field name="estimated_price" attrs="{'invisible': [('employee','=',True)]}"/>
                                         <field name="price_subtotal" attrs="{'invisible': [('employee','=',True)]}"/>
                                         <field name="invoice_id" attrs="{'invisible': [('employee','=',True)]}"/>
                                     </tree>
                                 </field>
                             </page>
-
-
                             <page string="Other Info">
                                 <div class="oe_clear">
                                     <label for="comment"/>
@@ -113,22 +117,30 @@
             <field name="model">hon.issue.line</field>
             <field name="view_type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Hon Issue Lines"  create="false">
-                    <field name="account_analytic_id" invisible="1"/>
+                <tree string="Hon Issue Lines"  editable="top" create="false" >
+                    <field name="account_analytic_id" invisible="0"/>
                     <field name="company_id" invisible="1"/>
+                    <field name="partner_id" on_change="partner_id_change(partner_id, context )"
+                           attrs="{'readonly': [('state','!=','draft')]}"
+                           domain="['|',('employee','=', True),('category_id', '=',  %(nsm_hon.hon_partner_category)d)]"/>
+                    <field name="product_category_id" on_change="product_category_change(product_category_id, product_id, context)"
+                           attrs="{'readonly': [('state','!=','draft')]}"
+                           domain="[('id','in', [ %(nsm_hon.hon_categoryT)d, %(nsm_hon.hon_categoryB)d])]"/>
                     <field name="page_number"/>
-                    <field name="name"/>
-                    <field name="nr_of_columns"/>
-                    <field name="partner_id" />
+                    <field name="activity_id" invisible="0"  attrs="{'readonly': [('state','!=','draft')]}"/>
+                    <field name="product_id" on_change="product_id_change(product_id, partner_id, price_unit, context )"
+                           attrs="{'readonly': [('state','!=','draft')]}"
+                           domain="[('categ_id', '=', product_category_id)]"/>
+                    <field name="quantity" on_change="price_quantity_change(partner_id, price_unit, quantity, price_subtotal, context )"
+                           attrs="{'invisible': [('employee','=',True)], 'readonly': [('state','!=','draft')]}"/>
+                    <field name="nr_of_columns" sum="columns"/>
+                    <field name="price_unit" attrs="{'invisible': [('employee','=',True)], 'readonly': [('state','!=','draft')]}"/>
                     <field name="employee" invisible="1"/>
-                    <field name="activity_id" invisible="0" />
-                    <field name="product_category_id" />
-                    <field name="product_id"/>
+                    <field name="name"/>
                     <field name="account_id" invisible="1"/>
-                    <field name="price_unit" attrs="{'invisible': [('employee','=',True)]}"/>
-                    <field name="quantity" attrs="{'invisible': [('employee','=',True)]}"/>
-                    <field name="estimated_price" attrs="{'invisible': [('employee','=',True)]}"/>
-                    <field name="price_subtotal" attrs="{'invisible': [('employee','=',True)]}"/>
+                    <field name="gratis" attrs="{'invisible': [('employee','=',True)]}"/>
+                    <field name="estimated_price" attrs="{'invisible': [('employee','=',True)]}" sum="Estimate"/>
+                    <field name="price_subtotal" attrs="{'invisible': [('employee','=',True)]}" sum="Total"/>
                     <field name="invoice_id"/>
                     <field name="state" invisible="0"/>
                 </tree>
@@ -144,16 +156,19 @@
                     <field name="partner_id" />
                     <field name="activity_id" />
                     <field name="product_category_id" />
-                    <filter name="state" string="Draft" domain="[('state','=','draft')]" help="Draft issues"/>
-                    <filter name="state" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed issues"/>
-                    <filter name="state" string="Invoiced" domain="[('state','=','invoiced')]" help="Invoiced issues"/>
+                    <filter name="state" string="Draft" domain="[('state','=','draft')]" help="Draft Issue Lines"/>
+                    <filter name="state" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Issue Lines"/>
+                    <filter name="gratis" string="Gratis" domain="[('gratis','=',True)]" help="Gratis Issue Lines"/>
+                    <filter name="state" string="Invoiced" domain="[('state','=','invoiced')]" help="Invoiced Issue Lines"/>
+                    <filter name="employee" string="Employee Lines" domain="[('employee','=',True)]" help="Employee Issue Lines"/>
                     <separator/>
                     <field name="account_analytic_id" operator="child_of"/>
                     <separator/>
                     <group expand="0" string="Group By">
                     	<filter name="group_by_issue" string="Issue" context="{'group_by':'account_analytic_id'}"/>
-                        <filter name="group_by_product_category_id" string="Page Type" context="{'group_by':'product_category_id'}"/>
-                        <filter name="group_by_activity_id" string="Activity" context="{'group_by':'activity_id'}"/>
+                        <filter name="group_by_product_category_id" string="Tekst/Beeld" context="{'group_by':'product_category_id'}"/>
+                        <filter name="group_by_product_id" string="Product" context="{'group_by':'product_id'}"/>
+                        <filter name="group_by_activity_id" string="Page Type" context="{'group_by':'activity_id'}"/>
                         <filter name="group_by_partner" string="Partner" context="{'group_by':'partner_id'}"/>
                     <separator/>
                     </group>
@@ -231,6 +246,7 @@
               </p>
             </field>
         </record>
+
         <menuitem action="action_invoice_tree_hon"
                   name="Hon Invoices"
                   id="menu_action_invoice_tree"
