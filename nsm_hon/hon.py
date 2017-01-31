@@ -114,7 +114,8 @@ class hon_issue(orm.Model):
             ('cancel', 'Cancelled'),
             ('draft','Draft'),
             ('open','Open'),
-            ('manual', 'Partly Invoiced'),
+            ('manual', 'To Invoice'),
+            ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ],'Status', select=True, readonly=True,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Honorarium Issue. \
@@ -169,7 +170,6 @@ class hon_issue(orm.Model):
     def manual_invoice(self, cr, uid, ids, context=None):
            #create invoices for the given hon issues (ids), and open the form
            #view of one of the newly created invoices
-
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
 
@@ -181,7 +181,7 @@ class hon_issue(orm.Model):
             # determine newly created invoices
         new_inv_ids = list(inv_ids1 - inv_ids0)
 
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
         res_id = res and res[1] or False,
 
         return {
@@ -236,21 +236,21 @@ class hon_issue(orm.Model):
     def action_invoice_end(self, cr, uid, ids, context=None):
         for this in self.browse(cr, uid, ids, context=context):
             for line in this.hon_issue_line:
-                if line.state == 'confirmed':
-                    line.write({'state': 'invoiced'})
-    #        if this.state == 'invoice_except':
-    #            this.write({'state': 'progress'})
+                if line.state == 'exception':
+                    line.write({'state': 'confirmed'})
+            if this.state == 'invoice_except':
+                this.write({'state': 'open'})
         return True
 
     def action_invoice_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'manual'}, context=context)
+        self.write(cr, uid, ids, {'state': 'invoice_except'}, context=context)
         return True
 
-    #def action_button_confirm(self, cr, uid, ids, context=None):
-    #    assert len(ids) == 1, 'This option should only be used for a single id at a time.'
-    #    wf_service = netsvc.LocalService('workflow')
-    #    wf_service.trg_validate(uid, 'hon.issue', ids[0], 'issue_confirm', cr)
-    #    return True
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        wf_service = netsvc.LocalService('workflow')
+        wf_service.trg_validate(uid, 'hon.issue', ids[0], 'issue_confirm', cr)
+        return True
 
     def unlink(self, cr, uid, ids, context=None):
         issues = self.read(cr, uid, ids, ['state'], context=context)
@@ -279,6 +279,25 @@ class hon_issue(orm.Model):
                 raise osv.except_osv(_('Error!'),_('You cannot unconfirm a hon issue which has no line.'))
             self.write(cr, uid, [o.id], {'state': 'draft', })
             self.pool.get('hon.issue.line').button_unconfirm(cr, uid, [x.id for x in o.hon_issue_line])
+        return True
+
+    def action_cancel(self, cr, uid, ids, context=None):
+        wf_service = netsvc.LocalService("workflow")
+        if context is None:
+            context = {}
+        hon_issue_line_obj = self.pool.get('hon.issue.line')
+        for issue in self.browse(cr, uid, ids, context=context):
+            for inv in issue.invoice_ids:
+                if inv.state not in ('draft', 'cancel'):
+                    raise osv.except_osv(
+                        _('Cannot cancel this issue!'),
+                        _('First cancel all invoices attached to this issue.'))
+            for r in self.read(cr, uid, ids, ['invoice_ids']):
+                for inv in r['invoice_ids']:
+                    wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
+            hon_issue_line_obj.write(cr, uid, [l.id for l in  issue.hon_issue_line],
+                    {'state': 'cancel'})
+        self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
 
@@ -313,6 +332,9 @@ class hon_issue_line(orm.Model):
         'parent_analytic_id': fields.related('account_analytic_id', 'parent_id', type='many2one',
                                               relation='account.analytic.account', string='Title', store=True,
                                               readonly=True),
+        'date_publish': fields.related('account_analytic_id', 'date_publish', type='date',
+                                       relation='account.analytic.account', string='Publishing Date', store=True,
+                                       readonly=True),
         'activity_id': fields.many2one('project.activity_al', 'Page Type',  ondelete='set null', select=True),
         'company_id': fields.related('issue_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'price_subtotal': fields.function(_amount_line, string='Amount', type="float",
@@ -324,7 +346,7 @@ class hon_issue_line(orm.Model):
             [('cancel', 'Cancelled'),
              ('draft', 'Draft'),
              ('confirmed', 'Confirmed'),
-             ('invoiced', 'Invoiced'),
+             ('exception', 'Exception'),
              ('done', 'Done')],
             'Status', required=True, readonly=True,
             help='* The \'Draft\' status is set when the related hon issue in draft status. \
@@ -414,7 +436,7 @@ class hon_issue_line(orm.Model):
             vals = self._prepare_hon_issue_line_invoice_line(cr, uid, line, False, context)
             if vals:
                 inv_id = self.pool.get('account.invoice.line').create(cr, uid, vals, context=context)
-                self.write(cr, uid, [line.id], {'invoice_line_id': inv_id, 'state': 'invoiced'}, context=context)
+                self.write(cr, uid, [line.id], {'invoice_line_id': inv_id }, context=context)
                 hon.add(line.issue_id.id)
                 create_ids.append(inv_id)
         # Trigger workflow events
@@ -462,7 +484,6 @@ class hon_issue_line(orm.Model):
             result['employee'] = True
         else:
             result['employee'] = False
-        #import pdb; pdb.set_trace()
         if part.product_category_ids:
             result['product_category_id'] = part.product_category_ids[0].id
         res_final = {'value':result}

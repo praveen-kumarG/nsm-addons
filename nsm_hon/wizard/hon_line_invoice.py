@@ -32,6 +32,7 @@ class hon_issue_make_invoice(osv.osv_memory):
         issue_ids = context.get('active_ids', [])
         his_obj = self.pool.get('hon.issue.line.make.invoice')
         lines = self.pool['hon.issue.line'].search(cr, uid, [('issue_id','in', [issue_ids])], context=context)
+        context['active_ids'] = lines
         his_obj.make_invoices_from_lines(cr, uid, lines, context=context)
         return True
 
@@ -124,7 +125,9 @@ class hon_issue_line_make_invoice(osv.osv_memory):
         if not invoices:
             raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Honorarium Issue Line due to one of the following reasons:\n'
                                                   '1.The state of this hon issue line is either "draft" or "cancel"!\n'
-                                                  '2.The Honorarium Issue Line is Invoiced!'))
+                                                  '2.The Honorarium Issue Line is Invoiced!\n'
+                                                  '3.The Honorarium Issue Line is marked "gratis"\n'
+                                                  '4.The Honorarium Issue Line has an Employee as Creditor\n'))
 
         for issue_partner_category, il in invoices.items():
             issue_id = issue_partner_category[0]

@@ -24,10 +24,11 @@
                     <header>
                         <button name="issue_confirm" states="draft" string="Confirm Hon Issue" type="workflow" groups="base.group_user"/>
                         <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('invoice_exists', '=', False)]}" groups="base.group_user"/>
-                        <button name="manual_invoice" string="Create Invoices" type="action" states="open" class="oe_highlight" groups="base.group_user"/>
-                        <button name="cancel" states="draft,open" string="Cancel Issue" groups="base.group_user"/>
+                        <button name="manual_invoice" string="Create Invoices" type="object" states="open" class="oe_highlight" groups="base.group_user"/>
+                        <button name="cancel" states="draft,open,manual" string="Cancel Issue" type="workflow" groups="base.group_user"/>
                         <button name="back_draft" states="open" string="back to Draft" type="workflow" groups="base.group_user"/>
-                        <button name="invoice_cancel" states="open,manual" string="Cancel Issue" groups="base.group_user"/>
+                        <!--button name="cancel" states="manual,open" string="Cancel Issue" type="workflow" groups="base.group_user"/-->
+                        <button name="invoice_cancel" states="invoice_except" string="Cancel Issue" type="workflow" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,open,manual,done" statusbar_colors='{"draft":"blue", "open":"red","manual":"blue"}'/>
                     </header>
 
@@ -159,7 +160,7 @@
                     <filter name="state" string="Draft" domain="[('state','=','draft')]" help="Draft Issue Lines"/>
                     <filter name="state" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Issue Lines"/>
                     <filter name="gratis" string="Gratis" domain="[('gratis','=',True)]" help="Gratis Issue Lines"/>
-                    <filter name="state" string="Invoiced" domain="[('state','=','invoiced')]" help="Invoiced Issue Lines"/>
+                    <filter name="state" string="Exception" domain="[('state','=','exception')]" help="Issue Exception"/>
                     <filter name="employee" string="Employee Lines" domain="[('employee','=',True)]" help="Employee Issue Lines"/>
                     <separator/>
                     <field name="account_analytic_id" operator="child_of"/>
@@ -262,6 +263,26 @@
                   sequence="1"
                   groups="nsm_hon.group_module_hon_user"
                   />
+
+        <record id="account.action_invoice_tree2" model="ir.actions.act_window">
+            <field name="name">Supplier Invoices</field>
+            <field name="res_model">account.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field eval="False" name="view_id"/>
+            <field name="domain">[('type','=','in_invoice'), ('state', '!=', 'portalcreate'),'|',('hon','=',False),'&amp;',('state','not in',['draft','open']),('hon','!=',False)]</field>
+            <field name="context">{'default_type': 'in_invoice', 'type': 'in_invoice', 'journal_type': 'purchase'}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to record a new supplier invoice.
+              </p><p>
+                You can control the invoice from your supplier according to
+                what you purchased or received. OpenERP can also generate
+                draft invoices automatically from purchase orders or receipts.
+              </p>
+            </field>
+        </record>
 
     </data>
 </openerp>

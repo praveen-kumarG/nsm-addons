@@ -34,4 +34,5 @@ import account_invoice
 import account_analytic
 import res_company
 import product_category
+import account_invoice_state
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -8,17 +8,38 @@
             <field name="inherit_id" ref="nsm_supportal_extension.invoice_supplier_form_NSM_ext"/>
             <field name="arch" type="xml">
                 <data>
-                        <button name="invoice_open" position="before">
-                            <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|','|',('sent','=',True), ('hon','!=',True),('state', '!=', 'open')]}" class="oe_highlight" groups="nsm_hon.group_module_hon_user"/>
-                            <button name="invoice_print" string="Print" type="object" attrs="{'invisible':['|','|',('sent','=',True), ('hon','!=',True),('state', '!=', 'open')]}" class="oe_highlight" groups="nsm_hon.group_module_hon_user"/>
-                            <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|','|',('hon','!=',True),('sent','=',False), ('state', '!=', 'open')]}" groups="nsm_hon.group_module_hon_user"/>
-                            <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|','|',('hon','!=',True),('sent','=',False), ('state', '!=', 'open')]}" groups="nsm_hon.group_module_hon_user"/>
+                        <button name="invoice_open" position="replace">
+                            <button name="action_invoice_sent" type="object" class="oe_highlight" string="Send by Email"
+                                    attrs="{'invisible':['|','|',('sent','=',True),('hon','!=',True),('state','not in',['draft','open'])]}"
+                                    groups="nsm_hon.group_module_hon_user"/>
+                            <button name="invoice_print" string="Print Invoice" type="object" class="oe_highlight"
+                                    attrs="{'invisible':['|','|',('sent','=',True), ('hon','!=',True),('state', 'not in', ['draft', 'open'])]}"
+                                    groups="nsm_hon.group_module_hon_user"/>
+                            <button name="action_invoice_sent" type="object" string="Send by Email"
+                                    attrs="{'invisible':['|','|',('sent','!=',True), ('hon','!=',True),('state', 'not in', ['draft', 'open'])]}"
+                                    groups="nsm_hon.group_module_hon_user"/>
+                            <button name="invoice_print" string="Print Invoice" type="object"
+                                    attrs="{'invisible':['|','|',('sent','!=',True), ('hon','!=',True),('state', 'not in', ['draft', 'open'])]}"
+                                    groups="nsm_hon.group_module_hon_user"/>
+                            <button name="invoice_open" string="Confirm" class="oe_highlight"
+                                    attrs="{'invisible': ['|','|',('state', 'not in', ['draft','proforma2']),'&amp;',('product_category','=', %(nsm_hon.hon_categoryB)d ),
+                                    ('is_portal','!=',True),'&amp;',('hon','!=',True),('state', 'not in', ['draft','proforma2'])]}" />
                             <field name="sent" invisible="1"/>
                             <field name="hon" invisible="1"/>
+                            <field name="product_category" invisible="1"/>
+                            <field name="is_portal" invisible="1"/>
                         </button>
+                        <button name="portalback" position="replace">
+                            <button name="portalback" class="oe_highlight" type="workflow" string="Terug Portal" attrs="{'invisible': ['|','|','|',
+                                    ('product_category','=', %(nsm_hon.hon_categoryT)d ), ('state', '!=', 'draft'),('hon','!=',True),('sent','=',False)]}"/>
+                            <button name="portalback"  type="workflow" string="Terug Portal" attrs="{'invisible': ['|',('hon','=',True), ('state', '!=', 'draft')]}"/>
+                        </button>
+
+
                 </data>
             </field>
         </record>
+
 
         <!--record id="view_custom_supplier_invoice_submited_form_hon" model="ir.ui.view">
             <field name="name">account.invoice.form.hon</field>
@@ -34,21 +55,6 @@
             </field>
         </record-->
 
-        <record id="invoice_supplier_form_NSM_HON" model="ir.ui.view">
-            <field name="name">account.invoice.supplier.form.NSM_hon</field>
-            <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="nsm_supportal_extension.invoice_supplier_form_NSM_ext"/>
-            <field name="arch" type="xml">
-                <data>
-                        <button name="portalback" position="attributes">
-                            <attribute name="attrs" >{'invisible': ['|',('product_category','=', %(nsm_hon.hon_categoryT)d )]}</attribute>
-                        </button>
-                        <field name="state" position="after">
-                            <field name="product_category" invisible="1"/>
-                        </field>
-                </data>
-            </field>
-        </record>
 
     </data>
 </openerp>

@@ -21,13 +21,19 @@
             <field name="action">action_unwait()</field>
         </record>
         
-        <record id="act_sent" model="workflow.activity">
+        <!--record id="act_sent" model="workflow.activity">
             <field name="wkf_id" ref="wkf_hon"/>
             <field name="name">sent</field>
             <field name="kind">function</field>
             <field name="action">write({'state':'sent'})</field>
-        </record>
+        </record-->
 
+        <record id="act_wait_invoice" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_hon"/>
+            <field name="name">open</field>
+            <field name="kind">function</field>
+            <field name="action">action_wait()</field>
+        </record>
         <record id="act_invoice" model="workflow.activity">
             <field name="wkf_id" ref="wkf_hon"/>
             <field name="name">invoice</field>
@@ -35,13 +41,11 @@
             <field name="subflow_id" search="[('name','=','account.invoice.basic')]"/>
             <field name="action">action_invoice_create()</field>
         </record>
-
-        
-        <record id="act_wait_invoice" model="workflow.activity">
+        <record id="act_invoice_except" model="workflow.activity">
             <field name="wkf_id" ref="wkf_hon"/>
-            <field name="name">open</field>
+            <field name="name">invoice_except</field>
             <field name="kind">function</field>
-            <field name="action">action_wait()</field>
+            <field name="action">action_invoice_cancel()</field>
         </record>
 
         <record id="act_invoice_end" model="workflow.activity">
@@ -129,17 +133,17 @@
             <field name="act_to" ref="act_invoice_end"/>
             <field name="signal">all_lines</field>
         </record>
-        <!--record id="trans_wait_invoice_cancel2" model="workflow.transition">
+        <record id="trans_wait_invoice_cancel2" model="workflow.transition">
             <field name="act_from" ref="act_wait_invoice"/>
             <field name="act_to" ref="act_cancel2"/>
             <field name="signal">cancel</field>
-        </record-->
+        </record>
         <record id="trans_wait_invoice_invoice_manual" model="workflow.transition">
             <field name="act_from" ref="act_wait_invoice"/>
             <field name="act_to" ref="act_invoice"/>
             <field name="signal">manual_invoice</field>
         </record>
-        <!--record id="trans_invoice_invoice_end" model="workflow.transition">
+        <record id="trans_invoice_invoice_end" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
             <field name="act_to" ref="act_invoice_end"/>
             <field name="signal">subflow.paid</field>
@@ -148,26 +152,26 @@
             <field name="act_from" ref="act_invoice"/>
             <field name="act_to" ref="act_invoice_except"/>
             <field name="signal">subflow.cancel</field>
-        </record-->
-        <!--record id="trans_invoice_except_invoice" model="workflow.transition">
+        </record>
+        <record id="trans_invoice_except_invoice" model="workflow.transition">
             <field name="act_from" ref="act_invoice_except"/>
             <field name="act_to" ref="act_invoice"/>
             <field name="signal">invoice_recreate</field>
-        </record-->
-        <!--record id="trans_invoice_except_invoice_end" model="workflow.transition">
+        </record>
+        <record id="trans_invoice_except_invoice_end" model="workflow.transition">
             <field name="act_from" ref="act_invoice_except"/>
             <field name="act_to" ref="act_invoice_end"/>
             <field name="signal">invoice_corrected</field>
-        </record-->
-        <!--record id="trans_invoice_except_invoice_cancel" model="workflow.transition">
+        </record>
+        <record id="trans_invoice_except_invoice_cancel" model="workflow.transition">
             <field name="act_from" ref="act_invoice_except"/>
             <field name="act_to" ref="act_invoice_cancel"/>
             <field name="signal">invoice_cancel</field>
-        </record-->
-        <!--record id="trans_invoice_end_done" model="workflow.transition">
+        </record>
+        <record id="trans_invoice_end_done" model="workflow.transition">
             <field name="act_from" ref="act_invoice_end"/>
             <field name="act_to" ref="act_done"/>
-        </record-->
+        </record>
 
     </data>
 </openerp>
