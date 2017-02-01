@@ -319,7 +319,7 @@ class hon_issue_line(orm.Model):
         'page_number': fields.char('Pgnr', size=32),
         'nr_of_columns': fields.float('#Cols', digits_compute= dp.get_precision('Number of Columns'), required=True),
         'issue_id': fields.many2one('hon.issue', 'Issue Reference', ondelete='cascade', select=True),
-        'partner_id': fields.many2one('res.partner', 'Partner',),
+        'partner_id': fields.many2one('res.partner', 'Partner', required=True),
         'employee': fields.boolean('Employee',  help="It indicates that the partner is an employee."),
         'product_category_id': fields.many2one('product.category', 'T/B',required=True, domain=[('parent_id.supportal', '=', True)]),
         'product_id': fields.many2one('product.product', 'Product', required=True,),
