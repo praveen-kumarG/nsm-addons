@@ -37,11 +37,15 @@ class account_invoice_portalback(orm.TransientModel):
         if context is None:
             context = {}
         pool_obj = pooler.get_pool(cr.dbname)
-        data_inv = pool_obj.get('account.invoice').read(cr, uid, context['active_ids'], ['state'], context=context)
-
+        data_inv = pool_obj.get('account.invoice').browse(cr, uid, context['active_ids'], context=context)
+        m = self.pool['ir.model.data']
+        id = m.get_object(cr, uid, 'nsm_hon', 'hon_categoryT').id
         for record in data_inv:
-            if record['state'] != ('draft'):
+            if record.state != ('draft'):
                 raise osv.except_osv(_('Warning!'), _("Selected invoice(s) cannot be sent to portal as they are not in 'Draft' state."))
+            if record.product_category.id is id :
+                raise osv.except_osv(_('Warning!'), _(
+                    "Selected invoice(s) cannot be sent to portal as they have HON Tekst Category."))
             wf_service.trg_validate(uid, 'account.invoice', record['id'], 'portalback', cr)
         return {'type': 'ir.actions.act_window_close'}
 
