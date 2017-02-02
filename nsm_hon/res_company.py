@@ -27,6 +27,12 @@ class res_company(osv.osv):
 
     _columns = {
         'hon_journal': fields.many2one('account.journal', 'Honorarium Journal'),
+        'report_background_image_hon1': fields.binary(
+            'Background Image for HON Frontpage',
+            help='Set Background Image for HON Frontpage'),
+        'report_background_image_hon2': fields.binary(
+            'Background Image for HON Following Pages',
+            help='Set Background Image for HON Following Pages'),
 
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

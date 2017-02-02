@@ -7,10 +7,15 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
                     <data>
-                      <page string="Configuration" position="inside">
+                      <page string="Configuration" position="after">
+                          <page string="HON configuration" >
                             <group string="Honorarium App" col="2" colspan="2">
                                 <field name="hon_journal"/>
+                                <separator string="Background Image for Report"/>
+                                <field name="report_background_image_hon1" widget="image" class="oe_avatar oe_left"/>
+                                <field name="report_background_image_hon2" widget="image" class="oe_avatar oe_left"/>
                             </group>
+                          </page>
                       </page>
                     </data>
         </field>
