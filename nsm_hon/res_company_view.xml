@@ -9,7 +9,7 @@
                     <data>
                       <page string="Configuration" position="after">
                           <page string="HON configuration" >
-                            <group string="Honorarium App" col="2" colspan="2">
+                            <group string="Honorarium App" col="4" colspan="4">
                                 <field name="hon_journal"/>
                                 <separator string="Background Image for Report"/>
                                 <field name="report_background_image_hon1" widget="image" class="oe_avatar oe_left"/>
