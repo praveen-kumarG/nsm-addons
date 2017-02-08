@@ -9,11 +9,11 @@
                     <data>
                       <page string="Configuration" position="after">
                           <page string="HON configuration" >
-                            <group string="Honorarium App" col="4" colspan="4">
+                            <group string="Honorarium App" cols="2" >
                                 <field name="hon_journal"/>
-                                <separator string="Background Image for Report"/>
-                                <field name="report_background_image_hon1" widget="image" class="oe_avatar oe_left"/>
-                                <field name="report_background_image_hon2" widget="image" class="oe_avatar oe_left"/>
+                                <!--separator string="Background Images for HON Letters"/-->
+                                <field name="report_background_image_hon1" no_label="1" widget="image" class="oe_avatar oe_left"/>
+                                <field name="report_background_image_hon2" no_label="1" widget="image" class="oe_avatar oe_left"/>
                             </group>
                           </page>
                       </page>
