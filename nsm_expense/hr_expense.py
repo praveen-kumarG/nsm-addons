@@ -42,6 +42,8 @@ class hr_expense_expense(osv.osv):
     _columns = {
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)],'confirm':[('readonly',False)]}),
         'account_id': fields.many2one('account.account', 'Account', readonly=True, help="The partner account used for this expense."),
+        'date_confirm': fields.date('Date Submitted', select=True,
+                                    help="Date of submission of the sheet expense. It's filled when the button Confirm is pressed."),
         'state': fields.selection([
             ('draft', 'New'),
             ('cancelled', 'Refused'),

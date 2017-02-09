@@ -89,6 +89,9 @@
                 <xpath expr="//field[@name='line_ids']/tree/field[@name='analytic_account']" position="replace">
                         <field name="analytic_account" domain="[('type','in',['normal','contract'])]" groups="analytic.group_analytic_accounting" required="1"/>    
                 </xpath>
+                <xpath expr="//page[@string='Accounting']/group/group/field[@name='voucher_id']" position="after">
+                         <field name="date_confirm" groups="account.group_account_invoice" />
+                </xpath>
                 </data>
             </field>
         </record>
