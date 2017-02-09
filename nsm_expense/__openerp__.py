@@ -31,7 +31,9 @@
     'version' : '1.0',
     'category': 'other',
     'description': """
-This module adds "department_id.manager_id" to expense domain hr_user .
+This module adds "department_id.manager_id" to expense domain hr_user and
+adapts the workflow and tax processing. Also a special declaration journal is
+defined.
 =============================================================================
 
 
@@ -40,13 +42,13 @@ This module adds "department_id.manager_id" to expense domain hr_user .
     'website' : 'http://www.magnus.nl',
     'depends' : ['account',
                 'analytic',
-                'hr',
                 'hr_expense',
                 'megis_auth',
     ],
     'data'    : ["ir_rule.xml",
                  "hr_expense_view.xml",
                  "hr_expense_workflow.xml",
+                 "res_company_view.xml",
     ],
     'demo' : [],
     'installable': True

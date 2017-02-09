@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    Copyright 2014 BAS Solutions
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,13 +14,19 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp.osv import osv
+import openerp.addons.decimal_precision as dp
+from openerp.osv import fields
 
-import hr_expense
-import payment_order_create
-import res_company
 
+class res_company(osv.osv):
+    _inherit = 'res.company'
+
+    _columns = {
+        'decl_journal_id': fields.many2one('account.journal', 'Declaration Journal', domain=[('type','=','purchase')], required=True),
+
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

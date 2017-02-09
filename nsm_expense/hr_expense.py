@@ -27,8 +27,16 @@ from openerp.tools.translate import _
 
 import openerp.addons.decimal_precision as dp
 
+
+
 class hr_expense_expense(osv.osv):
     _inherit = 'hr.expense.expense'
+
+    def _journal_get(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        user = self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0]
+        return user.company_id.decl_journal_id.id
     
 
     _columns = {
@@ -47,7 +55,12 @@ class hr_expense_expense(osv.osv):
             \nIf Finance made accounting entries, the status is \'Waiting Approval\'.\n If the Manager has given approval, the status is \'Waiting Payment\'.'),
 
     }
-    
+    _defaults = {
+        'journal_id': _journal_get,
+    }
+
+
+
     def action_receipt_create(self, cr, uid, ids, context=None):
         '''
         main function that is called when trying to create the accounting entries related to an expense, inherited from hr_expense
@@ -199,15 +212,8 @@ class hr_expense_expense(osv.osv):
 class hr_expense_line(osv.osv):
      _inherit = 'hr.expense.line'
      
-     def onchange_product_id(self, cr, uid, ids, product_id, name, context=None):
+     def onchange_product_id(self, cr, uid, ids, product_id, context=None):
         res = {}
-#        if product_id:
-#            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-#            if not name:
-#                res['name'] = product.name
-#            amount_unit = product.price_get('standard_price')[product.id]
-#            res['unit_amount'] = amount_unit
-#            res['uom_id'] = product.uom_id.id
         return {'value': res}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
