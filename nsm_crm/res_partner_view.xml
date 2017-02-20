@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <!-- Top menu item -->
+        <!-- Top menu item >
         <menuitem name="Sales"
             id="menu_base_partner"
             groups="base.group_sale_salesman"
@@ -10,33 +10,40 @@
 
         <menuitem id="base.menu_sales" parent="base.menu_base_partner" name="Sales" sequence="1" />
         <menuitem id="menu_base_config" parent="menu_base_partner" name="Configuration" sequence="30" groups="group_system"/>
-        <menuitem id="menu_config_address_book" parent="menu_base_config" name="Address Book" sequence="40" groups="group_system"/>
+        <menuitem id="menu_config_address_book" parent="menu_base_config" name="Address Book" sequence="40" groups="group_system"/-->
 
 
 
 
 
         <!-- Partner -->
-        <record id="view_partner_tree" model="ir.ui.view">
+        <!--record id="view_partner_tree_nsm_crm" model="ir.ui.view">
             <field name="name">res.partner.tree</field>
             <field name="model">res.partner</field>
-            <field eval="8" name="priority"/>
+            <field name="inherit_id" ref="nsm_hon.view_partner_supplier_tree_portal_usermgt_ext"/>
             <field name="arch" type="xml">
-                <tree string="Contacts">
-                    <field name="name"/>
-                    <field name="function" invisible="1"/>
-                    <field name="phone"/>
-                    <field name="email"/>
-                    <field name="user_id" invisible="1"/>
-                    <field name="is_company" invisible="1"/>
-                    <field name="country" invisible="1"/>
-                    <field name="country_id" invisible="1"/>
-                    <field name="parent_id" invisible="1"/>
-                </tree>
-            </field>
-        </record>
+                <data>
+                    <field name="product_price_ids" position="attributes">
+                       <attribute name="invisible">[('customer','=', True)]</attribute>
+                    </field>
+                    <field name="analytic_account_ids" position="attributes">
+                       <attribute name="invisible">[('customer','=', True)]</attribute>
+                    </field>
+                    <field name="user_ids" position="attributes">
+                       <attribute name="invisible">[('customer','=', True)]</attribute>
+                    </field>
+                    <field name="reuse" position="attributes">
+                       <attribute name="invisible">[('customer','=', True)]</attribute>
+                    </field>
+                    <field name="var_ok" position="attributes">
+                       <attribute name="invisible">[('customer','=', True)]</attribute>
+                    </field>
+                </data>
 
-        <record id="view_partner_simple_form" model="ir.ui.view">
+            </field>
+        </record-->
+
+        <!--record id="view_partner_simple_form" model="ir.ui.view">
             <field name="name">res.partner.simplified.form</field>
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
@@ -64,9 +71,9 @@
                     </div>
                 </form>
             </field>
-        </record>
+        </record-->
 
-        <record id="view_partner_form" model="ir.ui.view">
+        <!--record id="view_partner_form" model="ir.ui.view">
             <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
             <field eval="1" name="priority"/>
@@ -261,16 +268,16 @@
                                 </group>
                             </group>
                         </page>
-                        <!-- The History page becomes visible as soon as there is something to display inside -->
+
                         <page string="History" name="page_history" invisible="True">
                         </page>
                     </notebook>
                 </sheet>
                 </form>
             </field>
-        </record>
+        </record-->
 
-       <record id="view_res_partner_filter" model="ir.ui.view">
+       <!--record id="view_res_partner_filter" model="ir.ui.view">
             <field name="name">res.partner.select</field>
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
@@ -295,10 +302,10 @@
                    </group>
                </search>
             </field>
-        </record>
+        </record-->
 
-        <!-- Partner Kanban View >
-        <record model="ir.ui.view" id="res_partner_kanban_view">
+        <!-- Partner Kanban View -->
+        <!--record model="ir.ui.view" id="res_partner_kanban_view">
             <field name="name">res.partner.kanban</field>
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
@@ -358,7 +365,7 @@
             </field>
         </record-->
 
-        <record id="action_partner_form" model="ir.actions.act_window">
+        <!--record id="action_partner_form" model="ir.actions.act_window">
             <field name="name">Customers</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
@@ -375,8 +382,8 @@
                 documents, etc.
               </p>
             </field>
-        </record>
-        <record id="action_partner_form_view1" model="ir.actions.act_window.view">
+        </record-->
+        <!--record id="action_partner_form_view1" model="ir.actions.act_window.view">
             <field eval="0" name="sequence"/>
             <field name="view_mode">kanban</field>
             <field name="view_id" ref="res_partner_kanban_view"/>
@@ -455,63 +462,6 @@
             <field name="filter" eval="True"/>
         </record>
 
-        <!-- Categories -->
-        <record id="view_partner_category_form" model="ir.ui.view">
-            <field name="name">Partner Categories</field>
-            <field name="model">res.partner.category</field>
-            <field name="arch" type="xml">
-                <form string="Partner Category" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="active"/>
-                        <field name="parent_id"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="view_partner_category_list" model="ir.ui.view">
-            <field name="name">Partner Categories</field>
-            <field name="model">res.partner.category</field>
-            <field eval="6" name="priority"/>
-            <field name="arch" type="xml">
-                <tree string="Partner Categories">
-                    <field name="complete_name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="view_partner_category_tree" model="ir.ui.view">
-            <field name="name">res.partner.category.tree</field>
-            <field name="model">res.partner.category</field>
-            <field name="field_parent">child_ids</field>
-            <field name="arch" type="xml">
-                <tree toolbar="1" string="Partner Categories">
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-        <!--
-        <record id="action_partner_category" model="ir.actions.act_window">
-            <field name="name">Partners by Categories</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner.category</field>
-            <field name="view_type">tree</field>
-            <field name="view_id" ref="view_partner_category_tree"/>
-            <field name="domain">[('parent_id','=',False)]</field>
-        </record>
-        <menuitem action="action_partner_category" id="menu_partner_category_main" parent="base.menu_address_book" sequence="1"
-            groups="base.group_no_one"/>
-        -->
-
-        <record id="action_partner_by_category" model="ir.actions.act_window">
-            <field name="name">Partner Categories</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('category_id','child_of', [active_id])]</field>
-            <field name="context">{'category_id':active_id}</field>
-            <field name="search_view_id" ref="view_res_partner_filter"/>
-        </record>
-
         <record id="ir_action_partner_by_category" model="ir.values">
             <field eval="'tree_but_open'" name="key2"/>
             <field eval="'res.partner.category'" name="model"/>
@@ -534,7 +484,7 @@
             </field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Tags" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Tags" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/-->
 
     </data>
 </openerp>

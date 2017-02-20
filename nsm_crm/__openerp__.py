@@ -27,26 +27,20 @@
 ##############################################################################
 
 {
-    'name': 'nsm_improv02',
+    'name': 'nsm_crm',
     'version': '1.0',
-    'category': 'workflow',
+    'category': 'crm',
     'description': """
-This module adds a verification step in the invoice authorization flow in Odoo.
-=====================================================================================
+This module adds several fields to res_partner and makes a crm-only view for Customers in Odoo.
+===============================================================================================
 
 
     """,
     'author': 'Magnus - Willem Hulshof',
     'website': 'http://www.magnus.nl',
-    'depends': ['account', 'nsm_expense', 'megis_auth',
+    'depends': ['crm', 'sale_advertising',
                 ],
-    'data': ["account_security.xml",
-             "account_view.xml",
-             "account_invoice_view.xml",
-             "account_invoice_state_view.xml",
-             "account_invoice_workflow.xml",
-             "res_company_view.xml",
-             "ir.model.access.csv",
+    'data': ["crm_menu_view.xml",
              ],
     'demo': [],
     'installable': True
