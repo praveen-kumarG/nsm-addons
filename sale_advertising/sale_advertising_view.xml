@@ -16,6 +16,10 @@
 				<xpath expr="/form/sheet/group/group/field[@name='partner_shipping_id']" position="attributes">
 					<attribute name="groups">base.group_no_one</attribute>
 				</xpath>
+				<xpath expr="/form/sheet/group/group/field[@name='client_order_ref']" position="replace">
+						<field name="client_order_ref" string="Customer PO-number"/>
+				</xpath>
+
 				<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="attributes">
 					<attribute name="invisible">[('published_customer','!=', "")]</attribute>
 				</xpath>
