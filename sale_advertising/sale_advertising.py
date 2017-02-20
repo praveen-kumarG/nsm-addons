@@ -29,8 +29,6 @@ class sale_order(orm.Model):
     _inherit = "sale.order"
 
     _columns = {
-        'name': fields.char('Order Reference', size=64, required=True,
-                            select=True),
         'published_customer': fields.many2one('res.partner', 'Published Customer'),
         'advertising_agency': fields.many2one('res.partner', 'Advertising Agency'),
     }
