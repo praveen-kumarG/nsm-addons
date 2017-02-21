@@ -11,7 +11,7 @@
             <field name="arch" type="xml">
                 <field name="company_id" position="after">
                     <field name="is_ad_agency"/>
-                    <field name="agency_discount"/>
+                    <field name="agency_discount" attrs="{'invisible': [('is_ad_agency', '=', False)]}"/>
                 </field>
 
             </field>
