@@ -10,32 +10,80 @@
 			<field name="model">sale.order</field>
 			<field name="inherit_id" ref="sale.view_order_form"/>
 			<field name="arch" type="xml">
+				<data>
+					<button name="invoice_recreate" position="before">
+						<button name="submit" states="draft" type="workflow" string="Submit Opportunity" groups="base.group_sale_salesman"/>
+                        <button name="approve1" states="submitted" type="workflow" string="Approval Sales Manager" groups="base.group_sale_manager"/>
+                        <button name="approve2" string="Approval Traffic" type="workflow" states="approved1" class="oe_highlight"
+								groups="sale_advertising.group_traffic_user"/>
+                        <button name="refuse" string="Refuse" type="workflow" states="submitted,approved1"
+								groups="sale_advertising.group_traffic_user, base.group_sale_manager"/>
+					</button>
+					<button name="invoice_recreate" position="attributes">
+						<attribute name="groups">base.group_no_one</attribute>
+					</button>
+					<button name="invoice_corrected" position="attributes">
+						<attribute name="groups">base.group_no_one</attribute>
+					</button>
+					<!--xpath expr="/form/header/button[@name='action_quotation_send' @class='oe_highlight']" position="attributes">
+						<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
+					<xpath expr="/form/header/button[@name='action_quotation_send' @states='sent,progress,manual']" position="attributes">
+						<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
+					<xpath expr="/form/header/button[@name='print_quotation' @class='oe_highlight']" position="attributes">
+						<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
+					<xpath expr="/form/header/button[@name='print_quotation' @states='sent,progress,manual']" position="attributes">
+						<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
+					<xpath expr="/form/header/button[@name='action_button_confirm' @states='sent']" position="attributes">
+						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
+					</xpath>
+					<xpath expr="/form/header/button[@name='action_button_confirm' @states='draft']" position="attributes">
+						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
+						<attribute name="states">approved2</attribute>
+					</xpath-->
+					<button name="action_view_invoice" position="attributes" >
+						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
+					</button>
+					<button name="%(sale.action_view_sale_advance_payment_inv)d" position="attributes" >
+						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
+					</button>
+					<button name="invoice_cancel" position="attributes" >
+						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
+					</button>
 
-				<xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="before">
+
+					<field name="state" position="attributes">
+						<attribute name="statusbar_visible">draft,submitted,approved1,approved2,sent,progress,done</attribute>
+					</field>
+
+					<xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="before">
 						<field name="published_customer"  on_change="onchange_published_customer(published_customer, context)"/>
-				</xpath>
-				<xpath expr="/form/sheet/group/group/field[@name='partner_shipping_id']" position="attributes">
-					<attribute name="groups">base.group_no_one</attribute>
-				</xpath>
-				<xpath expr="/form/sheet/group/group/field[@name='client_order_ref']" position="replace">
+					</xpath>
+					<xpath expr="/form/sheet/group/group/field[@name='partner_shipping_id']" position="attributes">
+						<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
+					<xpath expr="/form/sheet/group/group/field[@name='client_order_ref']" position="replace">
 						<field name="client_order_ref" string="Customer PO-number"/>
-				</xpath>
+					</xpath>
 
-				<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="attributes">
-					<attribute name="invisible">[('published_customer','!=', "")]</attribute>
-				</xpath>
-				<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="after">
+					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="attributes">
+						<attribute name="invisible">[('published_customer','!=', "")]</attribute>
+					</xpath>
+					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="after">
 						<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"/>
-				</xpath>
-				<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="before">
-					<field name="adv_issue" on_change="onchange_adv_issue(adv_issue)" />
-					<field name="medium" invisible="1" />
-					<field name="ad_class" on_change="onchange_ad_class(ad_class)" domain="[('type','!=', 'view'), ('id','child_of', medium)]"/>
-				</xpath>
-				<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='product_uom']" position="attributes">
-					<attribute name="invisible">True</attribute>
-				</xpath>
-				<xpath expr="/form/sheet/notebook/page/field/form/label[@for='name']" position="before">
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="before">
+						<field name="adv_issue" on_change="onchange_adv_issue(adv_issue)" />
+						<field name="medium" invisible="1" />
+						<field name="ad_class" on_change="onchange_ad_class(ad_class)" domain="[('type','!=', 'view'), ('id','child_of', medium)]"/>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='product_uom']" position="attributes">
+						<attribute name="invisible">True</attribute>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/label[@for='name']" position="before">
 						<group>
 							<field name="page_reference"/>
 							<field name="from_date"/>
@@ -43,20 +91,21 @@
 							<separator string="Layout Remark" colspan="2"/>
 							<field name="layout_remark" colspan="2" nolabel="1"/>
 						</group>
-				</xpath>
-				<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_id']" position="before">
-					<field name="adv_issue"/>
-					<field name="ad_class"/>
-				</xpath>
-				<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_uom_qty']" position="replace">
-				</xpath>
-				<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_uom']" position="replace">
-				</xpath>
-				<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_uos']" position="replace">
-				</xpath>
-				<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='name']" position="after">
-					<field name="page_reference"/>
-				</xpath>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_id']" position="before">
+						<field name="adv_issue"/>
+						<field name="ad_class"/>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_uom_qty']" position="replace">
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_uom']" position="replace">
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_uos']" position="replace">
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='name']" position="after">
+						<field name="page_reference"/>
+					</xpath>
+				</data>
 
 			</field>
 		</record>

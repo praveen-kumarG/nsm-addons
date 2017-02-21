@@ -34,7 +34,10 @@ This module allow you to use the Sale Management to encode your advertising sale
     'depends': ['sale', 'nsm_analytic',
                 ],
     'data': ["security/ir.model.access.csv",
+             "security/security.xml",
              "sale_advertising_view.xml",
+             "res_partner_view.xml",
+             "sale_workflow.xml",
              ],
     'demo': ['sale_advertising_demo.xml'],
     'installable': True

@@ -31,10 +31,27 @@ class sale_order(orm.Model):
     _columns = {
         'published_customer': fields.many2one('res.partner', 'Published Customer'),
         'advertising_agency': fields.many2one('res.partner', 'Advertising Agency'),
+        'state': fields.selection([
+            ('draft', 'Draft Quotation'),
+            ('submitted', 'Submitted for Approval'),
+            ('approved1', 'Approved by Sales Mgr'),
+            ('approved2', 'Approved by Traffic'),
+            ('sent', 'Quotation Sent'),
+            ('cancel', 'Cancelled'),
+            ('waiting_date', 'Waiting Schedule'),
+            ('progress', 'Sales Order'),
+            ('manual', 'Sale to Invoice'),
+            ('invoice_except', 'Invoice Exception'),
+            ('done', 'Done'),
+        ], 'Status', readonly=False, track_visibility='onchange',
+            help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a cancel operation occurs in the processing of a document linked to the sales order. \nThe 'Waiting Schedule' status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.",
+            select=True),
+
     }
 
     def onchange_published_customer(self, cr, uid, ids, published_customer, context):
-        data = {'advertising_agency':published_customer,'partner_id':published_customer, 'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False}
+        data = {'advertising_agency':published_customer,'partner_id':published_customer, 'partner_invoice_id': False,
+                'partner_shipping_id':False, 'partner_order_id':False}
         if published_customer:
             address = self.onchange_partner_id(cr, uid, ids, published_customer, context)
             data.update(address['value'])

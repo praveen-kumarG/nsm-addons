@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="wkf_sale" model="workflow">
+            <field name="name">sale.order.basic</field>
+            <field name="osv">sale.order</field>
+            <field name="on_create">True</field>
+        </record>
+
+        <!-- Activity -->
+        <!--record id="act_draft" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="flow_start">True</field>
+            <field name="name">draft</field>
+        </record-->
+        <record id="act_submit" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">submit</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'submitted'})</field>
+        </record>
+        <record id="act_approve1" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">approve1</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'approved1'})</field>
+        </record>
+        <record id="act_approve2" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">approve2</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'approved2'})</field>
+        </record>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        <!--record id="act_sent" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">sent</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'sent'})</field>
+        </record>   
+     
+        <record id="act_router" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">router</field>
+            <field name="kind">function</field>
+            <field name="action">action_wait()</field>
+            <field name="split_mode">OR</field>
+        </record>
+        
+        <record id="act_wait_invoice" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">wait_invoice</field>
+        </record>
+
+        <record id="act_done" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">done</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">function</field>
+            <field name="action">action_done()</field>
+            <field name="join_mode">AND</field>
+        </record>
+
+        <record id="act_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">cancel</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">action_cancel()</field>
+        </record>
+        
+        <record id="act_cancel2" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">cancel2</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">action_cancel()</field>
+        </record>
+        
+        <record id="act_invoice" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">invoice</field>
+            <field name="kind">subflow</field>
+            <field name="subflow_id" search="[('name','=','account.invoice.basic')]"/>
+            <field name="action">action_invoice_create()</field>
+        </record>
+        <record id="act_invoice_except" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">invoice_except</field>
+            <field name="kind">function</field>
+            <field name="action">action_invoice_cancel()</field>
+        </record>
+        <record id="act_invoice_end" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">invoice_end</field>
+            <field name="kind">function</field>
+            <field name="action">action_invoice_end()</field>
+        </record>
+        <record id="act_invoice_cancel" model="workflow.activity">
+            <field name="wkf_id" ref="wkf_sale"/>
+            <field name="name">invoice_cancel</field>
+            <field name="flow_stop">True</field>
+            <field name="kind">stopall</field>
+            <field name="action">action_cancel()</field>
+        </record-->
+
+        <!-- Transition -->
+
+        <record id="trans_draft_submit" model="workflow.transition">
+            <field name="act_from" ref="sale.act_draft"/>
+            <field name="act_to" ref="act_submit"/>
+            <field name="signal">submit</field>
+        </record>
+        <record id="trans_submit_approve1" model="workflow.transition">
+            <field name="act_from" ref="act_submit"/>
+            <field name="act_to" ref="act_approve1"/>
+            <field name="signal">approve1</field>
+        </record>
+        <record id="trans_approve1_approve2" model="workflow.transition">
+            <field name="act_from" ref="act_approve1"/>
+            <field name="act_to" ref="act_approve2"/>
+            <field name="signal">approve2</field>
+        </record>
+        <record id="trans_approve2_draft" model="workflow.transition">
+            <field name="act_from" ref="act_approve2"/>
+            <field name="act_to" ref="sale.act_draft"/>
+            <field name="signal">refuse</field>
+        </record>
+        <record id="trans_approve1_draft" model="workflow.transition">
+            <field name="act_from" ref="act_approve1"/>
+            <field name="act_to" ref="sale.act_draft"/>
+            <field name="signal">refuse</field>
+        </record>
+
+
+    </data>
+</openerp>
