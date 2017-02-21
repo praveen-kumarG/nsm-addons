@@ -21,6 +21,7 @@
 ##############################################################################
 
 from openerp.osv import fields, osv, orm
+import openerp.addons.decimal_precision as dp
 import time
 
 
@@ -28,9 +29,78 @@ import time
 class sale_order(orm.Model):
     _inherit = "sale.order"
 
+
+    def _amount_all(self, cr, uid, ids, name, args, context=None):
+        if context is None:
+            context = {}
+
+        res = {}
+        if context.get('verif_setting_change'):
+            company_ids = context.get('company_ids', [])
+            company_obj = self.pool['res.company'].browse(cr, uid, company_ids, context=context)
+            for company in company_obj:
+                treshold = company.verify_order_setting
+                maxdiscount = company.verify_discount_setting
+                company_id = company.id
+
+                cr.execute("""UPDATE sale_order
+                            SET ver_tr_exc=True
+                            WHERE (amount_untaxed > %s
+                            OR max_discount > %s)
+                            AND company_id= %s
+                            AND state!='paid';
+                            UPDATE sale_order
+                            SET ver_tr_exc=False
+                            WHERE amount_untaxed <= %s
+                            AND company_id= %s
+                            AND max_discount <= %s
+                            AND state!='paid'
+                            """, ( treshold, maxdiscount, company_id,  treshold, company_id, maxdiscount ))
+
+        else:
+            cur_obj = self.pool.get('res.currency')
+            res = {}
+            for order in self.browse(cr, uid, ids, context=context):
+                res[order.id] = {
+                    'amount_untaxed': 0.0,
+                    'amount_tax': 0.0,
+                    'amount_total': 0.0,
+                    'ver_tr_exc': None,
+                }
+                val = val1 = 0.0
+                discount = []
+                cur = order.pricelist_id.currency_id
+                for line in order.order_line:
+                    discount.append(line.discount)
+                    val1 += line.price_subtotal
+                    val += self._amount_line_tax(cr, uid, line, context=context)
+                res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
+                res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1)
+                res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
+                res[order.id]['max_discount'] = max(discount)
+                if order.company_id.verify_order_setting < res[order.id]['amount_untaxed'] or order.company_id.verify_discount_setting < res[order.id]['max_discount']:
+                    res[order.id]['ver_tr_exc'] = True
+                else:
+                    res[order.id]['ver_tr_exc'] = False
+        return res
+
+    def _get_order(self, cr, uid, ids, context=None):
+        line_obj = self.pool.get('sale.order.line')
+        return list(set(line['order_id'] for line in line_obj.read(
+            cr, uid, ids, ['order_id'], load='_classic_write', context=context)))
+
+    def _setting_change(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        context['company_ids'] = ids
+        context['verif_setting_change'] = True
+        res = ids
+        return res
+
     _columns = {
         'published_customer': fields.many2one('res.partner', 'Published Customer'),
         'advertising_agency': fields.many2one('res.partner', 'Advertising Agency'),
+        'traffic_employee': fields.many2one('res.users', 'Traffic Employee'),
         'state': fields.selection([
             ('draft', 'Draft Quotation'),
             ('submitted', 'Submitted for Approval'),
@@ -43,9 +113,37 @@ class sale_order(orm.Model):
             ('manual', 'Sale to Invoice'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
-        ], 'Status', readonly=False, track_visibility='onchange',
-            help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a cancel operation occurs in the processing of a document linked to the sales order. \nThe 'Waiting Schedule' status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.",
+        ], 'Status', readonly=True, track_visibility='onchange',
+            help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a "
+                 "cancel operation occurs in the processing of a document linked to the sales order. \nThe 'Waiting Schedule' "
+                 "status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.",
             select=True),
+        'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
+                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),'sale.order.line':
+                                        (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
+                                        },
+                                multi='sums', help="The amount without tax.", track_visibility='always'),
+        'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Taxes',
+                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),'sale.order.line':
+                                        (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
+                                        },
+                                multi='sums', help="The tax amount."),
+        'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total',
+                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),'sale.order.line':
+                                        (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
+                                        },
+                                multi='sums', help="The total amount."),
+        'max_discount': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Max Discount',
+                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),'sale.order.line':
+                                        (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
+                                        },
+                                multi='sums', help="The Maximum Discount."),
+        'ver_tr_exc': fields.function(_amount_all, type="boolean", string="Verification Treshold",track_visibility='always',
+                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20), 'sale.order.line':
+                                        (_get_order, ['price_unit', 'quantity', 'discount', 'product_uom_qty'], 20),'res.company':
+                                        (_setting_change, ['verify_order_setting'], ['verify_discount_setting'], 10),
+                                        },
+                                multi='all'),
 
     }
 
@@ -63,6 +161,13 @@ class sale_order(orm.Model):
             address = self.onchange_partner_id(cr, uid, ids, ad_agency, context)
             data.update(address['value'])
         return {'value' : data}
+
+    '''def check_order_discount(self, cr, uid, ids, context):
+        data = {'partner_id':ad_agency,'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False}
+        if ad_agency:
+            address = self.onchange_partner_id(cr, uid, ids, ad_agency, context)
+            data.update(address['value'])
+        return {'value' : data}'''
 
 
 class sale_advertising_issue(orm.Model):
@@ -134,6 +239,22 @@ class sale_order_line(orm.Model):
                 data['product_id'] = [('id', 'in', product_ids)]
                 return {'domain' : data}
         return
+
+    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
+            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+
+        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
+            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
+            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+
+        partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
+        discount = partner.agency_discount
+        result = res['value']
+        result.update({'discount': discount})
+        res['value'] = result
+
+        return res
 
 
 

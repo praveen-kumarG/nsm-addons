@@ -12,9 +12,11 @@
 			<field name="arch" type="xml">
 				<data>
 					<button name="invoice_recreate" position="before">
-						<button name="submit" states="draft" type="workflow" string="Submit Opportunity" groups="base.group_sale_salesman"/>
-                        <button name="approve1" states="submitted" type="workflow" string="Approval Sales Manager" groups="base.group_sale_manager"/>
-                        <button name="approve2" string="Approval Traffic" type="workflow" states="approved1" class="oe_highlight"
+						<button name="submit" states="draft" type="workflow" string="Submit Opportunity" class="oe_highlight"
+								groups="base.group_sale_salesman"/>
+                        <button name="approve1" states="submitted" type="workflow" string="Approval Sales Manager" class="oe_highlight"
+								groups="base.group_sale_manager"/>
+                        <button name="approve2" states="approved1" string="Approval Traffic" type="workflow"  class="oe_highlight"
 								groups="sale_advertising.group_traffic_user"/>
                         <button name="refuse" string="Refuse" type="workflow" states="submitted,approved1"
 								groups="sale_advertising.group_traffic_user, base.group_sale_manager"/>
@@ -25,25 +27,25 @@
 					<button name="invoice_corrected" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
 					</button>
-					<!--xpath expr="/form/header/button[@name='action_quotation_send' @class='oe_highlight']" position="attributes">
+					<xpath expr="/form/header/button[@name='action_quotation_send' and @class='oe_highlight']" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
-					<xpath expr="/form/header/button[@name='action_quotation_send' @states='sent,progress,manual']" position="attributes">
+					<xpath expr="/form/header/button[@name='action_quotation_send' and @states='sent,progress,manual']" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
-					<xpath expr="/form/header/button[@name='print_quotation' @class='oe_highlight']" position="attributes">
+					<xpath expr="/form/header/button[@name='print_quotation' and @class='oe_highlight']" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
-					<xpath expr="/form/header/button[@name='print_quotation' @states='sent,progress,manual']" position="attributes">
+					<xpath expr="/form/header/button[@name='print_quotation' and @states='sent,progress,manual']" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
-					<xpath expr="/form/header/button[@name='action_button_confirm' @states='sent']" position="attributes">
+					<xpath expr="/form/header/button[@name='action_button_confirm' and @states='sent']" position="attributes">
 						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
 					</xpath>
-					<xpath expr="/form/header/button[@name='action_button_confirm' @states='draft']" position="attributes">
+					<xpath expr="/form/header/button[@name='action_button_confirm' and @states='draft']" position="attributes">
 						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
 						<attribute name="states">approved2</attribute>
-					</xpath-->
+					</xpath>
 					<button name="action_view_invoice" position="attributes" >
 						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
 					</button>
@@ -67,6 +69,7 @@
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='client_order_ref']" position="replace">
 						<field name="client_order_ref" string="Customer PO-number"/>
+						<field name="traffic_employee" string="Traffic Employee"/>
 					</xpath>
 
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="attributes">
