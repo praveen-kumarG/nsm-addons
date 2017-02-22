@@ -77,7 +77,7 @@ class sale_order(orm.Model):
                 res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
                 res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1)
                 res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
-                res[order.id]['max_discount'] = max(discount)
+                res[order.id]['max_discount'] = max(discount) or 0.0
                 if order.company_id.verify_order_setting < res[order.id]['amount_untaxed'] or order.company_id.verify_discount_setting < res[order.id]['max_discount']:
                     res[order.id]['ver_tr_exc'] = True
                 else:
