@@ -138,7 +138,7 @@
 			</field>
 	</record-->
 
-		<record model="ir.ui.view" id="sale_view_inherit123">
+		<record model="ir.ui.view" id="sale_view_inherit123_return">
             <field name="name">sale.order.inherit</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale_crm.sale_view_inherit123"/>
