@@ -4,6 +4,7 @@
 
 
 <!-- View for sale.order object inherited from sale module -->
+
 	<record model="ir.ui.view" id="view_order_form_inherit">
 			<field name="name">sale.order.form.inherit</field>
 			<field name="type">form</field>
@@ -62,6 +63,7 @@
 					</field>
 
 					<xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="before">
+						<field name="categ_ids" widget="many2many_tags" placeholder="Tags..." />
 						<field name="published_customer"  on_change="onchange_published_customer(published_customer, context)"/>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_shipping_id']" position="attributes">
@@ -135,6 +137,15 @@
 				</xpath>
 			</field>
 	</record-->
+
+		<record model="ir.ui.view" id="sale_view_inherit123">
+            <field name="name">sale.order.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_crm.sale_view_inherit123"/>
+            <field name="arch" type="xml">
+				<field name="categ_ids" widget="many2many_tags" position="replace"/>
+            </field>
+        </record>
 
 		<record model="ir.ui.view" id="view_order_form_inherit2">
 			<field name="name">sale.order.line.form.inherit.line2</field>
