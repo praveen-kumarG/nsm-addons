@@ -143,7 +143,7 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale_crm.sale_view_inherit123"/>
             <field name="arch" type="xml">
-				<field name="categ_ids" widget="many2many_tags" position="replace"/>
+				<field name="categ_ids" position="replace"/>
             </field>
         </record>
 
