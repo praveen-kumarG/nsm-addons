@@ -141,7 +141,7 @@ class sale_order(orm.Model):
         'ver_tr_exc': fields.function(_amount_all, type="boolean", string="Verification Treshold",track_visibility='always',
                                 store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20), 'sale.order.line':
                                         (_get_order, ['price_unit', 'quantity', 'discount', 'product_uom_qty'], 20),'res.company':
-                                        (_setting_change, ['verify_order_setting'], ['verify_discount_setting'], 10),
+                                        (_setting_change, ['verify_order_setting', 'verify_discount_setting'], 10),
                                         },
                                 multi='all'),
 
@@ -215,6 +215,8 @@ class sale_order_line(orm.Model):
         'page_reference': fields.char('Reference of the Page', size=32),
         'from_date': fields.datetime('Start of Validity'),
         'to_date': fields.datetime('End of Validity'),
+     #   'actual_unit_price' :fields.float()
+     #   'computed_discount' :fields.function()
     }
 
     def onchange_adv_issue(self, cr, uid, ids, adv_issue=False, context=None):
