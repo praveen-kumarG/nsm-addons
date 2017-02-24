@@ -38,7 +38,7 @@ This module adds several fields to res_partner and makes a crm-only view for Cus
     """,
     'author': 'Magnus - Willem Hulshof',
     'website': 'http://www.magnus.nl',
-    'depends': ['crm', 'sale_advertising',
+    'depends': ['crm', 'sale_advertising', 'nsm_supportal_extension'
                 ],
     'data': ["crm_menu_view.xml",
              "res_partner_view.xml",
