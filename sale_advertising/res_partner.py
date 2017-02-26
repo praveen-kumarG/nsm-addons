@@ -27,7 +27,8 @@ class res_partner(osv.osv):
 
     _columns = {
         'agency_discount': fields.float('Agency Discount (%)', digits=(16, 2)),
-        'is_ad_agency': fields.boolean('Agency')
+        'is_ad_agency': fields.boolean('Agency'),
+        'coc_nr': fields.char('Chamber of Commerce id', size=64, help="Customer CoC number" ),
     }
 
     _defaults = {
