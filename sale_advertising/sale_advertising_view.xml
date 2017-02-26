@@ -6,10 +6,10 @@
 <!-- View for sale.order object inherited from sale module -->
 
 	<record model="ir.ui.view" id="view_order_form_inherit">
-			<field name="name">sale.order.form.inherit</field>
+			<field name="name">sale.order.form.inherit.3</field>
 			<field name="type">form</field>
 			<field name="model">sale.order</field>
-			<field name="inherit_id" ref="sale.view_order_form"/>
+			<field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
 			<field name="arch" type="xml">
 				<data>
 					<button name="invoice_recreate" position="before">
@@ -56,12 +56,9 @@
 					<button name="invoice_cancel" position="attributes" >
 						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
 					</button>
-
-
 					<field name="state" position="attributes">
 						<attribute name="statusbar_visible">draft,submitted,approved1,approved2,sent,progress,done</attribute>
 					</field>
-
 					<xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="before">
 						<field name="categ_ids" widget="many2many_tags" placeholder="Tags..." />
 						<field name="published_customer"  on_change="onchange_published_customer(published_customer, context)"/>
@@ -80,14 +77,55 @@
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="after">
 						<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"/>
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="before">
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="replace">
 						<field name="adv_issue" on_change="onchange_adv_issue(adv_issue)" />
 						<field name="medium" invisible="1" />
 						<field name="ad_class" on_change="onchange_ad_class(ad_class)" domain="[('type','!=', 'view'), ('id','child_of', medium)]"/>
+						<field name="product_id"
+							   context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
+                               groups="base.group_user"
+							   on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, False, product_uos_qty, False, name, parent.partner_id, actual_unit_price, False, True, parent.date_order, False, discount, parent.fiscal_position, False, context)"/>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='price_unit']" position="attributes">
+						<attribute name="readonly">True</attribute>
+						<attribute name="on_change">onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, price_subtotal)</attribute>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='discount']" position="attributes">
+						<attribute name="readonly">True</attribute>
+						<attribute name="on_change">onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, price_subtotal)</attribute>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='price_unit']" position="after">
+						<field name="actual_unit_price" on_change="onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, price_subtotal)" />
+						<label for="computed_discount" groups="sale.group_discount_per_so_line"/>
+							<div name="computed_discount" groups="sale.group_discount_per_so_line">
+								<field name="computed_discount" class="oe_inline"/> %%
+							</div>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div[@name='discount']" position="after">
+						<field name="price_subtotal" readonly="True"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='product_uom']" position="attributes">
 						<attribute name="invisible">True</attribute>
 					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='type']" position="attributes">
+							<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='th_weight']" position="attributes">
+							<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='address_allotment_id']" position="attributes">
+							<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/label[@for='delay']" position="attributes">
+							<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group[2]/div" position="attributes">
+							<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='property_ids']" position="attributes">
+							<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
+
 					<xpath expr="/form/sheet/notebook/page/field/form/label[@for='name']" position="before">
 						<group>
 							<field name="page_reference"/>
@@ -97,26 +135,33 @@
 							<field name="layout_remark" colspan="2" nolabel="1"/>
 						</group>
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_id']" position="before">
+					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_id']" position="before">
 						<field name="adv_issue"/>
 						<field name="ad_class"/>
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_uom_qty']" position="replace">
+					<!--xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='name']" position="replace">
+					</xpath-->
+					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='price_unit']" position="replace">
+						<field name="actual_unit_price"/>
+						<field name="computed_discount"/>
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_uom']" position="replace">
+					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_uom_qty']" position="replace">
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_uos']" position="replace">
+					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_uom']" position="replace">
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='name']" position="after">
+					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_uos']" position="replace">
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='name']" position="after">
 						<field name="page_reference"/>
 					</xpath>
 				</data>
-
 			</field>
 		</record>
 
+
+
 <!-- View for sale.order.line object inherited from sale module -->
-	<!--record model="ir.ui.view" id="view_order_form_inherit1">
+		<!--record model="ir.ui.view" id="view_order_form_inherit1">
 			<field name="name">sale.order.form.inherit.line</field>
 			<field name="type">form</field>
 			<field name="model">sale.order</field>
@@ -136,7 +181,7 @@
 						</group>
 				</xpath>
 			</field>
-	</record-->
+		</record-->
 
 		<record model="ir.ui.view" id="sale_view_inherit123_return">
             <field name="name">sale.order.inherit</field>

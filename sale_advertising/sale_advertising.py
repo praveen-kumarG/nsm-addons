@@ -71,13 +71,16 @@ class sale_order(orm.Model):
                 discount = []
                 cur = order.pricelist_id.currency_id
                 for line in order.order_line:
-                    discount.append(line.discount)
+                    discount.append(line.computed_discount)
                     val1 += line.price_subtotal
                     val += self._amount_line_tax(cr, uid, line, context=context)
+                if discount:
+                    max_discount = max(discount)
+                else: max_discount = 0.0
                 res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
                 res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1)
                 res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
-                res[order.id]['max_discount'] = max(discount) or 0.0
+                res[order.id]['max_discount'] = max_discount
                 if order.company_id.verify_order_setting < res[order.id]['amount_untaxed'] or order.company_id.verify_discount_setting < res[order.id]['max_discount']:
                     res[order.id]['ver_tr_exc'] = True
                 else:
@@ -162,12 +165,6 @@ class sale_order(orm.Model):
             data.update(address['value'])
         return {'value' : data}
 
-    '''def check_order_discount(self, cr, uid, ids, context):
-        data = {'partner_id':ad_agency,'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False}
-        if ad_agency:
-            address = self.onchange_partner_id(cr, uid, ids, ad_agency, context)
-            data.update(address['value'])
-        return {'value' : data}'''
 
 
 class sale_advertising_issue(orm.Model):
@@ -196,7 +193,6 @@ class sale_advertising_issue(orm.Model):
 
     _defaults = {
         'issue_date': _get_issue_date,
-    #    'issue_date': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'open',
     }
 
@@ -205,6 +201,42 @@ class sale_advertising_issue(orm.Model):
 
 class sale_order_line(orm.Model):
     _inherit = "sale.order.line"
+
+    def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
+        tax_obj = self.pool.get('account.tax')
+        cur_obj = self.pool.get('res.currency')
+        res = {}
+
+        if context is None:
+            context = {}
+        for line in self.browse(cr, uid, ids, context=context):
+            comp_discount = 0.0
+            res[line.id] = {
+                'price_unit': 0.0,
+                'computed_discount': 0.0,
+                'price_subtotal': 0.0,
+            }
+            #import pdb;pdb.set_trace()
+            if not line.order_id.date_order:
+                date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
+            else: date_order = line.order_id.date_order
+
+            pricelist = line.order_id.pricelist_id and line.order_id.pricelist_id.id or False
+            product_id = line.product_id and line.product_id.id or False
+            order_partner_id = line.order_partner_id and line.order_partner_id.id or False
+            product_uom = line.product_uom and line.product_uom.id or False
+            unit_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id,
+                                                        line.product_uom_qty or 1.0, order_partner_id,
+                                                    {'uom': product_uom, 'date': date_order,})[pricelist]
+            if unit_price > 0.0:
+                comp_discount = (unit_price - line.actual_unit_price)/unit_price * 100.0
+            price = line.actual_unit_price * (1 - (line.discount or 0.0) / 100.0)
+            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_partner_id)
+            cur = line.order_id.pricelist_id.currency_id
+            res[line.id]['price_unit'] = unit_price
+            res[line.id]['computed_discount'] = comp_discount
+            res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, taxes['total'])
+        return res
 
 
     _columns = {
@@ -215,8 +247,16 @@ class sale_order_line(orm.Model):
         'page_reference': fields.char('Reference of the Page', size=32),
         'from_date': fields.datetime('Start of Validity'),
         'to_date': fields.datetime('End of Validity'),
-     #   'actual_unit_price' :fields.float()
-     #   'computed_discount' :fields.function()
+        'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), multi=True),
+        'discount': fields.related('order_partner_id','agency_discount', type='float', string='Agency Discount (%)', store=True,),
+        'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
+        'computed_discount' :fields.function(_amount_line, string='Computed Discount (%)', digits_compute=dp.get_precision('Account'), type="float", store=True, multi=True),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type="float", multi=True),
+    }
+
+    _defaults = {
+        'actual_unit_price': 0.0,
+        'computed_discount': 0.0,
     }
 
     def onchange_adv_issue(self, cr, uid, ids, adv_issue=False, context=None):
@@ -242,20 +282,34 @@ class sale_order_line(orm.Model):
                 return {'domain' : data}
         return
 
+    def onchange_actualup(self, cr, uid, ids, actual_unit_price=False, price_unit=False, qty=0, discount=False, price_subtotal=0.0, context=None):
+        result = {}
+        if actual_unit_price and price_unit is not 0.0:
+            cdisc = (float(price_unit) - float(actual_unit_price)) / float(price_unit) * 100.0
+            result['computed_discount'] = cdisc
+            result['price_subtotal'] = actual_unit_price * qty * (1 - discount/100.0)
+        else:
+            result['computed_discount'] = 0.0
+            result['price_subtotal'] = price_subtotal
+        return {'value': result}
+
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
-            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+            uom=False, qty_uos=0, uos=False, name='', partner_id=False, actual_unit_price=False,
+            lang=False, update_tax=True, date_order=False, packaging=False, discount=0.0, fiscal_position=False, flag=False, context=None):
 
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
             uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
             lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
 
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-        discount = partner.agency_discount
+        if partner.is_ad_agency:
+            discount = partner.agency_discount
         result = res['value']
         result.update({'discount': discount})
+        res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=actual_unit_price, price_unit=res['value']['price_unit'], qty=qty, discount=discount, price_subtotal=0.0, context=None)
+        result.update({'computed_discount': res2['value']['computed_discount']})
+        result.update({'price_subtotal': res2['value']['price_subtotal']})
         res['value'] = result
-
         return res
 
 
