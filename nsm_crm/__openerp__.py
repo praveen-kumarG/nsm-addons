@@ -42,6 +42,7 @@ This module adds several fields to res_partner and makes a crm-only view for Cus
                 ],
     'data': ["crm_menu_view.xml",
              "res_partner_view.xml",
+             #"crm_lead_to_opportunity_view.xml",
              ],
     'demo': [],
     'installable': True

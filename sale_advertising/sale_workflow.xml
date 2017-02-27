@@ -4,16 +4,17 @@
 
 
         <!-- Activity -->
-        <!--record id="act_draft" model="workflow.activity">
-            <field name="wkf_id" ref="wkf_sale"/>
-            <field name="flow_start">True</field>
-            <field name="name">draft</field>
-        </record-->
+        <record id="act_back_draft" model="workflow.activity">
+            <field name="wkf_id" ref="sale.wkf_sale"/>
+            <field name="name">backdraft</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'draft'})</field>
+        </record>
         <record id="act_submit" model="workflow.activity">
             <field name="wkf_id" ref="sale.wkf_sale"/>
             <field name="name">submit</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'submitted'})</field>
+            <field name="action">action_submit()</field>
         </record>
         <record id="act_approve1" model="workflow.activity">
             <field name="wkf_id" ref="sale.wkf_sale"/>
@@ -28,18 +29,6 @@
             <field name="action">write({'state':'approved2'})</field>
         </record>
 
-
-
-
-
-
-
-
-
-
-
-
-        
         <!--record id="act_sent" model="workflow.activity">
             <field name="wkf_id" ref="wkf_sale"/>
             <field name="name">sent</field>
@@ -119,6 +108,11 @@
             <field name="act_to" ref="act_submit"/>
             <field name="signal">submit</field>
         </record>
+        <record id="trans_back_draft_submit" model="workflow.transition">
+            <field name="act_from" ref="act_back_draft"/>
+            <field name="act_to" ref="act_submit"/>
+            <field name="signal">submit</field>
+        </record>
         <record id="trans_submit_approve1" model="workflow.transition">
             <field name="act_from" ref="act_submit"/>
             <field name="act_to" ref="act_approve1"/>
@@ -129,15 +123,25 @@
             <field name="act_to" ref="act_approve2"/>
             <field name="signal">approve2</field>
         </record>
-        <record id="trans_approve2_draft" model="workflow.transition">
-            <field name="act_from" ref="act_approve2"/>
-            <field name="act_to" ref="sale.act_draft"/>
+        <record id="trans_submit_back_draft" model="workflow.transition">
+            <field name="act_from" ref="act_submit"/>
+            <field name="act_to" ref="act_back_draft"/>
             <field name="signal">refuse</field>
         </record>
         <record id="trans_approve1_draft" model="workflow.transition">
             <field name="act_from" ref="act_approve1"/>
-            <field name="act_to" ref="sale.act_draft"/>
+            <field name="act_to" ref="act_back_draft"/>
             <field name="signal">refuse</field>
+        </record>
+        <record id="trans_approve2_router" model="workflow.transition">
+            <field name="act_from" ref="act_approve2"/>
+            <field name="act_to" ref="sale.act_router"/>
+            <field name="signal">order_confirm</field>
+        </record>
+        <record id="trans_approve2_sent" model="workflow.transition">
+            <field name="act_from" ref="act_approve2"/>
+            <field name="act_to" ref="sale.act_sent"/>
+            <field name="signal">quotation_sent</field>
         </record>
 
 

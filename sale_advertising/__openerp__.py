@@ -31,7 +31,7 @@ This module allow you to use the Sale Management to encode your advertising sale
     """,
     'author': 'Magnus - Willem Hulshof',
     'website': 'http://www.magnus.nl',
-    'depends': ['sale_stock', 'nsm_analytic',
+    'depends': ['sale_stock', 'sale_crm', 'nsm_analytic',
                 ],
     'data': ["security/ir.model.access.csv",
              "security/security.xml",

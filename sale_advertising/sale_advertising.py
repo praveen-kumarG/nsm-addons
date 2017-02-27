@@ -57,10 +57,10 @@ class sale_order(orm.Model):
                             AND state!='paid'
                             """, ( treshold, maxdiscount, company_id,  treshold, company_id, maxdiscount ))
 
-        else:
-            cur_obj = self.pool.get('res.currency')
-            res = {}
-            for order in self.browse(cr, uid, ids, context=context):
+
+        cur_obj = self.pool.get('res.currency')
+        res = {}
+        for order in self.browse(cr, uid, ids, context=context):
                 res[order.id] = {
                     'amount_untaxed': 0.0,
                     'amount_tax': 0.0,
@@ -162,7 +162,7 @@ class sale_order(orm.Model):
         if published_customer:
             address = self.onchange_partner_id(cr, uid, ids, published_customer, context)
             data.update(address['value'])
-        return {'value' : data}
+        return {'value' : data }
 
     def onchange_advertising_agency(self, cr, uid, ids, ad_agency, context):
         data = {'partner_id':ad_agency,'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False}
@@ -171,6 +171,17 @@ class sale_order(orm.Model):
             data.update(address['value'])
         return {'value' : data}
 
+    def action_submit(self, cr, uid, ids, context=None):
+        context = context or {}
+        for o in self.browse(cr, uid, ids):
+            if not o.order_line:
+                raise osv.except_osv(_('Error!'),_('You cannot submit a quotation/sales order which has no line.'))
+
+            if o.ver_tr_exc :
+                self.write(cr, uid, [o.id], {'state': 'submitted'})
+            else:
+                self.write(cr, uid, [o.id], {'state': 'approved1'})
+        return True
 
 
 class sale_advertising_issue(orm.Model):
@@ -221,18 +232,19 @@ class sale_order_line(orm.Model):
             if not line.order_id.date_order:
                 date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
             else: date_order = line.order_id.date_order
-
+            #import pdb; pdb.set_trace()
             pricelist = line.order_id.pricelist_id and line.order_id.pricelist_id.id or False
             product_id = line.product_id and line.product_id.id or False
-            order_partner_id = line.order_partner_id and line.order_partner_id.id or False
+            order_partner_id = line.order_id.partner_id and line.order_id.partner_id.id or False
+            discount = line.order_id.partner_id.agency_discount or 0.0
             product_uom = line.product_uom and line.product_uom.id or False
             unit_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id,
                                                         line.product_uom_qty or 1.0, order_partner_id,
                                                     {'uom': product_uom, 'date': date_order,})[pricelist]
             if unit_price > 0.0:
                 comp_discount = (unit_price - line.actual_unit_price)/unit_price * 100.0
-            price = line.actual_unit_price * (1 - (line.discount or 0.0) / 100.0)
-            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, line.order_partner_id)
+            price = line.actual_unit_price * (1 - (discount) / 100.0)
+            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, order_partner_id)
             cur = line.order_id.pricelist_id.currency_id
             res[line.id]['price_unit'] = unit_price
             res[line.id]['computed_discount'] = comp_discount
@@ -248,11 +260,11 @@ class sale_order_line(orm.Model):
         'page_reference': fields.char('Reference of the Page', size=32),
         'from_date': fields.datetime('Start of Validity'),
         'to_date': fields.datetime('End of Validity'),
-        'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), multi=True),
-        'discount': fields.related('order_partner_id','agency_discount', type='float', string='Agency Discount (%)', store=False,),
+        'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), store=True, multi=True),
+        'discount': fields.related('order_partner_id','agency_discount', type='float', relation='res.partner', string='Agency Discount (%)'),
         'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
-        'computed_discount' :fields.function(_amount_line, string='Computed Discount (%)', digits_compute=dp.get_precision('Account'), type="float", store=True, multi=True),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type="float", store=True, multi=True),
+        'computed_discount' :fields.function(_amount_line, string='Computed Discount (%)', digits_compute=dp.get_precision('Account'), type="float", multi=True),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type="float", multi=True),
     }
 
     _defaults = {
