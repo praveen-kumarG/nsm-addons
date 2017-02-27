@@ -87,6 +87,12 @@ class sale_order(orm.Model):
                     res[order.id]['ver_tr_exc'] = False
         return res
 
+    def _amount_line_tax(self, cr, uid, line, context=None):
+        val = 0.0
+        for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.actual_unit_price * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.product_id, line.order_id.partner_id)['taxes']:
+            val += c.get('amount', 0.0)
+        return val
+
     def _get_order(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('sale.order.line')
         return list(set(line['order_id'] for line in line_obj.read(
@@ -122,29 +128,29 @@ class sale_order(orm.Model):
                  "status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.",
             select=True),
         'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
-                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),'sale.order.line':
-                                        (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
+                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
+                                       'sale.order.line':(_get_order, ['actual_unit_price', 'tax_id', 'discount', 'product_uom_qty'], 10),
                                         },
                                 multi='sums', help="The amount without tax.", track_visibility='always'),
         'amount_tax': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Taxes',
-                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),'sale.order.line':
-                                        (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
+                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
+                                       'sale.order.line':(_get_order, ['actual_unit_price', 'tax_id', 'discount', 'product_uom_qty'], 10),
                                         },
                                 multi='sums', help="The tax amount."),
         'amount_total': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Total',
-                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),'sale.order.line':
-                                        (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
+                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
+                                       'sale.order.line':(_get_order, ['actual_unit_price', 'tax_id', 'discount', 'product_uom_qty'], 10),
                                         },
                                 multi='sums', help="The total amount."),
         'max_discount': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Max Discount',
-                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),'sale.order.line':
-                                        (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
+                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
+                                       'sale.order.line':(_get_order, ['actual_unit_price', 'tax_id', 'discount', 'product_uom_qty'], 10),
                                         },
                                 multi='sums', help="The Maximum Discount."),
         'ver_tr_exc': fields.function(_amount_all, type="boolean", string="Verification Treshold",track_visibility='always',
-                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20), 'sale.order.line':
-                                        (_get_order, ['price_unit', 'quantity', 'discount', 'product_uom_qty'], 20),'res.company':
-                                        (_setting_change, ['verify_order_setting', 'verify_discount_setting'], 10),
+                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20),
+                                       'sale.order.line':(_get_order, ['actual_unit_price', 'discount', 'product_uom_qty'], 20),
+                                       'res.company':(_setting_change, ['verify_order_setting', 'verify_discount_setting'], 10),
                                         },
                                 multi='all'),
 
@@ -180,19 +186,15 @@ class sale_advertising_issue(orm.Model):
         'analytic_account_id': fields.many2one('account.analytic.account', required=True,
                                       string='Related Analytic Account', ondelete='restrict',
                                       help='Analytic-related data of the issue'),
-        'issue_date': fields.date('Issue Date', required=True),
+        'issue_date': fields.related('analytic_account_id','date_publish', type='date', string='Issue Date',),
         'medium': fields.many2one('product.category','Medium', required=True),
         'state': fields.selection([('open','Open'),('close','Close')], 'State'),
         'default_note': fields.text('Default Note'),
     }
 
     # voor nsm_modules 7.0, date_publish bestaat alleen in nsm.
-    def _get_issue_date(self, cr, uid, analytic_account_id, context=None):
-        analytic = self.pool.get('account.analytic.account').browse(cr, uid, analytic_account_id, context=None)
-        return analytic[0].date_publish
 
     _defaults = {
-        'issue_date': _get_issue_date,
         'state': 'open',
     }
 
@@ -216,7 +218,6 @@ class sale_order_line(orm.Model):
                 'computed_discount': 0.0,
                 'price_subtotal': 0.0,
             }
-            #import pdb;pdb.set_trace()
             if not line.order_id.date_order:
                 date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
             else: date_order = line.order_id.date_order
@@ -248,10 +249,10 @@ class sale_order_line(orm.Model):
         'from_date': fields.datetime('Start of Validity'),
         'to_date': fields.datetime('End of Validity'),
         'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), multi=True),
-        'discount': fields.related('order_partner_id','agency_discount', type='float', string='Agency Discount (%)', store=True,),
+        'discount': fields.related('order_partner_id','agency_discount', type='float', string='Agency Discount (%)', store=False,),
         'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'computed_discount' :fields.function(_amount_line, string='Computed Discount (%)', digits_compute=dp.get_precision('Account'), type="float", store=True, multi=True),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type="float", multi=True),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type="float", store=True, multi=True),
     }
 
     _defaults = {
@@ -296,17 +297,22 @@ class sale_order_line(orm.Model):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False, actual_unit_price=False,
             lang=False, update_tax=True, date_order=False, packaging=False, discount=0.0, fiscal_position=False, flag=False, context=None):
-
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
-            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
-            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+                                                uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
+                                                lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging,
+                                                fiscal_position=fiscal_position, flag=flag, context=context)
 
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         if partner.is_ad_agency:
             discount = partner.agency_discount
         result = res['value']
         result.update({'discount': discount})
-        res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=actual_unit_price, price_unit=res['value']['price_unit'], qty=qty, discount=discount, price_subtotal=0.0, context=None)
+        if 'price_unit' in result:
+            pu = result['price_unit']
+        else: pu = 0.0
+        res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=actual_unit_price,
+                                        price_unit=pu, qty=qty, discount=discount,
+                                        price_subtotal=0.0, context=None)
         result.update({'computed_discount': res2['value']['computed_discount']})
         result.update({'price_subtotal': res2['value']['price_subtotal']})
         res['value'] = result

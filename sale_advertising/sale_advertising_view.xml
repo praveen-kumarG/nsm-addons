@@ -61,7 +61,8 @@
 					</field>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="before">
 						<field name="categ_ids" widget="many2many_tags" placeholder="Tags..." />
-						<field name="published_customer"  on_change="onchange_published_customer(published_customer, context)"/>
+						<field name="published_customer"  on_change="onchange_published_customer(published_customer, context)"
+								domain="[('is_ad_agency','!=', True),('is_company','=', True),('aprofit_nummer','!=', True)]" states="draft"/>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_shipping_id']" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
@@ -75,7 +76,8 @@
 						<attribute name="invisible">[('published_customer','!=', "")]</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="after">
-						<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"/>
+						<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"
+								domain="[('is_ad_agency','=', True)]" states="draft"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="replace">
 						<field name="adv_issue" on_change="onchange_adv_issue(adv_issue)" />
@@ -234,7 +236,7 @@
 					<group>
 						<field name="name" string="Name"/>
 						<field name="analytic_account_id" string="Related Analytic Account"/>
-						<field name="issue_date" string="Issue Date" />
+						<field name="issue_date" string="Issue Date" readonly="True"/>
 						<field name="medium" string="Medium"/>
 						<field name="default_note" string="Default Note" colspan="4"/>
 						<field name="state" string="State" />
