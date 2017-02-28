@@ -48,19 +48,18 @@ class sale_order(orm.Model):
                             WHERE (amount_untaxed > %s
                             OR max_discount > %s)
                             AND company_id= %s
-                            AND state!='paid';
+                            AND state!='done';
                             UPDATE sale_order
                             SET ver_tr_exc=False
                             WHERE amount_untaxed <= %s
                             AND company_id= %s
                             AND max_discount <= %s
-                            AND state!='paid'
+                            AND state!='done'
                             """, ( treshold, maxdiscount, company_id,  treshold, company_id, maxdiscount ))
 
-
-        cur_obj = self.pool.get('res.currency')
-        res = {}
-        for order in self.browse(cr, uid, ids, context=context):
+        else:
+            cur_obj = self.pool.get('res.currency')
+            for order in self.browse(cr, uid, ids, context=context):
                 res[order.id] = {
                     'amount_untaxed': 0.0,
                     'amount_tax': 0.0,
