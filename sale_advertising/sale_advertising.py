@@ -238,9 +238,11 @@ class sale_order_line(orm.Model):
             order_partner_id = line.order_id.partner_id and line.order_id.partner_id.id or False
             discount = line.order_id.partner_id.agency_discount or 0.0
             product_uom = line.product_uom and line.product_uom.id or False
-            unit_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id,
+            if product_id:
+                unit_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id,
                                                         line.product_uom_qty or 1.0, order_partner_id,
                                                     {'uom': product_uom, 'date': date_order,})[pricelist]
+            else: unit_price = 0.0
             if unit_price > 0.0:
                 comp_discount = (unit_price - line.actual_unit_price)/unit_price * 100.0
             price = line.actual_unit_price * (1 - (discount) / 100.0)
@@ -297,10 +299,14 @@ class sale_order_line(orm.Model):
 
     def onchange_actualup(self, cr, uid, ids, actual_unit_price=False, price_unit=False, qty=0, discount=False, price_subtotal=0.0, context=None):
         result = {}
-        if actual_unit_price and price_unit is not 0.0:
-            cdisc = (float(price_unit) - float(actual_unit_price)) / float(price_unit) * 100.0
-            result['computed_discount'] = cdisc
-            result['price_subtotal'] = actual_unit_price * qty * (1 - discount/100.0)
+        if actual_unit_price:
+            if price_unit and price_unit > 0.0:
+                cdisc = (float(price_unit) - float(actual_unit_price)) / float(price_unit) * 100.0
+                result['computed_discount'] = cdisc
+                result['price_subtotal'] = actual_unit_price * qty * (1 - discount/100.0)
+            else:
+                result['computed_discount'] = 0.0
+                result['price_subtotal'] = actual_unit_price * qty * (1 - discount / 100.0)
         else:
             result['computed_discount'] = 0.0
             result['price_subtotal'] = price_subtotal
@@ -317,17 +323,14 @@ class sale_order_line(orm.Model):
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         if partner.is_ad_agency:
             discount = partner.agency_discount
-        result = res['value']
-        result.update({'discount': discount})
-        if 'price_unit' in result:
-            pu = result['price_unit']
+        res['value'].update({'discount': discount})
+        if 'price_unit' in res['value']:
+            pu = res['value']['price_unit']
         else: pu = 0.0
         res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=actual_unit_price,
                                         price_unit=pu, qty=qty, discount=discount,
                                         price_subtotal=0.0, context=None)
-        result.update({'computed_discount': res2['value']['computed_discount']})
-        result.update({'price_subtotal': res2['value']['price_subtotal']})
-        res['value'] = result
+        res['value'].update(res2['value'])
         return res
 
 
