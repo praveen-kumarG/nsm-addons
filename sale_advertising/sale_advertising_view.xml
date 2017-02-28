@@ -227,6 +227,25 @@
 			</field>
 		</record>
 
+		<record id="view_sales_order_filter_inherit" model="ir.ui.view">
+            <field name="name">sale.order.list.select</field>
+            <field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+				<data>
+					<filter name="draft" position="after" >
+						<filter string="Submitted" name="submitted" domain="[('state','in',('submitted',))]"/>
+						<filter string="Sales Mgr Approved" name="approved1" domain="[('state','in',('approved1',))]"/>
+						<filter string="Traffic Approved" name="approved2" domain="[('state','in',('approved2',))]"/>
+					</filter>
+					<field name="project_id" position="after" >
+						<field name="date_from" filter_domain="[('date_order','&gt;=',self)]"/>
+						<field name="date_to" filter_domain="[('date_order','&lt;=',self)]"/>
+					</field>
+				</data>
+            </field>
+        </record>
+
 
 <!-- View for sale.advertising.issue object -->
 	<record model="ir.ui.view" id="sale_advertising_issue_form">
