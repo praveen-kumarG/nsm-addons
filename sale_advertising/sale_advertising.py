@@ -67,19 +67,19 @@ class sale_order(orm.Model):
                     'ver_tr_exc': None,
                 }
                 val = val1 = 0.0
-                discount = []
+                cdiscount = []
                 cur = order.pricelist_id.currency_id
                 for line in order.order_line:
-                    discount.append(line.computed_discount)
+                    cdiscount.append(line.computed_discount)
                     val1 += line.price_subtotal
                     val += self._amount_line_tax(cr, uid, line, context=context)
-                if discount:
-                    max_discount = max(discount)
-                else: max_discount = 0.0
+                if cdiscount:
+                    max_cdiscount = max(cdiscount)
+                else: max_cdiscount = 0.0
                 res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
                 res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1)
                 res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
-                res[order.id]['max_discount'] = max_discount
+                res[order.id]['max_discount'] = max_cdiscount
                 if order.company_id.verify_order_setting < res[order.id]['amount_untaxed'] or order.company_id.verify_discount_setting < res[order.id]['max_discount']:
                     res[order.id]['ver_tr_exc'] = True
                 else:
@@ -247,7 +247,7 @@ class sale_order_line(orm.Model):
             else: unit_price = 0.0
             if unit_price > 0.0:
                 comp_discount = (unit_price - line.actual_unit_price)/unit_price * 100.0
-            price = line.actual_unit_price * (1 - (discount) / 100.0)
+            price = line.actual_unit_price * (1 - discount / 100.0)
             taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, order_partner_id)
             cur = line.order_id.pricelist_id.currency_id
             res[line.id]['price_unit'] = unit_price
