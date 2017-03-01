@@ -108,7 +108,7 @@ class sale_order(orm.Model):
     _columns = {
         'published_customer': fields.many2one('res.partner', 'Published Customer'),
         'advertising_agency': fields.many2one('res.partner', 'Advertising Agency'),
-        'customer_contact': fields.many2one('res.partner', 'Customer Contact Person', domain=[('is_company', '=', False), ('type', '=', 'contact')]),
+        'customer_contact': fields.many2one('res.partner', 'Customer Contact Person'),
         'traffic_employee': fields.many2one('res.users', 'Traffic Employee',),
         'date_from': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date from"),
         'date_to': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date to"),

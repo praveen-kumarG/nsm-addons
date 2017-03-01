@@ -68,7 +68,7 @@
 						<field name="partner_id" on_change="onchange_partner_id(partner_id, context)"
 							   domain="[('customer','=',True), ('is_company','=', True),('aprofit_nummer','=', None)]" context="{'search_default_customer':1, 'show_address': 1}"
 							   options='{"always_reload": True}'/>
-						<field name="customer_contact" domain="[('parent_id','=', partner_id)]"/>
+						<field name="customer_contact" domain="[('parent_id','=', partner_id),('is_company', '=', False), ('type', '=', 'contact')]"/>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_shipping_id']" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
