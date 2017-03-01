@@ -108,6 +108,7 @@ class sale_order(orm.Model):
     _columns = {
         'published_customer': fields.many2one('res.partner', 'Published Customer'),
         'advertising_agency': fields.many2one('res.partner', 'Advertising Agency'),
+        'customer_contact': fields.many2one('res.partner', 'Customer Contact Person', domain=[('is_company', '=', False), ('type', '=', 'contact')]),
         'traffic_employee': fields.many2one('res.users', 'Traffic Employee',),
         'date_from': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date from"),
         'date_to': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date to"),
@@ -264,6 +265,8 @@ class sale_order_line(orm.Model):
         'from_date': fields.datetime('Start of Validity'),
         'to_date': fields.datetime('End of Validity'),
         'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), store=True, multi=True),
+        'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner',
+                                            string='Customer'),
         'discount': fields.related('order_partner_id','agency_discount', type='float', relation='res.partner', string='Agency Discount (%)'),
         'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'computed_discount' :fields.function(_amount_line, string='Computed Discount (%)', digits_compute=dp.get_precision('Account'), type="float", multi=True),
