@@ -304,8 +304,6 @@ class sale_order_line(orm.Model):
         'from_date': fields.datetime('Start of Validity'),
         'to_date': fields.datetime('End of Validity'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
-        'discount': fields.float('Agency Discount (%)', digits_compute=dp.get_precision('Discount'), readonly=True,
-                                 states={'draft': [('readonly', False)]}),
         'discount_dummy': fields.related('discount', type='float', string='Agency Discount (%)',readonly=True ),
         'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), multi=True),
