@@ -200,12 +200,13 @@ class sale_order(orm.Model):
         }
         if pricelist:
             val['pricelist_id'] = pricelist
-        if order.order_line:
-            vals = {}
-            for line in order.order_line:
-                l = self.pool['sale.order.line'].browse(cr, uid, line, context=None)
-                vals['discount'] = discount
-                self.pool['sale.order.line'].write(cr, uid, l, vals, context=None)
+        if order:
+            if order.order_line:
+                vals = {}
+                for line in order.order_line:
+                    l = self.pool['sale.order.line'].browse(cr, uid, line, context=None)
+                    vals['discount'] = discount
+                    self.pool['sale.order.line'].write(cr, uid, l, vals, context=None)
 
         return {'value': val}
 
