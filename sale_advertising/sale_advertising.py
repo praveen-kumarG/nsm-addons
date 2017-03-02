@@ -185,7 +185,6 @@ class sale_order(orm.Model):
 
         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
         addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
-        order = self.pool['sale.order'].browse(cr, uid, ids, context=context)
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
         fiscal_position = part.property_account_position and part.property_account_position.id or False
@@ -200,15 +199,33 @@ class sale_order(orm.Model):
         }
         if pricelist:
             val['pricelist_id'] = pricelist
-        if order:
-            if order.order_line:
-                vals = {}
-                for line in order.order_line:
-                    l = self.pool['sale.order.line'].browse(cr, uid, line, context=None)
-                    vals['discount'] = discount
-                    self.pool['sale.order.line'].write(cr, uid, l, vals, context=None)
-
         return {'value': val}
+
+    def update_line_discount(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        order = self.browse(cr, uid, ids[0], context=context)
+        discount = order.partner_id.agency_discount or 0.0
+        line_ids = self.pool['sale.order.line'].search(
+            cr, uid, [('order_id', 'in', ids)], context=context)
+        if line_ids:
+            self.pool['sale.order.line'].write(
+                cr, uid, line_ids, {'discount': discount},
+                context=context)
+        return True
+
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(sale_order, self).write(
+            cr, uid, ids, vals, context=context)
+        if 'partner_id' in vals:
+            self.update_line_discount(cr, uid, ids, context=context)
+        return res
+
+    def create(self, cr, uid, vals, context=None):
+        res = super(sale_order, self).create(
+            cr, uid, vals, context=context)
+        self.update_line_discount(cr, uid, [res], context=context)
+        return res
 
     '''def write(self, cr, uid, ids, vals, context=None):
         if context is None:
