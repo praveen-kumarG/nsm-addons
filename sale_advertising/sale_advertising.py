@@ -182,15 +182,25 @@ class sale_order(orm.Model):
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
-
+        result = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+            order = self.pool['sale.order'].browse(cr, uid, ids[0], context=context)
+            if order:
+                if order.order_line:
+                    result['warning'] = {'title': 'Warning',
+                                         'message': 'Changing the Customer can have a change in Agency Discount as a result. '
+                                                    'This change will only show after saving the order!'
+                                                    'Before saving the order the order lines and the total amounts may therefor '
+                                                    'show wrong values.'}
         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
         addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
         fiscal_position = part.property_account_position and part.property_account_position.id or False
         dedicated_salesman = part.user_id and part.user_id.id or uid
-        discount = part.agency_discount or 0.0
-        val = {
+
+        result['value'] = {
             'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
             'payment_term': payment_term,
@@ -198,8 +208,8 @@ class sale_order(orm.Model):
             'user_id': dedicated_salesman,
         }
         if pricelist:
-            val['pricelist_id'] = pricelist
-        return {'value': val}
+            result['value']['pricelist_id'] = pricelist
+        return result
 
     def update_line_discount(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -227,19 +237,6 @@ class sale_order(orm.Model):
         self.update_line_discount(cr, uid, [res], context=context)
         return res
 
-    '''def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-
-
-        for journal in self.browse(cr, uid, ids, context=context):
-            if 'company_id' in vals and journal.company_id.id != vals['company_id']:
-                move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
-                if move_lines:
-                    raise osv.except_osv(_('Warning!'), _('This journal already contains items, therefore you cannot modify its company field.'))
-        return super(sale_order, self).write(cr, uid, ids, vals, context=context)'''
 
 
 class sale_advertising_issue(orm.Model):
