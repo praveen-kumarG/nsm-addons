@@ -60,7 +60,6 @@
 						<attribute name="statusbar_visible">draft,submitted,approved1,approved2,sent,progress,done</attribute>
 					</field>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="replace">
-						<field name="categ_ids" widget="many2many_tags" placeholder="Tags..." />
 						<field name="published_customer"  on_change="onchange_published_customer(published_customer, context)"
 							   context="{'tree_view_ref': 'nsm_crm.view_partner_tree_nsm_crm'}"
 							   domain="[('is_ad_agency','!=', True),('is_company','=', True),('aprofit_nummer','=', None)]"
@@ -68,22 +67,23 @@
 						<field name="partner_id" on_change="onchange_partner_id(partner_id, context)"
 							   domain="[('customer','=',True), ('is_company','=', True),('aprofit_nummer','=', None)]" context="{'search_default_customer':1, 'show_address': 1}"
 							   options='{"always_reload": True}'/>
-						<field name="customer_contact" domain="[('parent_id','=', partner_id),('is_company', '=', False), ('type', '=', 'contact')]"/>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_shipping_id']" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='client_order_ref']" position="replace">
 						<field name="client_order_ref" string="Customer PO-number"/>
-						<field name="traffic_employee" string="Traffic Employee"/>
+						<field name="customer_contact" domain="[('parent_id','=', partner_id),('is_company', '=', False), ('type', '=', 'contact')]"/>
+						<field name="traffic_employee" string="Traffic Employee" groups="sale_advertising.group_traffic_user"/>
 					</xpath>
 
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="attributes">
-						<attribute name="invisible">[('published_customer','!=', "")]</attribute>
+						<attribute name="invisible">[('published_customer','!=', None)]</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="after">
 						<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"
 								domain="[('is_ad_agency','=', True)]" attrs="{'readonly':[('state','not in','draft')]}"/>
+						<field name="categ_ids" widget="many2many_tags" placeholder="Tags..." />
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="replace">
 						<field name="adv_issue" on_change="onchange_adv_issue(adv_issue)" />
@@ -106,9 +106,11 @@
 						<attribute name="readonly">True</attribute>
 						<attribute name="on_change">onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, price_subtotal)</attribute>
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='discount']" position="attributes">
-						<attribute name="readonly">True</attribute>
-						<attribute name="on_change">onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, price_subtotal)</attribute>
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div[@name='discount']" position="replace">
+						<div name="discount" groups="sale.group_discount_per_so_line">
+							<field name="discount" invisible="1"/>
+							<field name="discount_dummy" class="oe_inline"/> %%
+						</div>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='price_unit']" position="after">
 						<field name="actual_unit_price" on_change="onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, price_subtotal)" />
@@ -158,6 +160,7 @@
 					<!--xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='name']" position="replace">
 					</xpath-->
 					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='price_unit']" position="replace">
+						<field name="price_unit"/>
 						<field name="actual_unit_price"/>
 						<field name="computed_discount"/>
 					</xpath>

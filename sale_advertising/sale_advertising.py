@@ -79,8 +79,7 @@ class sale_order(orm.Model):
                 res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
                 res[order.id]['amount_untaxed'] = cur_obj.round(cr, uid, cur, val1)
                 res[order.id]['amount_total'] = res[order.id]['amount_untaxed'] + res[order.id]['amount_tax']
-                res[order.id]['max_discount'] = max_cdiscount
-                if order.company_id.verify_order_setting < res[order.id]['amount_untaxed'] or order.company_id.verify_discount_setting < res[order.id]['max_discount']:
+                if order.company_id.verify_order_setting < res[order.id]['amount_untaxed'] or order.company_id.verify_discount_setting < max_cdiscount:
                     res[order.id]['ver_tr_exc'] = True
                 else:
                     res[order.id]['ver_tr_exc'] = False
@@ -144,17 +143,12 @@ class sale_order(orm.Model):
                                        'sale.order.line':(_get_order, ['actual_unit_price', 'tax_id', 'discount', 'product_uom_qty'], 10),
                                         },
                                 multi='sums', help="The total amount."),
-        'max_discount': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Max Discount',
-                                store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
-                                       'sale.order.line':(_get_order, ['actual_unit_price', 'tax_id', 'discount', 'product_uom_qty'], 10),
-                                        },
-                                multi='sums', help="The Maximum Discount."),
         'ver_tr_exc': fields.function(_amount_all, type="boolean", string="Verification Treshold",track_visibility='always',
                                 store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 20),
                                        'sale.order.line':(_get_order, ['actual_unit_price', 'discount', 'product_uom_qty'], 20),
                                        'res.company':(_setting_change, ['verify_order_setting', 'verify_discount_setting'], 10),
                                         },
-                                multi='all'),
+                                multi='sums'),
 
     }
 
@@ -184,6 +178,50 @@ class sale_order(orm.Model):
             else:
                 self.write(cr, uid, [o.id], {'state': 'approved1'})
         return True
+
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
+        if not part:
+            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
+
+        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
+        order = self.pool['sale.order'].browse(cr, uid, ids, context=context)
+        pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
+        payment_term = part.property_payment_term and part.property_payment_term.id or False
+        fiscal_position = part.property_account_position and part.property_account_position.id or False
+        dedicated_salesman = part.user_id and part.user_id.id or uid
+        discount = part.agency_discount or 0.0
+        val = {
+            'partner_invoice_id': addr['invoice'],
+            'partner_shipping_id': addr['delivery'],
+            'payment_term': payment_term,
+            'fiscal_position': fiscal_position,
+            'user_id': dedicated_salesman,
+        }
+        if pricelist:
+            val['pricelist_id'] = pricelist
+        if order.order_line:
+            vals = {}
+            for line in order.order_line:
+                l = self.pool['sale.order.line'].browse(cr, uid, line, context=None)
+                vals['discount'] = discount
+                self.pool['sale.order.line'].write(cr, uid, l, vals, context=None)
+
+        return {'value': val}
+
+    '''def write(self, cr, uid, ids, vals, context=None):
+        if context is None:
+            context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+
+        for journal in self.browse(cr, uid, ids, context=context):
+            if 'company_id' in vals and journal.company_id.id != vals['company_id']:
+                move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
+                if move_lines:
+                    raise osv.except_osv(_('Warning!'), _('This journal already contains items, therefore you cannot modify its company field.'))
+        return super(sale_order, self).write(cr, uid, ids, vals, context=context)'''
 
 
 class sale_advertising_issue(orm.Model):
@@ -238,7 +276,7 @@ class sale_order_line(orm.Model):
             pricelist = line.order_id.pricelist_id and line.order_id.pricelist_id.id or False
             product_id = line.product_id and line.product_id.id or False
             order_partner_id = line.order_id.partner_id and line.order_id.partner_id.id or False
-            discount = line.order_id.partner_id.agency_discount or 0.0
+            discount = line.discount or 0.0
             product_uom = line.product_uom and line.product_uom.id or False
             if product_id:
                 unit_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id,
@@ -264,11 +302,12 @@ class sale_order_line(orm.Model):
         'page_reference': fields.char('Reference of the Page', size=32),
         'from_date': fields.datetime('Start of Validity'),
         'to_date': fields.datetime('End of Validity'),
-        'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), store=True, multi=True),
-        'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner',
-                                            string='Customer'),
-        'discount': fields.related('order_partner_id','agency_discount', type='float', relation='res.partner', string='Agency Discount (%)'),
+        'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
+        'discount': fields.float('Agency Discount (%)', digits_compute=dp.get_precision('Discount'), readonly=True,
+                                 states={'draft': [('readonly', False)]}),
+        'discount_dummy': fields.related('discount', type='float', string='Agency Discount (%)',readonly=True ),
         'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
+        'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), multi=True),
         'computed_discount' :fields.function(_amount_line, string='Computed Discount (%)', digits_compute=dp.get_precision('Account'), type="float", multi=True),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type="float", multi=True),
     }
@@ -327,7 +366,7 @@ class sale_order_line(orm.Model):
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         if partner.is_ad_agency:
             discount = partner.agency_discount
-        res['value'].update({'discount': discount})
+        res['value'].update({'discount': discount, 'discount_dummy': discount})
         if 'price_unit' in res['value']:
             pu = res['value']['price_unit']
         else: pu = 0.0
