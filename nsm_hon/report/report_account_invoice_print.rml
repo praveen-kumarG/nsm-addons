@@ -96,7 +96,7 @@
             </tr>
             <tr>
                 <td>
-                    <para style="Standard">Geachte [[  (o.partner_id.title and o.partner_id.title.salutation) or '' ]] [[ (o.partner_id.lastname) or ''  ]],</para>
+                    <para style="Standard">Geachte [[  (o.partner_id.title and o.partner_id.title.salutation) or '' ]] [[  (o.partner_id.infix) or '' ]][[ (o.partner_id.lastname) or ''  ]],</para>
                 </td>
             </tr>
             <tr></tr>

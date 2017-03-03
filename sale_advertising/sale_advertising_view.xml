@@ -398,5 +398,17 @@
             </field>
     </record>
 
+	 <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="priority">5</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+				<page string="Accounting" position="attributes">
+					<attribute name="groups">account.group_account_invoice,sale_advertising.group_traffic_user</attribute>
+				</page>
+			</field>
+	 </record>
+
 	</data>
 </openerp>
