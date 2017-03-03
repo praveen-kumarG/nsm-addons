@@ -315,6 +315,7 @@ class sale_order_line(orm.Model):
         'medium': fields.related('adv_issue', 'medium', type='many2one', relation='product.category',string='Medium', ),
         'ad_class': fields.many2one('product.category', 'Advertising Class'),
         'page_reference': fields.char('Reference of the Page', size=32),
+        'ad_number': fields.char('Advertising Reference', size=32),
         'from_date': fields.datetime('Start of Validity'),
         'to_date': fields.datetime('End of Validity'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),

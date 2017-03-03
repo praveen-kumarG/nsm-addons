@@ -62,10 +62,10 @@
 					<xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="replace">
 						<field name="published_customer"  on_change="onchange_published_customer(published_customer, context)"
 							   context="{'tree_view_ref': 'nsm_crm.view_partner_tree_nsm_crm'}"
-							   domain="[('is_ad_agency','!=', True),('is_company','=', True)]"
+							   domain="[('is_ad_agency','!=', True),('is_company','=', True),('aprofit_nummer','=', None)]"
 							   attrs="{'readonly':[('state','not in','draft')]}" required="True"/>
 						<field name="partner_id" on_change="onchange_partner_id(partner_id, context)"
-							   domain="[('customer','=',True), ('is_company','=', True)]" context="{'search_default_customer':1, 'show_address': 1}"
+							   domain="[('customer','=',True), ('is_company','=', True),('aprofit_nummer','=', None)]" context="{'search_default_customer':1, 'show_address': 1}"
 							   options='{"always_reload": True}'/>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_shipping_id']" position="attributes">
@@ -73,7 +73,7 @@
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='client_order_ref']" position="replace">
 						<field name="client_order_ref" string="Customer PO-number"/>
-						<field name="customer_contact" domain="[('is_company', '=', False), ('type', '=', 'contact')]"/>
+						<field name="customer_contact" domain="[('is_company', '=', False), ('type', '=', 'contact'),('parent_id','=', partner_id)]"/>
 						<field name="traffic_employee" string="Traffic Employee" groups="sale_advertising.group_traffic_user"/>
 					</xpath>
 
@@ -82,7 +82,7 @@
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="after">
 						<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"
-								domain="[('is_ad_agency','=', True)]" attrs="{'readonly':[('state','not in','draft')]}"/>
+								domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]" attrs="{'readonly':[('state','not in','draft')]}"/>
 						<field name="categ_ids" widget="many2many_tags" placeholder="Tags..." />
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="replace">
@@ -146,6 +146,7 @@
 
 					<xpath expr="/form/sheet/notebook/page/field/form/label[@for='name']" position="before">
 						<group>
+							<field name="ad_number"/>
 							<field name="page_reference"/>
 							<field name="from_date"/>
 							<field name="to_date"/>
@@ -157,8 +158,6 @@
 						<field name="adv_issue"/>
 						<field name="ad_class"/>
 					</xpath>
-					<!--xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='name']" position="replace">
-					</xpath-->
 					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='price_unit']" position="replace">
 						<field name="price_unit"/>
 						<field name="actual_unit_price"/>
@@ -171,11 +170,36 @@
 					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_uos']" position="replace">
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='name']" position="after">
+						<field name="ad_number"/>
 						<field name="page_reference"/>
 					</xpath>
 				</data>
 			</field>
 		</record>
+
+		<record id="view_order_tree+inherit" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="replace">
+						<field name="published_customer"/>
+						<field name="advertising_agency"/>
+				</field>
+            </field>
+        </record>
+
+		<record id="view_quotation_tree_inherit" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                    <field name="partner_id" position="replace">
+						<field name="published_customer"/>
+						<field name="advertising_agency"/>
+					</field>
+            </field>
+        </record>
 
 
 
