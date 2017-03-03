@@ -180,9 +180,9 @@ class sale_order(orm.Model):
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
-        if not part:
-            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
+        res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
         result = {}
+        #import pdb; pdb.set_trace()
         if isinstance(ids, (int, long)):
             ids = [ids]
             order = self.pool['sale.order'].browse(cr, uid, ids[0], context=context)
@@ -193,23 +193,8 @@ class sale_order(orm.Model):
                                                     'This change will only show after saving the order!'
                                                     'Before saving the order the order lines and the total amounts may therefor '
                                                     'show wrong values.'}
-        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
-        pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
-        payment_term = part.property_payment_term and part.property_payment_term.id or False
-        fiscal_position = part.property_account_position and part.property_account_position.id or False
-        dedicated_salesman = part.user_id and part.user_id.id or uid
-
-        result['value'] = {
-            'partner_invoice_id': addr['invoice'],
-            'partner_shipping_id': addr['delivery'],
-            'payment_term': payment_term,
-            'fiscal_position': fiscal_position,
-            'user_id': dedicated_salesman,
-        }
-        if pricelist:
-            result['value']['pricelist_id'] = pricelist
-        return result
+        res.update(result)
+        return res
 
     def update_line_discount(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
