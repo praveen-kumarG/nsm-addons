@@ -23,6 +23,7 @@
 from openerp.osv import fields, osv, orm
 import openerp.addons.decimal_precision as dp
 import time
+from openerp.tools.translate import _
 
 
 
@@ -168,32 +169,21 @@ class sale_order(orm.Model):
         return {'value' : data}
 
     def action_submit(self, cr, uid, ids, context=None):
-        context = context or {}
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot submit a quotation/sales order which has no line.'))
-
-            if o.ver_tr_exc :
-                self.write(cr, uid, [o.id], {'state': 'submitted'})
-            else:
-                self.write(cr, uid, [o.id], {'state': 'approved1'})
         return True
 
-    def onchange_partner_id(self, cr, uid, ids, part, context=None):
+    def onchange_partner_id(self, cr, uid, ids, part, lines, context=None):
         res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
         result = {}
-        #import pdb; pdb.set_trace()
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-            order = self.pool['sale.order'].browse(cr, uid, ids[0], context=context)
-            if order:
-                if order.order_line:
-                    result['warning'] = {'title': 'Warning',
-                                         'message': 'Changing the Customer can have a change in Agency Discount as a result. '
-                                                    'This change will only show after saving the order!'
-                                                    'Before saving the order the order lines and the total amounts may therefor '
-                                                    'show wrong values.'}
-        res.update(result)
+        if lines:
+            result['warning'] = {'title':_('Warning'),
+                                 'message':_('Changing the Customer can have a change in Agency Discount as a result.'
+                                             'This change will only show after saving the order!'
+                                             'Before saving the order the order lines and the total amounts may therefor'
+                                             'show wrong values.')}
+            res.update(result)
         return res
 
     def update_line_discount(self, cr, uid, ids, context=None):

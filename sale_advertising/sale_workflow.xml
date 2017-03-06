@@ -14,13 +14,15 @@
             <field name="wkf_id" ref="sale.wkf_sale"/>
             <field name="name">submit</field>
             <field name="kind">function</field>
-            <field name="action">action_submit()</field>
+            <field name="action">action_submit()
+                write({'state':'submitted'})</field>
         </record>
         <record id="act_approve1" model="workflow.activity">
             <field name="wkf_id" ref="sale.wkf_sale"/>
             <field name="name">approve1</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'approved1'})</field>
+            <field name="action">action_submit()
+                write({'state':'approved1'})</field>
         </record>
         <record id="act_approve2" model="workflow.activity">
             <field name="wkf_id" ref="sale.wkf_sale"/>
@@ -103,19 +105,39 @@
 
         <!-- Transition -->
 
+        <record id="trans_back_draft_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_back_draft"/>
+            <field name="act_to" ref="sale.act_cancel"/>
+            <field name="signal">cancel</field>
+        </record>
         <record id="trans_draft_submit" model="workflow.transition">
             <field name="act_from" ref="sale.act_draft"/>
             <field name="act_to" ref="act_submit"/>
+            <field name="condition">ver_tr_exc</field>
             <field name="signal">submit</field>
         </record>
         <record id="trans_back_draft_submit" model="workflow.transition">
             <field name="act_from" ref="act_back_draft"/>
             <field name="act_to" ref="act_submit"/>
+            <field name="condition">ver_tr_exc</field>
+            <field name="signal">submit</field>
+        </record>
+        <record id="trans_back_draft_approve1" model="workflow.transition">
+            <field name="act_from" ref="act_back_draft"/>
+            <field name="act_to" ref="act_approve1"/>
+            <field name="condition">ver_tr_exc != True</field>
+            <field name="signal">submit</field>
+        </record>
+        <record id="trans_draft_approve1" model="workflow.transition">
+            <field name="act_from" ref="sale.act_draft"/>
+            <field name="act_to" ref="act_approve1"/>
+            <field name="condition">ver_tr_exc != True</field>
             <field name="signal">submit</field>
         </record>
         <record id="trans_submit_approve1" model="workflow.transition">
             <field name="act_from" ref="act_submit"/>
             <field name="act_to" ref="act_approve1"/>
+            <field name="condition">ver_tr_exc</field>
             <field name="signal">approve1</field>
         </record>
         <record id="trans_approve1_approve2" model="workflow.transition">

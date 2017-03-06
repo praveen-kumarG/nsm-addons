@@ -64,7 +64,7 @@
 							   context="{'tree_view_ref': 'nsm_crm.view_partner_tree_nsm_crm'}"
 							   domain="[('is_ad_agency','!=', True),('is_company','=', True),('aprofit_nummer','=', None)]"
 							   attrs="{'readonly':[('state','not in','draft')]}" required="True"/>
-						<field name="partner_id" on_change="onchange_partner_id(partner_id, context)"
+						<field name="partner_id" on_change="onchange_partner_id(partner_id, order_line, context)"
 							   domain="[('customer','=',True), ('is_company','=', True),('aprofit_nummer','=', None)]" context="{'search_default_customer':1, 'show_address': 1}"
 							   options='{"always_reload": True}'/>
 					</xpath>
@@ -160,6 +160,7 @@
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='price_unit']" position="replace">
 						<field name="price_unit"/>
+						<field name="product_uom_qty"/>
 						<field name="actual_unit_price"/>
 						<field name="computed_discount"/>
 					</xpath>
@@ -402,7 +403,7 @@
             <field name="name">product.template.form.inherit</field>
             <field name="model">product.template</field>
             <field name="priority">5</field>
-            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="inherit_id" ref="account.product_template_form_view"/>
             <field name="arch" type="xml">
 				<page string="Accounting" position="attributes">
 					<attribute name="groups">account.group_account_invoice,sale_advertising.group_traffic_user</attribute>
