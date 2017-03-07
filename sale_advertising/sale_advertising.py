@@ -450,6 +450,7 @@ class crm_make_sale(osv.osv_memory):
                     'fiscal_position': fpos,
                     'payment_term': payment_term,
                     'user_id': uid,
+                    'opportunity_subject': case.name,
                 }
                 new_id = sale_obj.create(cr, uid, vals, context=context)
                 sale_order = sale_obj.browse(cr, uid, new_id, context=context)
