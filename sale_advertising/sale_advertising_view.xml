@@ -75,6 +75,8 @@
 						<field name="client_order_ref" string="Customer PO-number"/>
 						<field name="customer_contact" domain="[('is_company', '=', False), ('type', '=', 'contact'),('parent_id','=', partner_id)]"/>
 						<field name="traffic_employee" string="Traffic Employee" groups="sale_advertising.group_traffic_user"/>
+						<field name="traffic_comments" string="Traffic Comments"/>
+						<field name="traffic_appr_date" string="Traffic Approval Date" readonly="True"/>
 					</xpath>
 
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="attributes">
@@ -84,6 +86,7 @@
 						<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"
 								domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]" attrs="{'readonly':[('state','not in','draft')]}"/>
 						<field name="categ_ids" widget="many2many_tags" placeholder="Tags..." />
+						<field name="opportunity_subject"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="replace">
 						<field name="adv_issue" on_change="onchange_adv_issue(adv_issue)" />
@@ -123,7 +126,7 @@
 						<field name="price_subtotal" readonly="True"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='product_uom']" position="attributes">
-						<attribute name="invisible">True</attribute>
+						<attribute name="invisible">False</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='type']" position="attributes">
 							<attribute name="groups">base.group_no_one</attribute>
@@ -178,15 +181,22 @@
 			</field>
 		</record>
 
-		<record id="view_order_tree+inherit" model="ir.ui.view">
+		<record id="view_order_tree_inherit" model="ir.ui.view">
             <field name="name">sale.order.tree</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
-                <field name="partner_id" position="replace">
+				<data>
+                	<field name="partner_id" position="replace">
+						<field name="opportunity_subject"/>
 						<field name="published_customer"/>
 						<field name="advertising_agency"/>
-				</field>
+					</field>
+					<field name="amount_total" position="replace">
+						<field name="amount_untaxed"/>
+						<field name="traffic_appr_date"/>
+					</field>
+				</data>
             </field>
         </record>
 
@@ -195,10 +205,17 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_quotation_tree"/>
             <field name="arch" type="xml">
-                    <field name="partner_id" position="replace">
+				<data>
+                	<field name="partner_id" position="replace">
+						<field name="opportunity_subject"/>
 						<field name="published_customer"/>
 						<field name="advertising_agency"/>
 					</field>
+					<field name="amount_total" position="replace">
+						<field name="amount_untaxed"/>
+						<field name="traffic_appr_date"/>
+					</field>
+				</data>
             </field>
         </record>
 
@@ -271,8 +288,10 @@
 						<filter string="Traffic Approved" name="approved2" domain="[('state','in',('approved2',))]"/>
 					</filter>
 					<field name="project_id" position="after" >
-						<field name="date_from" filter_domain="[('date_order','&gt;=',self)]"/>
-						<field name="date_to" filter_domain="[('date_order','&lt;=',self)]"/>
+						<field name="date_from" string="Order Date From" filter_domain="[('date_order','&gt;=',self)]"/>
+						<field name="date_to" string="Order Date From" filter_domain="[('date_order','&lt;=',self)]"/>
+						<field name="date_from" string="Traffic Date From" filter_domain="[('traffic_appr_date','&gt;=',self)]"/>
+						<field name="date_to" string="Traffic Date To" filter_domain="[('traffic_appr_date','&lt;=',self)]"/>
 					</field>
 				</data>
             </field>
@@ -377,6 +396,7 @@
 	</record-->
 
 <!-- New Menuitem -->
+
 	<record model="ir.actions.act_window" id="advertising_sale_order_action">
 		<field name="name">All Advertising Sale Orders</field>
 		<field name="type">ir.actions.act_window</field>
@@ -388,7 +408,9 @@
 	
 	<menuitem name="All Advertising Sale Orders" id="menu_sale_advertising_sale_order" parent="menu_sale_advertising" action="advertising_sale_order_action"/>
 
-	<record id="product_category_tree_view_inh" model="ir.ui.view">
+
+		<!-- Product.Category Views -->
+	 <record id="product_category_tree_view_inh" model="ir.ui.view">
             <field name="name">product.category.tree</field>
             <field name="model">product.category</field>
 		 	<field name="inherit_id" ref="product.product_category_tree_view"/>
@@ -397,8 +419,9 @@
 						<field name="complete_name" />
 					</field>
             </field>
-    </record>
+     </record>
 
+		<!-- Product.template Views -->
 	 <record id="product_template_form_view" model="ir.ui.view">
             <field name="name">product.template.form.inherit</field>
             <field name="model">product.template</field>
@@ -410,6 +433,31 @@
 				</page>
 			</field>
 	 </record>
+
+		<!-- CRM lead/opportunities Views -->
+	 <record model="ir.ui.view" id="crm_case_form_view_oppor">
+            <field name="name">Opportunities</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="arch" type="xml">
+				<button name="case_mark_won" position="attributes" >
+					<attribute name="groups" >sale_advertising.group_traffic_user</attribute>
+				</button>
+			</field>
+	 </record>
+
+	 <record id="view_crm_make_sale" model="ir.ui.view">
+          <field name="name">crm.make.sale.form</field>
+          <field name="model">crm.make.sale</field>
+		  <field name="inherit_id" ref="sale_crm.view_crm_make_sale"/>
+          <field name="arch" type="xml">
+			  	<field name="close" position="attributes">
+			  		<attribute name="groups" >sale_advertising.group_traffic_user</attribute>
+		  		</field>
+          </field>
+	 </record>
+
+
 
 	</data>
 </openerp>

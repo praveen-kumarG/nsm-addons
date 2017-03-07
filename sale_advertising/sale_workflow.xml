@@ -28,7 +28,7 @@
             <field name="wkf_id" ref="sale.wkf_sale"/>
             <field name="name">approve2</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'approved2'})</field>
+            <field name="action">action_approve2()</field>
         </record>
 
         <!--record id="act_sent" model="workflow.activity">

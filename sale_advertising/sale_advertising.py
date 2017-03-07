@@ -110,6 +110,10 @@ class sale_order(orm.Model):
         'advertising_agency': fields.many2one('res.partner', 'Advertising Agency'),
         'customer_contact': fields.many2one('res.partner', 'Customer Contact Person'),
         'traffic_employee': fields.many2one('res.users', 'Traffic Employee',),
+        'traffic_comments': fields.text('Traffic Comments'),
+        'traffic_appr_date': fields.date('Traffic Confirmation Date', select=True, help="Date on which sales order is confirmed bij Traffic."),
+        'opportunity_subject': fields.char('Opportunity Subject', size=64,
+                              help="Subject of Opportunity from which this Sales Order is derived."),
         'date_from': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date from"),
         'date_to': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date to"),
         'state': fields.selection([
@@ -172,6 +176,12 @@ class sale_order(orm.Model):
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot submit a quotation/sales order which has no line.'))
+        return True
+
+    def action_approve2(self, cr, uid, ids, context=None):
+        for o in self.browse(cr, uid, ids):
+            self.write(cr, uid, [o.id],
+                       {'state': 'approved2', 'traffic_appr_date': fields.date.context_today(self, cr, uid, context=context)})
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, lines, context=None):
