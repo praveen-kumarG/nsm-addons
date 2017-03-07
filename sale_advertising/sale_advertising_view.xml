@@ -181,6 +181,8 @@
 			</field>
 		</record>
 
+		<delete model="ir.ui.view" search="[('id','=', ref('sale_advertising.view_order_tree+inherit')]"
+
 		<record id="view_order_tree_inherit" model="ir.ui.view">
             <field name="name">sale.order.tree</field>
             <field name="model">sale.order</field>
