@@ -29,8 +29,6 @@ class res_partner(osv.osv):
         'agency_discount': fields.float('Agency Discount (%)', digits=(16, 2)),
         'is_ad_agency': fields.boolean('Agency'),
         'coc_nr': fields.char('Chamber of Commerce id', size=64, help="Customer CoC number" ),
-        'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
-        'category_dum_id': fields.related('category_id', type='many2many', relation='res.partner.category', readonly=True, string='Tags' ),
     }
 
     _defaults = {

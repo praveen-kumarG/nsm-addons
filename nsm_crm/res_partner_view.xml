@@ -278,12 +278,14 @@
                        filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"/>
                    <filter help="My Customers" name="my_partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
                    <separator/>
-                   <filter string="Persons" name="type_person" domain="[('is_company','=',0)]"/>
+                   <filter string="Persons" name="type_person" domain="[('is_company','=',0),('type','=','contact')]"/>
+                   <filter string="Invoice" name="type_invoice" domain="[('is_company','=',0),('type','=','invoice')]"/>
                    <filter string="Companies" name="type_company" domain="[('is_company','=',1)]"/>
                    <separator/>
                    <filter string="Customers" name="customer" domain="[('customer','=',1)]" help="Customer Partners"/>
                    <separator/>
-                   <filter string="Non-aProfit" name="aprofit" domain="[('aprofit_nummer','=',None)]" help="Niet aProfit Customers"/>
+                   <filter string="Non-aProfit" name="aprofit" domain="['|','&amp;',('aprofit_nummer','=', False),'|',('parent_id','=', False),('is_company','!=', False),'&amp;',('parent_id','!=', False),('parent_id.aprofit_nummer','=', False)]" help="Niet aProfit Customers"/>
+                   <filter string="aProfit" name="aprofit" domain="['|','&amp;',('aprofit_nummer','!=', False),'|',('parent_id','=', False),('is_company','!=', False),'&amp;',('parent_id','!=', False),('parent_id.aprofit_nummer','!=', False)]" help="Niet aProfit Customers"/>
                    <separator/>
                    <filter string="Ad Agencies" name="agency" domain="[('is_ad_agency','=',1)]" help="Ad Agency Partners"/>
                    <separator/>
@@ -366,7 +368,7 @@
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="context">{"search_default_customer":1, "search_default_type_company":1, "search_default_my_partners":1, "search_default_aprofit":1}</field>
+            <field name="context">{"search_default_customer":1, "search_default_type_company":1, "search_default_my_partners":1,}</field>
             <field name="search_view_id" ref="view_res_partner_filter_crm"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
