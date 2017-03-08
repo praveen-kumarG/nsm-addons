@@ -17,9 +17,6 @@
     </data>
     <data noupdate="1">
 
-        <delete model="ir.rule" search="[('id','=', ref('sale.sale_order_see_all'))]"/>
-        <delete model="ir.rule" search="[('id','=', ref('crm.crm_rule_all_lead'))]"/>
-
 
         <record id="sale_order_see_all" model="ir.rule">
             <field name="name">All Orders</field>
