@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-
-
         <record id="view_partner_form" model="ir.ui.view">
             <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <field name="category_id" position="replace">
-                        <field name="category_id" widget="many2many_tags" groups="base.group_sale_manager"/>
-                        <field name="category_dum_id" widget="many2many_tags" readonly="True" groups="sale_advertising.group_partner_category" />
+                    <field name="category_id" position="attributes">
+                        <attribute name="readonly">True</attribute>
                     </field>
                     <field name="user_id" position="attributes">
-                        <attribute name="groups">sale_advertising.group_traffic_user, account.group_account_user</attribute>
+                        <attribute name="invisible">True</attribute>
                     </field>
                     <field name="company_id" position="after">
                         <field name="is_ad_agency"/>
@@ -23,8 +19,22 @@
                         <field name="coc_nr"/>
                     </field>
                 </data>
-
-
+            </field>
+        </record>
+        <record id="view_partner_form_sales_manager" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="sale_advertising.view_partner_form"/>
+            <field name="groups_id" eval="[(6,0,[ref('base.group_sale_manager'),ref('account.group_account_user')])]" />
+            <field name="arch" type="xml">
+                <data>
+                    <field name="category_id" position="attributes">
+                        <attribute name="readonly">False</attribute>
+                    </field>
+                    <field name="user_id" position="attributes">
+                        <attribute name="invisible">False</attribute>
+                    </field>
+                </data>
             </field>
         </record>
 
