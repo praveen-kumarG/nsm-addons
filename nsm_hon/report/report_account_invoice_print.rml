@@ -12,17 +12,17 @@
                           <!-- directly to company -->
                           <!--para style="Standard_bold">[[ o.partner_id.is_company == True and (o.partner_id and o.partner_id and o.partner_id.property_account_payable.name) or '' ]]</para-->
                           <para style="Standard_bold">[[ o.partner_id.is_company == True and (o.partner_id and o.partner_id and o.partner_id.name) or '' ]]</para>
-                          <para style="Standard_bold">[[ o.partner_id.is_company == True and (o.partner_id  and o.partner_id.street) or '' ]]</para>
-                          <para style="Standard_bold">[[ o.partner_id.is_company == True and (o.partner_id  and o.partner_id.street2) or removeParentNode('para') ]]</para>
-                          <para style="Standard_bold">[[ o.partner_id.is_company == True and (o.partner_id  and o.partner_id.zip) ]] [[ o.partner_id.is_company == True and (o.partner_id  and o.partner_id.city) or '' ]] </para>
+                          <para style="Standard_bold">[[ o.partner_id.is_company == True and (o.partner_id and o.partner_id.street) or '' ]]</para>
+                          <para style="Standard_bold">[[ o.partner_id.is_company == True and (o.partner_id and o.partner_id.street2) or removeParentNode('para') ]]</para>
+                          <para style="Standard_bold">[[ o.partner_id.is_company == True and (o.partner_id and o.partner_id.zip) ]] [[ o.partner_id.is_company == True and (o.partner_id  and o.partner_id.city) or '' ]] </para>
                           <para style="Standard_bold">[[ o.partner_id.is_company == True and (o.partner_id.country_id and o.partner_id.country_id.name) or '' ]]</para>
                           <!-- not directly to company -->
-                          <para style="Standard_bold">[[ o.partner_id.is_company != True and (o.partner_id and o.partner_id.parent_id and o.partner_id.parent_id.name) or '' ]]</para>
-                          <para style="Standard_bold">[[ o.partner_id.is_company != True and (o.partner_id and o.partner_id.name) or removeParentNode('para') and '' ]]</para>
-                          <para style="Standard_bold">[[ o.partner_id.is_company != True  and (o.partner_id and o.partner_id.street) or '' ]]</para>
-                          <para style="Standard_bold">[[ o.partner_id.is_company != True  and (o.partner_id and o.partner_id.street2) or removeParentNode('para') ]]</para>
-                          <para style="Standard_bold">[[ o.partner_id.is_company != True  and (o.partner_id and o.partner_id.zip) ]] [[ o.partner_id.is_company != True and (o.partner_id  and o.partner_id.city) or '' ]] </para>
-                          <para style="Standard_bold">[[ o.partner_id.is_company != True  and (o.partner_id and o.partner_id.country_id and  o.partner_id.country_id.name) or removeParentNode('para') ]]</para>
+                          <para style="Standard_bold">[[ o.partner_id.is_company != True and (o.partner_id and o.partner_id.parent_id and o.partner_id.parent_id.name) or removeParentNode('para')  ]]</para>
+                          <para style="Standard_bold">[[ o.partner_id.is_company != True and (o.partner_id and o.partner_id.title.name) or '' ]] [[ o.partner_id.is_company != True and (o.partner_id.initials) or '']] [[  o.partner_id.is_company != True and (o.partner_id.infix) or '' ]] [[ o.partner_id.is_company != True and (o.partner_id.lastname) or ''  ]] </para>
+                          <para style="Standard_bold">[[ o.partner_id.is_company != True and (o.partner_id and o.partner_id.street) or '' ]]</para>
+                          <para style="Standard_bold">[[ o.partner_id.is_company != True and (o.partner_id and o.partner_id.street2) or removeParentNode('para') ]]</para>
+                          <para style="Standard_bold">[[ o.partner_id.is_company != True and (o.partner_id and o.partner_id.zip) ]] [[ o.partner_id.is_company != True and (o.partner_id  and o.partner_id.city) or '' ]] </para>
+                          <para style="Standard_bold">[[ o.partner_id.is_company != True and (o.partner_id and o.partner_id.country_id and  o.partner_id.country_id.name) or removeParentNode('para') ]]</para>
                         </td>
                         <td>
                           <para style="terp_default_8"><font color="white"></font></para>
@@ -96,7 +96,7 @@
             </tr>
             <tr>
                 <td>
-                    <para style="Standard">Geachte [[  (o.partner_id.title and o.partner_id.title.salutation) or '' ]] [[  (o.partner_id.infix) or '' ]][[ (o.partner_id.lastname) or ''  ]],</para>
+                    <para style="Standard">Geachte [[  (o.partner_id.title and o.partner_id.title.salutation) or '' ]] [[  (o.partner_id.infix) or '' ]] [[ (o.partner_id.lastname) or ''  ]],</para>
                 </td>
             </tr>
             <tr></tr>
