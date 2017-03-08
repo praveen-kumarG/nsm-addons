@@ -10,6 +10,10 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <field name="category_id" position="replace">
+                        <field name="category_id" widget="many2many_tags" groups="base.group_sale_manager"/>
+                        <field name="category_dum_id" widget="many2many_tags" readonly="True" groups="sale_advertising.group_partner_category" />
+                    </field>
                     <field name="user_id" position="attributes">
                         <attribute name="groups">sale_advertising.group_traffic_user, account.group_account_user</attribute>
                     </field>

@@ -304,13 +304,13 @@
 			<field name="type">form</field>
 			<field name="model">sale.advertising.issue</field>
 			<field name="arch" type="xml">
-				<form string="Advertising issue">
-					<group>
+				<form string="Advertising issue" >
+					<group col="4" colspan="4" >
 						<field name="name" string="Name"/>
 						<field name="analytic_account_id" string="Related Analytic Account"/>
 						<field name="issue_date" string="Issue Date" readonly="True"/>
 						<field name="medium" string="Medium"/>
-						<field name="default_note" string="Default Note" colspan="4"/>
+						<field name="default_note" string="Default Note" />
 						<field name="state" string="State" />
 					</group>
 				</form>
@@ -326,7 +326,7 @@
 						<field name="analytic_account_id" string="Related Analytic Account"/>
 						<field name="issue_date" string="Issue Date"/>
 						<field name="medium" string="Medium"/>
-						<field name="default_note" string="Default Note" colspan="4"/>
+						<field name="default_note" string="Default Note" />
 						<field name="state" string="State" />
 				</tree>
 			</field>
