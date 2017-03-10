@@ -235,6 +235,8 @@ class sale_advertising_issue(orm.Model):
 
     _columns = {
         'name': fields.char('Name', size=64, required=True),
+        'child_ids': fields.one2many('sale.advertising.issue', 'parent_id', 'Issues', domain=[('active', '=', True)]),
+        'parent_id': fields.many2one('sale.advertising.issue', 'Title', select=True),
         'analytic_account_id': fields.many2one('account.analytic.account', required=True,
                                       string='Related Analytic Account', ondelete='restrict',
                                       help='Analytic-related data of the issue'),
@@ -273,7 +275,6 @@ class sale_order_line(orm.Model):
             if not line.order_id.date_order:
                 date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
             else: date_order = line.order_id.date_order
-            #import pdb; pdb.set_trace()
             pricelist = line.order_id.pricelist_id and line.order_id.pricelist_id.id or False
             product_id = line.product_id and line.product_id.id or False
             order_partner_id = line.order_id.partner_id and line.order_id.partner_id.id or False
@@ -297,6 +298,9 @@ class sale_order_line(orm.Model):
 
     _columns = {
         'layout_remark': fields.text('Layout Remark'),
+        'title': fields.many2one('sale.advertising.issue', 'Title', domain=[('child_ids','=', True)]),
+        'adv_issue_ids': fields.many2many('sale.advertising.issue','sale_order_line_adv_issue_rel', 'order_line_id',
+                                          'adv_issue_id',  'Advertising Issues'),
         'adv_issue': fields.many2one('sale.advertising.issue','Advertising Issue'),
         'medium': fields.related('adv_issue', 'medium', type='many2one', relation='product.category',string='Medium', ),
         'ad_class': fields.many2one('product.category', 'Advertising Class'),
@@ -317,15 +321,18 @@ class sale_order_line(orm.Model):
         'computed_discount': 0.0,
     }
 
-    def onchange_adv_issue(self, cr, uid, ids, adv_issue=False, context=None):
+    def onchange_adv_issue(self, cr, uid, ids, adv_issue=False, adv_issue_ids=False, context=None):
         if context is None:
             context = {}
+        data = {}
+        vals = {}
         if adv_issue:
             ad_issue = self.pool.get('sale.advertising.issue').browse(cr, uid, adv_issue, context)
             ac = ad_issue.medium and ad_issue.medium.id or False
-            data = {'ad_class':
-                        [('id', 'child_of', ac), ('type','!=','view')]}
-            return {'domain' : data}
+            data = {'ad_class':[('id', 'child_of', ac), ('type','!=','view')]}
+            if adv_issue_ids:
+                vals['product_uom_qty'] = len(adv_issue_ids and adv_issue_ids[0][2])
+            return {'value': vals, 'domain' : data}
         return
 
     def onchange_ad_class(self, cr, uid, ids, ad_class=False, context=None):
@@ -376,7 +383,23 @@ class sale_order_line(orm.Model):
         res['value'].update(res2['value'])
         return res
 
-
+    def create_multi_lines(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        import pdb; pdb.set_trace()
+        [ol] = self.browse(cr, uid, ids, context=context)
+        lines = [x.id for x in ol.order_id.order_line]
+        number_ids = len(ol.adv_issue_ids)
+        uom_qty = ol.product_uom_qty / number_ids
+        uos_qty = ol.product_uos_qty / number_ids
+        for ad_iss in ol.adv_issue_ids:
+            res = {'adv_issue': ad_iss.id, 'adv_issue_ids': False, 'product_uom_qty': uom_qty, 'product_uos_qty': uos_qty,'title': False}
+            vals = self.copy_data(cr, uid, ol.id, default=res, context=context)
+            mol_id = self.create(cr, uid, vals, context=context)
+            lines.append(mol_id)
+        lines.remove(ol.id)
+        self.pool['sale.order'].write(cr, uid, [ol.order_id], {'order_line': lines})
+        return True
 
 class sale_advertising_proof(orm.Model):
     _name = "sale.advertising.proof"
