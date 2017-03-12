@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2016 Magnus (<http://www.magnus.nl>). All Rights Reserved
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -19,31 +19,9 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'sale_advertising',
-    'version': '1.0',
-    'category': 'Sale',
-    'description': """
-This module allow you to use the Sale Management to encode your advertising sales
-=====================================================================================
 
+import sale_line_create_multi
 
-    """,
-    'author': 'Magnus - Willem Hulshof',
-    'website': 'http://www.magnus.nl',
-    'depends': ['sale_stock', 'sale_crm', 'nsm_analytic',
-                ],
-    'data': ["security/ir.model.access.csv",
-             "security/security.xml",
-             "wizard/sale_line_create_multi.xml",
-             "sale_advertising_view.xml",
-             "res_partner_view.xml",
-             "res_company_view.xml",
-             "sale_workflow.xml",
-             ],
-    'demo': ['sale_advertising_demo.xml'],
-    'installable': True
-}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

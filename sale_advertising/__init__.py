@@ -24,6 +24,8 @@ import sale_advertising
 import product_category
 import res_partner
 import res_company
+import wizard
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

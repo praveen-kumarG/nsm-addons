@@ -21,6 +21,9 @@
 								groups="sale_advertising.group_traffic_user"/>
                         <button name="refuse" string="Refuse" type="workflow" states="submitted,approved1"
 								groups="sale_advertising.group_traffic_user, base.group_sale_manager"/>
+						<button name="%(sale_advertising.action_view_sale_order_line_create_multi)d"
+									string="Create Multiple Order Lines" type="action" icon="terp-document-new"
+									attrs="{'invisible': [('state','not in',['approved2'])]}"/>
 					</button>
 					<button name="invoice_recreate" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
@@ -89,12 +92,12 @@
 						<field name="opportunity_subject"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/header/button[@name='%(sale.action_view_sale_order_line_make_invoice)d']" position="after">
-							<button name="create_multi_lines" states="draft" attrs="{'invisible':[('title','=',False)]}"
-									string="Create Multiple Order Lines" type="object" icon="terp-document-new"/>
+							<button name="%(sale_advertising.action_view_sale_order_line_create_multi)d" attrs="{'invisible':['|',('adv_issue','!=',False),('state','not in',['draft'])]}"
+									string="Create Multiple Order Lines" type="action" icon="terp-document-new"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="replace">
-						<field name="adv_issue" on_change="onchange_adv_issue(adv_issue, adv_issue_ids)"
-							   attrs="{'invisible':[('title','!=',False)],'required':[('title','=',False)]}"/>
+						<field name="title" string="Title" domain="[('child_ids','!=', False)]" required="True"
+							   on_change="onchange_title(title)"/>
 						<field name="medium" invisible="1" />
 						<field name="ad_class" on_change="onchange_ad_class(ad_class)" required="1"
 							   domain="[('type','!=', 'view'), ('id','child_of', medium)]"/>
@@ -153,9 +156,9 @@
 							<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='property_ids']" position="after">
-						<field name="title" string="Title" domain="[('child_ids','!=', False)]" />
-						<field name="adv_issue_ids" string="Advertising Issues" attrs="{'invisible':[('title','=',False)]}"
-							   domain="[('id','child_of', title)]" on_change="onchange_adv_issue(title, adv_issue_ids)"/>
+						<field name="adv_issue" attrs="{'invisible':['|',('adv_issue','=',False),('title','=',False)]}"/>
+						<field name="adv_issue_ids" string="Advertising Issues" attrs="{'invisible':['|',('adv_issue','!=',False), ('title','=',False)]}"
+							   domain="[('id','child_of', title)]" on_change="onchange_adv_issue_ids(adv_issue_ids)"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/label[@for='name']" position="before">
 						<group>
@@ -168,6 +171,7 @@
 						</group>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_id']" position="before">
+						<field name="title" />
 						<field name="adv_issue" />
 						<field name="ad_class" required="1"/>
 					</xpath>
