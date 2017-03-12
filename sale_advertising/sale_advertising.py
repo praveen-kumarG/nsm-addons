@@ -202,12 +202,14 @@ class sale_order(orm.Model):
             ids = [ids]
         order = self.browse(cr, uid, ids[0], context=context)
         discount = order.partner_id.agency_discount or 0.0
-        line_ids = self.pool['sale.order.line'].search(
-            cr, uid, [('order_id', 'in', ids)], context=context)
+        fiscal_position = order.partner_id.property_account_position.id
+        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
+        line_ids = self.pool['sale.order.line'].search(cr, uid, [('order_id', 'in', ids)], context=context)
         if line_ids:
-            self.pool['sale.order.line'].write(
-                cr, uid, line_ids, {'discount': discount},
-                context=context)
+            for line in self.pool['sale.order.line'].browse(cr, uid, line_ids):
+                product = self.pool['product.product'].browse(cr, uid, line.product_id.id)
+                tax = self.pool['account.fiscal.position'].map_tax(cr, uid, fpos, product.taxes_id)
+                self.pool['sale.order.line'].write(cr, uid, line.id, {'discount': discount,'tax_id': [(6,0,tax)]}, context=context)
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -410,6 +412,20 @@ class sale_order_line(orm.Model):
         res['value'].update(res2['value'])
         return res
 
+    def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
+        """Prepare the dict of values to create the new invoice line for a
+           sales order line. This method may be overridden to implement custom
+           invoice generation (making sure to call super() to establish
+           a clean extension chain).
+
+           :param browse_record line: sale.order.line record to invoice
+           :param int account_id: optional ID of a G/L account to force
+               (this is used for returning products including service)
+           :return: dict of values to create() the invoice line
+        """
+        res = super(sale_order_line,self)._prepare_order_line_invoice_line(cr, uid, line, account_id=account_id, context=context)
+        res['account_analytic_id'] = line.adv_issue.analytic_account_id and line.adv_issue.analytic_account_id.id or False
+        return res
 
 
 class sale_advertising_proof(orm.Model):
