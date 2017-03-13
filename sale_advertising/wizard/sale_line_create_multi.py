@@ -72,21 +72,6 @@ class sale_order_line_create_multi_lines(orm.TransientModel):
                 raise osv.except_osv(
                     _('Warning!'),
                     _('There are no Sales Order Lines without Advertising Issues in the selection.'))
-
-        '''view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
-        view_id = view_ref and view_ref[1] or False,
-        view = {
-            'type': 'ir.actions.act_window',
-            'name': _('Sales Order'),
-            'res_model': 'sale.order',
-            'res_id': oid,
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'view_id': view_id,
-            'target': 'new',
-            'nodestroy': True,
-        }
-        return view'''
         return
 
     def create_multi_from_order_lines(self, cr, uid, ids, oid, context=None):
@@ -94,7 +79,11 @@ class sale_order_line_create_multi_lines(orm.TransientModel):
         sales_order_line_obj = self.pool['sale.order.line']
         for ol in ids:
             lines = [x.id for x in ol.order_id.order_line]
-            number_ids = len(ol.adv_issue_ids)
+            number_ids = len([x.id for x in ol.adv_issue_ids])
+            if number_ids < 1:
+                raise osv.except_osv(
+                    _('Error!'),
+                    _('The product Quantity is different from the number of Issues in the multi line.'))
             uom_qty = ol.product_uom_qty / number_ids
             uos_qty = ol.product_uos_qty / number_ids
             for ad_iss in ol.adv_issue_ids:
