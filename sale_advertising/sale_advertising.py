@@ -423,6 +423,7 @@ class sale_order_line(orm.Model):
         res['value'].update({'discount': discount, 'discount_dummy': discount})
         if 'price_unit' in res['value']:
             pu = res['value']['price_unit']
+            res['value']['actual_unit_price'] = 0.0
         else: pu = 0.0
         res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=actual_unit_price,
                                         price_unit=pu, qty=qty, discount=discount,
