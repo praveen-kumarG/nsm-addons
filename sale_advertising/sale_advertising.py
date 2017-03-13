@@ -341,6 +341,12 @@ class sale_order_line(orm.Model):
                 vals['actual_unit_price'] = 0.0
                 ac = ad_issue.medium and ad_issue.medium.id or False
                 data = {'ad_class': [('id', 'child_of', ac), ('type', '!=', 'view')]}
+                ac_child = self.pool['product.category'].search(cr, uid,
+                                                                [('id', 'child_of', ac), ('type', '!=', 'view')],
+                                                                context)
+                if len(ac_child) == 1:
+                    vals['ad_class'] = ac_child[0]
+
 
             else:
                 vals['adv_issue'] = False
@@ -349,8 +355,14 @@ class sale_order_line(orm.Model):
                 vals['actual_unit_price'] = 0.0
                 ac = ad_issue.medium and ad_issue.medium.id or False
                 data = {'ad_class': [('id', 'child_of', ac), ('type', '!=', 'view')]}
+                ac_child = self.pool['product.category'].search(cr, uid,
+                                                                [('id', 'child_of', ac), ('type', '!=', 'view')],
+                                                                context)
+                if len(ac_child) == 1:
+                    vals['ad_class'] = ac_child[0]
 
         return {'value': vals, 'domain': data}
+
 
     def onchange_adv_issue_ids(self, cr, uid, ids, adv_issue_ids=False, context=None):
         if context is None:
@@ -367,14 +379,18 @@ class sale_order_line(orm.Model):
     def onchange_ad_class(self, cr, uid, ids, ad_class=False, context=None):
         if context is None:
             context = {}
+        vals = {}
+        data = {}
         if ad_class:
-            data = {}
             template_ids = self.pool.get('product.template').search(cr, uid, [('categ_id', '=', ad_class)], context=context )
             product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', template_ids)], context=context )
             if product_ids :
                 data['product_id'] = [('id', 'in', product_ids)]
-                return {'domain' : data}
-        return
+                if len(product_ids) == 1:
+                    vals['product_id'] = product_ids[0]
+
+        return {'value': vals, 'domain' : data}
+
 
     def onchange_actualup(self, cr, uid, ids, actual_unit_price=False, price_unit=False, qty=0, discount=False, price_subtotal=0.0, context=None):
         result = {}
@@ -387,6 +403,8 @@ class sale_order_line(orm.Model):
                 result['computed_discount'] = 0.0
                 result['price_subtotal'] = actual_unit_price * qty * (1 - discount / 100.0)
         else:
+            if price_unit and price_unit > 0.0:
+                result['actual_unit_price'] = price_unit
             result['computed_discount'] = 0.0
             result['price_subtotal'] = price_subtotal
         return {'value': result}
