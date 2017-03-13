@@ -156,7 +156,7 @@
 							<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='property_ids']" position="after">
-						<field name="adv_issue" attrs="{'invisible':['|',('adv_issue','=',False),('title','=',False)]}"/>
+						<field name="adv_issue" domain="[('parent_id','=', title)]" attrs="{'invisible':['|',('adv_issue','=',False),('title','=',False)]}"/>
 						<field name="adv_issue_ids" string="Advertising Issues" attrs="{'invisible':['|',('adv_issue','!=',False), ('title','=',False)]}"
 							   domain="[('id','child_of', title)]" on_change="onchange_adv_issue_ids(adv_issue_ids)"/>
 					</xpath>
