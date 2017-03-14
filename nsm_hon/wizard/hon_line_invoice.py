@@ -43,8 +43,8 @@ class hon_issue_line_make_invoice(osv.osv_memory):
     def _prepare_invoice(self, cr, uid, partner, issue, category, lines, context=None):
 
         a = partner.property_account_payable.id
-        if partner and partner.property_payment_term.id:
-            pay_term = partner.property_payment_term.id
+        if partner and partner.property_supplier_payment_term.id:
+            pay_term = partner.property_supplier_payment_term.id
         else:
             pay_term = False
         return {
