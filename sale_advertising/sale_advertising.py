@@ -382,10 +382,12 @@ class sale_order_line(orm.Model):
         if context is None:
             context = {}
         vals = {}
+        qty = 1
         if not adv_issue_id and adv_issue_ids:
-            if len(adv_issue_ids[0][2]) >= 1:
-                vals['product_uom_qty'] = len(adv_issue_ids[0][2])
-        else: vals['product_uom_qty'] = 1
+            if len(adv_issue_ids[0][2]) > 1:
+                qty = len(adv_issue_ids[0][2])
+
+        vals['product_uom_qty'] = qty
         return {'value': vals}
 
 
@@ -395,12 +397,15 @@ class sale_order_line(orm.Model):
         vals = {}
         data = {}
         if ad_class:
-            product_ids = self.pool.get('product.template').search(cr, uid, [('categ_id', '=', ad_class)], context=context )
+            product_ids = self.pool.get('product.product').search(cr, uid, [('categ_id', '=', ad_class)], context=context )
             if product_ids:
                 data['product_id'] = [('categ_id', '=', ad_class)]
                 if len(product_ids) == 1:
                     vals['product_id'] = product_ids[0]
-
+                else:
+                    vals['product_id'] = False
+        else:
+            vals['product_id'] = False
         return {'value': vals, 'domain' : data}
 
 
@@ -440,6 +445,7 @@ class sale_order_line(orm.Model):
                                                 uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
                                                 lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging,
                                                 fiscal_position=fiscal_position, flag=flag, context=context)
+        qty = 1.00
         if not adv_issue_id and adv_issue_ids:
             res1 = self.onchange_adv_issue_ids(cr, uid, ids, adv_issue_id=adv_issue_id, adv_issue_ids=adv_issue_ids,
                                           context=context)
