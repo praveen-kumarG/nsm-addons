@@ -317,7 +317,7 @@ class sale_order_line(orm.Model):
         'adv_issue_ids': fields.many2many('sale.advertising.issue','sale_order_line_adv_issue_rel', 'order_line_id',
                                           'adv_issue_id',  'Advertising Issues'),
         'adv_issue': fields.many2one('sale.advertising.issue','Advertising Issue'),
-        'medium': fields.related('adv_issue', 'medium', type='many2one', relation='product.category',string='Medium', ),
+        'medium': fields.related('title', 'medium', type='many2one', relation='product.category',string='Medium', ),
         'ad_class': fields.many2one('product.category', 'Advertising Class'),
         'page_reference': fields.char('Reference of the Page', size=32),
         'ad_number': fields.char('Advertising Reference', size=32),
@@ -380,13 +380,12 @@ class sale_order_line(orm.Model):
     def onchange_adv_issue_ids(self, cr, uid, ids, adv_issue_ids=False, context=None):
         if context is None:
             context = {}
-        data = {}
         vals = {}
         if adv_issue_ids:
             if len(adv_issue_ids and adv_issue_ids[0][2]) >= 1:
                 vals['product_uom_qty'] = len(adv_issue_ids and adv_issue_ids[0][2])
             else: vals['product_uom_qty'] = 1
-        return {'value': vals, 'domain' : data}
+        return {'value': vals}
 
 
     def onchange_ad_class(self, cr, uid, ids, ad_class=False, context=None):
@@ -396,11 +395,13 @@ class sale_order_line(orm.Model):
         data = {}
         if ad_class:
             template_ids = self.pool.get('product.template').search(cr, uid, [('categ_id', '=', ad_class)], context=context )
-            product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', template_ids)], context=context )
-            if product_ids :
-                data['product_id'] = [('id', 'in', product_ids)]
-                if len(product_ids) == 1:
-                    vals['product_id'] = product_ids[0]
+            #product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', template_ids)], context=context )
+            #if product_ids :
+            if template_ids:
+            #    data['product_id'] = [('id', 'in', product_ids)]
+                data['product_id'] = [('categ_id', '=', ad_class)]
+                if len(template_ids) == 1:
+                    vals['product_id'] = template_ids[0]
 
         return {'value': vals, 'domain' : data}
 

@@ -108,6 +108,7 @@
 						<field name="product_id" required="1"
 							   context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,
 							   'shop':parent.shop_id, 'uom':product_uom}"
+							   domain="[('categ_id','=', ad_class)]"
                                groups="base.group_user"
 							   on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, False,
 							   product_uos_qty, False, name, parent.partner_id, actual_unit_price, False, True, parent.date_order,
