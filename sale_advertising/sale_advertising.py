@@ -382,10 +382,10 @@ class sale_order_line(orm.Model):
         if context is None:
             context = {}
         vals = {}
-        if not adv_issue_id:
-            if len(adv_issue_ids and adv_issue_ids[0][2]) >= 1:
-                vals['product_uom_qty'] = len(adv_issue_ids and adv_issue_ids[0][2])
-            else: vals['product_uom_qty'] = 1
+        if not adv_issue_id and adv_issue_ids:
+            if len(adv_issue_ids[0][2]) >= 1:
+                vals['product_uom_qty'] = len(adv_issue_ids[0][2])
+        else: vals['product_uom_qty'] = 1
         return {'value': vals}
 
 
@@ -440,12 +440,13 @@ class sale_order_line(orm.Model):
                                                 uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
                                                 lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging,
                                                 fiscal_position=fiscal_position, flag=flag, context=context)
-        if not adv_issue_id:
+        if not adv_issue_id and adv_issue_ids:
             res1 = self.onchange_adv_issue_ids(cr, uid, ids, adv_issue_id=adv_issue_id, adv_issue_ids=adv_issue_ids,
                                           context=context)
             res['value'].update(res1['value'])
-            quantity = res['value']['product_uom_qty']
-        else: quantity = qty
+            if 'product_uom_qty' in res['value']:
+                qty = res['value']['product_uom_qty']
+
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         if partner.is_ad_agency:
             discount = partner.agency_discount
@@ -454,7 +455,7 @@ class sale_order_line(orm.Model):
             pu = res['value']['price_unit']
         else: pu = 0.0
         res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=pu,
-                                        price_unit=pu, qty=quantity, discount=discount,
+                                        price_unit=pu, qty=qty, discount=discount,
                                         price_subtotal=0.0, context=context)
         res['value'].update(res2['value'])
         return res

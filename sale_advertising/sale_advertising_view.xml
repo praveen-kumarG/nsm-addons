@@ -116,7 +116,8 @@
 								parent.date_order, adv_issue, adv_issue_ids, False, discount, parent.fiscal_position, False, context)</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div[@groups='product.group_uos']" position="after">
-						<field name="adv_issue" domain="[('parent_id','=', title)]" attrs="{'invisible':['|',('adv_issue','=',False),('title','=',False)]}"/>
+						<field name="adv_issue" domain="[('parent_id','=', title)]" attrs="{'invisible':['|',('adv_issue','=',False),('title','=',False)]}"
+							   on_change="onchange_adv_issue_ids(adv_issue, adv_issue_ids)"/>
 						<field name="adv_issue_ids" string="Advertising Issues" attrs="{'invisible':['|',('adv_issue','!=',False), ('title','=',False)]}"
 							   domain="[('id','child_of', title)]" on_change="onchange_adv_issue_ids(adv_issue, adv_issue_ids)">
 								<tree>
