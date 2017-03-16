@@ -106,14 +106,15 @@ class sale_order(orm.Model):
         return res
 
     _columns = {
-        'published_customer': fields.many2one('res.partner', 'Published Customer'),
-        'advertising_agency': fields.many2one('res.partner', 'Advertising Agency'),
-        'customer_contact': fields.many2one('res.partner', 'Customer Contact Person'),
+        'published_customer': fields.many2one('res.partner', 'Advertiser', domain=[('customer','=',True)]),
+        'advertising_agency': fields.many2one('res.partner', 'Advertising Agency', domain=[('customer','=',True)]),
+        'customer_contact': fields.many2one('res.partner', 'Payer Contact Person', domain=[('customer','=',True)]),
         'traffic_employee': fields.many2one('res.users', 'Traffic Employee',),
         'traffic_comments': fields.text('Traffic Comments'),
         'traffic_appr_date': fields.date('Traffic Confirmation Date', select=True, help="Date on which sales order is confirmed bij Traffic."),
         'opportunity_subject': fields.char('Opportunity Subject', size=64,
                               help="Subject of Opportunity from which this Sales Order is derived."),
+        'partner_acc_mgr': fields.related('published_customer', 'user_id', type='many2one', relation='res.users', string='Account Manager', store=True ),
         'date_from': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date from"),
         'date_to': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date to"),
         'state': fields.selection([
@@ -158,8 +159,8 @@ class sale_order(orm.Model):
     }
 
     def onchange_published_customer(self, cr, uid, ids, published_customer, context):
-        data = {'advertising_agency':published_customer,'partner_id':published_customer, 'partner_invoice_id': False,
-                'partner_shipping_id':False, 'partner_order_id':False}
+        data = {'partner_id':published_customer, 'partner_invoice_id': False,
+                'partner_shipping_id':False, 'partner_order_id':False, 'advertising_agency': False}
         if published_customer:
             address = self.onchange_partner_id(cr, uid, ids, published_customer, context)
             data.update(address['value'])
@@ -186,6 +187,17 @@ class sale_order(orm.Model):
 
     def onchange_partner_id(self, cr, uid, ids, part, lines, context=None):
         res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
+        if not part:
+            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'customer_contact': False, 'payment_term': False, 'fiscal_position': False}}
+        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
+        if part.type == 'contact':
+            contact = self.pool['res.partner'].search(cr, uid, [('is_company','=', False),('type','=', 'contact'),('parent_id','=', part.id)], context=context)
+            contact_id = [c.id for c in contact][0]
+        elif addr['contact'] == addr['default']:
+            contact_id = False
+        else: contact_id = addr['contact']
+
         result = {}
         if lines:
             result['warning'] = {'title':_('Warning'),
@@ -195,6 +207,7 @@ class sale_order(orm.Model):
                                              'show wrong values.')}
             res.update(result)
         res['value']['user_id'] = uid
+        res['value']['customer_contact'] = contact_id
         return res
 
     def update_line_discount(self, cr, uid, ids, context=None):
@@ -308,8 +321,8 @@ class sale_order_line(orm.Model):
         'ad_class': fields.many2one('product.category', 'Advertising Class'),
         'page_reference': fields.char('Reference of the Page', size=32),
         'ad_number': fields.char('Advertising Reference', size=32),
-        'from_date': fields.datetime('Start of Validity'),
-        'to_date': fields.datetime('End of Validity'),
+        'from_date': fields.date('Start of Validity'),
+        'to_date': fields.date('End of Validity'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'discount_dummy': fields.related('discount', type='float', string='Agency Discount (%)',readonly=True ),
         'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
@@ -392,22 +405,35 @@ class sale_order_line(orm.Model):
         return {'value': vals, 'domain' : data}
 
 
-    def onchange_actualup(self, cr, uid, ids, actual_unit_price=False, price_unit=False, qty=0, discount=False, price_subtotal=0.0, context=None):
+    def onchange_actualup(self, cr, uid, ids, actual_unit_price=False, price_unit=False, qty=0.0, discount=False, price_subtotal=0.0, context=None):
         result = {}
+        if context is None:
+            context = {}
         if actual_unit_price:
             if price_unit and price_unit > 0.0:
                 cdisc = (float(price_unit) - float(actual_unit_price)) / float(price_unit) * 100.0
                 result['computed_discount'] = cdisc
-                result['price_subtotal'] = actual_unit_price * qty * (1 - discount/100.0)
+                result['price_subtotal'] = round((float(actual_unit_price) * float(qty) * (1.0 - float(discount)/100.0)),2)
             else:
                 result['computed_discount'] = 0.0
-                result['price_subtotal'] = actual_unit_price * qty * (1 - discount / 100.0)
+                result['price_subtotal'] = round((float(actual_unit_price) * float(qty) * (1.0 - float(discount)/100.0)),2)
         else:
             if price_unit and price_unit > 0.0:
                 result['actual_unit_price'] = price_unit
             result['computed_discount'] = 0.0
             result['price_subtotal'] = price_subtotal
         return {'value': result}
+
+    def onchange_price_subtotal(self,cr, uid, ids, qty=0, discount=False, price_subtotal=0.0, context=None):
+        result = {}
+        if context is None:
+            context = {}
+        if price_subtotal and price_subtotal > 0.0:
+                if qty > 0.0:
+                    actual_unit_price = round(float(price_subtotal) / float(qty) / (1.0 - float(discount) / 100.0), 2)
+                    result['actual_unit_price'] = actual_unit_price
+        return {'value': result}
+
 
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False, actual_unit_price=False,
@@ -427,7 +453,7 @@ class sale_order_line(orm.Model):
         else: pu = 0.0
         res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=actual_unit_price,
                                         price_unit=pu, qty=qty, discount=discount,
-                                        price_subtotal=0.0, context=None)
+                                        price_subtotal=0.0, context=context)
         res['value'].update(res2['value'])
         return res
 

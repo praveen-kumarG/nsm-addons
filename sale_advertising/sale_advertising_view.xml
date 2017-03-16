@@ -65,18 +65,20 @@
 					<xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="replace">
 						<field name="published_customer"  on_change="onchange_published_customer(published_customer, context)"
 							   context="{'tree_view_ref': 'nsm_crm.view_partner_tree_nsm_crm'}"
-							   domain="[('is_ad_agency','!=', True),('is_company','=', True),('aprofit_nummer','=', None)]"
+							   domain="[('is_ad_agency','!=', True),('is_company','=', True),('customer','=', True)]"
 							   attrs="{'readonly':[('state','not in','draft')]}" required="True"/>
-						<field name="partner_id" on_change="onchange_partner_id(partner_id, order_line, context)"
-							   domain="[('customer','=',True), ('is_company','=', True),('aprofit_nummer','=', None)]" context="{'search_default_customer':1, 'show_address': 1}"
+						<field name="partner_id" on_change="onchange_partner_id(partner_id, order_line, context)" string="Payer"
+							   domain="[('customer','=',True), ('is_company','=', True)]" context="{'search_default_customer':1, 'show_address': 1}"
 							   options='{"always_reload": True}'/>
+					</xpath>
+					<xpath expr="/form/sheet/group/group/field[@name='partner_invoice_id']" position="attributes">
+						<attribute name="string">Payer Invoice Address</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_shipping_id']" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='client_order_ref']" position="replace">
-						<field name="client_order_ref" string="Customer PO-number"/>
-						<field name="customer_contact" domain="[('is_company', '=', False), ('customer', '=', True),('parent_id', '!=', False),('type', '=', 'contact')]"/>
+						<field name="client_order_ref" string="PO-number"/>
 						<field name="traffic_employee" string="Traffic Employee" groups="sale_advertising.group_traffic_user"/>
 						<field name="traffic_comments" string="Traffic Comments"/>
 						<field name="traffic_appr_date" string="Traffic Approval Date" readonly="True"/>
@@ -86,8 +88,10 @@
 						<attribute name="invisible">[('published_customer','!=', None)]</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="after">
+						<field name="customer_contact" required="True" context="{'default_parent_id': partner_id}"
+							   domain="[('is_company', '=', False), ('customer', '=', True),('parent_id', '=', partner_id),('type', '=', 'contact')]"/>
 						<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"
-								domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]" attrs="{'readonly':[('state','not in','draft')]}"/>
+							   domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]" attrs="{'readonly':[('state','not in','draft')]}"/>
 						<field name="categ_ids" widget="many2many_tags" placeholder="Tags..." />
 						<field name="opportunity_subject"/>
 					</xpath>
@@ -116,7 +120,6 @@
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='price_unit']" position="attributes">
 						<attribute name="readonly">True</attribute>
-						<attribute name="on_change">onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, price_subtotal)</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div[@name='discount']" position="replace">
 						<div name="discount" groups="sale.group_discount_per_so_line">
@@ -125,14 +128,14 @@
 						</div>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='price_unit']" position="after">
-						<field name="actual_unit_price" on_change="onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, price_subtotal)" />
+						<field name="actual_unit_price" on_change="onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, price_subtotal, context)"/>
 						<label for="computed_discount" groups="sale.group_discount_per_so_line"/>
 							<div name="computed_discount" groups="sale.group_discount_per_so_line">
 								<field name="computed_discount" class="oe_inline"/> %%
 							</div>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div[@name='discount']" position="after">
-						<field name="price_subtotal" readonly="True"/>
+						<field name="price_subtotal" readonly="False" on_change="onchange_price_subtotal(product_uom_qty, discount, price_subtotal, context)"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='product_uom']" position="attributes">
 						<attribute name="invisible">False</attribute>
@@ -191,6 +194,9 @@
 						<field name="ad_number"/>
 						<field name="page_reference"/>
 					</xpath>
+					<xpath expr="/form/sheet/notebook/page/group/group/field[@name='user_id']" position="after">
+						<field name="partner_acc_mgr"/>
+					</xpath>
 				</data>
 			</field>
 		</record>
@@ -205,10 +211,11 @@
 						<field name="opportunity_subject"/>
 						<field name="published_customer"/>
 						<field name="advertising_agency"/>
+						<field name="partner_acc_mgr"/>
 					</field>
 					<field name="amount_total" position="replace">
 						<field name="amount_untaxed"/>
-						<field name="traffic_appr_date"/>
+						<field name="traffic_appr_date" string="Traffic Date"/>
 					</field>
 				</data>
             </field>
@@ -224,10 +231,11 @@
 						<field name="opportunity_subject"/>
 						<field name="published_customer"/>
 						<field name="advertising_agency"/>
+						<field name="partner_acc_mgr"/>
 					</field>
 					<field name="amount_total" position="replace">
 						<field name="amount_untaxed"/>
-						<field name="traffic_appr_date"/>
+						<field name="traffic_appr_date" string="Traffic Date"/>
 					</field>
 				</data>
             </field>
@@ -301,12 +309,19 @@
 						<filter string="Sales Mgr Approved" name="approved1" domain="[('state','in',('approved1',))]"/>
 						<filter string="Traffic Approved" name="approved2" domain="[('state','in',('approved2',))]"/>
 					</filter>
+					<filter name="my_sale_orders_filter" position="after">
+						<filter name="accmgr_sale_orders_filter" string="My Sales Orders (Account Manager)" domain="[('partner_acc_mgr','=',uid)]" help="My Sales Orders as Account manager" icon="terp-personal" />
+						<field name="partner_acc_mgr"/>
+					</filter>
 					<field name="project_id" position="after" >
 						<field name="date_from" string="Order Date From" filter_domain="[('date_order','&gt;=',self)]"/>
-						<field name="date_to" string="Order Date From" filter_domain="[('date_order','&lt;=',self)]"/>
+						<field name="date_to" string="Order Date To" filter_domain="[('date_order','&lt;=',self)]"/>
 						<field name="date_from" string="Traffic Date From" filter_domain="[('traffic_appr_date','&gt;=',self)]"/>
 						<field name="date_to" string="Traffic Date To" filter_domain="[('traffic_appr_date','&lt;=',self)]"/>
 					</field>
+					<filter string="Salesperson" position="after" >
+						<filter string="Account Manager" icon="terp-personal" domain="[]" context="{'group_by':'partner_acc_mgr'}"/>
+					</filter>
 				</data>
             </field>
         </record>

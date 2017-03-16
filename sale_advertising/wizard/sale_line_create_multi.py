@@ -46,7 +46,7 @@ class sale_order_line_create_multi_lines(orm.TransientModel):
                     continue
                 n += 1
                 olines = self.pool['sale.order.line'].browse(cr, uid, lines, context=context)
-                self.create_multi_from_order_lines(cr, uid, olines, so.id, context)
+                self.create_multi_from_order_lines(cr, uid, olines, context)
             if n == 0:
                 raise osv.except_osv(
                     _('Warning!'),
@@ -67,14 +67,14 @@ class sale_order_line_create_multi_lines(orm.TransientModel):
                     continue
                 n += 1
                 olines = self.pool['sale.order.line'].browse(cr, uid, lines, context=context)
-                self.create_multi_from_order_lines(cr, uid, olines, oid, context)
+                self.create_multi_from_order_lines(cr, uid, olines, context)
             if n == 0:
                 raise osv.except_osv(
                     _('Warning!'),
                     _('There are no Sales Order Lines without Advertising Issues in the selection.'))
         return
 
-    def create_multi_from_order_lines(self, cr, uid, ids, oid, context=None):
+    def create_multi_from_order_lines(self, cr, uid, ids, context=None):
 
         sales_order_line_obj = self.pool['sale.order.line']
         for ol in ids:
