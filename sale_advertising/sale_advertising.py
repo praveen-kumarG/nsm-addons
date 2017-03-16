@@ -167,11 +167,13 @@ class sale_order(orm.Model):
         return {'value' : data }
 
     def onchange_advertising_agency(self, cr, uid, ids, ad_agency, context):
-        data = {'partner_id':ad_agency,'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False}
         if ad_agency:
+            data = {'partner_id': ad_agency, 'partner_invoice_id': False, 'partner_shipping_id': False,
+                    'partner_order_id': False}
             address = self.onchange_partner_id(cr, uid, ids, ad_agency, context)
             data.update(address['value'])
-        return {'value' : data}
+            return {'value' : data}
+        return True
 
     def action_submit(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids):
@@ -342,7 +344,6 @@ class sale_order_line(orm.Model):
         data = {}
         vals = {}
         if title:
-            #import pdb; pdb.set_trace()
             ad_issue_obj = self.pool['sale.advertising.issue']
             ad_issue = ad_issue_obj.browse(cr, uid, title, context=context)
             child_id = [x.id for x in ad_issue.child_ids]
@@ -377,11 +378,11 @@ class sale_order_line(orm.Model):
         return {'value': vals, 'domain': data}
 
 
-    def onchange_adv_issue_ids(self, cr, uid, ids, adv_issue_ids=False, context=None):
+    def onchange_adv_issue_ids(self, cr, uid, ids, adv_issue_id=False, adv_issue_ids=False, context=None):
         if context is None:
             context = {}
         vals = {}
-        if adv_issue_ids:
+        if not adv_issue_id:
             if len(adv_issue_ids and adv_issue_ids[0][2]) >= 1:
                 vals['product_uom_qty'] = len(adv_issue_ids and adv_issue_ids[0][2])
             else: vals['product_uom_qty'] = 1
@@ -394,14 +395,11 @@ class sale_order_line(orm.Model):
         vals = {}
         data = {}
         if ad_class:
-            template_ids = self.pool.get('product.template').search(cr, uid, [('categ_id', '=', ad_class)], context=context )
-            #product_ids = self.pool.get('product.product').search(cr, uid, [('product_tmpl_id', 'in', template_ids)], context=context )
-            #if product_ids :
-            if template_ids:
-            #    data['product_id'] = [('id', 'in', product_ids)]
+            product_ids = self.pool.get('product.template').search(cr, uid, [('categ_id', '=', ad_class)], context=context )
+            if product_ids:
                 data['product_id'] = [('categ_id', '=', ad_class)]
-                if len(template_ids) == 1:
-                    vals['product_id'] = template_ids[0]
+                if len(product_ids) == 1:
+                    vals['product_id'] = product_ids[0]
 
         return {'value': vals, 'domain' : data}
 
@@ -435,15 +433,19 @@ class sale_order_line(orm.Model):
                     result['actual_unit_price'] = actual_unit_price
         return {'value': result}
 
-
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
-            uom=False, qty_uos=0, uos=False, name='', partner_id=False, actual_unit_price=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, discount=0.0, fiscal_position=False, flag=False, context=None):
+    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, qty_uos=0, uos=False, name='',
+            partner_id=False, lang=False, update_tax=True, date_order=False, adv_issue_id=False, adv_issue_ids=False,
+            packaging=False, discount=0.0, fiscal_position=False, flag=False, context=None):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
                                                 uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
                                                 lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging,
                                                 fiscal_position=fiscal_position, flag=flag, context=context)
-
+        if not adv_issue_id:
+            res1 = self.onchange_adv_issue_ids(cr, uid, ids, adv_issue_id=adv_issue_id, adv_issue_ids=adv_issue_ids,
+                                          context=context)
+            res['value'].update(res1['value'])
+            quantity = res['value']['product_uom_qty']
+        else: quantity = qty
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         if partner.is_ad_agency:
             discount = partner.agency_discount
@@ -452,7 +454,7 @@ class sale_order_line(orm.Model):
             pu = res['value']['price_unit']
         else: pu = 0.0
         res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=pu,
-                                        price_unit=pu, qty=qty, discount=discount,
+                                        price_unit=pu, qty=quantity, discount=discount,
                                         price_subtotal=0.0, context=context)
         res['value'].update(res2['value'])
         return res
