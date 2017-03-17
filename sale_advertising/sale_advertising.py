@@ -381,7 +381,7 @@ class sale_order_line(orm.Model):
         if context is None:
             context = {}
         vals = {}
-        if not adv_issue_id:
+        if not adv_issue_id and adv_issue_ids:
             if len(adv_issue_ids[0][2]) >= 1:
                 qty = len(adv_issue_ids[0][2])
             else:
@@ -448,7 +448,7 @@ class sale_order_line(orm.Model):
                                                 lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging,
                                                 fiscal_position=fiscal_position, flag=flag, context=context)
 
-        if not adv_issue_id:
+        if not adv_issue_id and adv_issue_ids:
             if len(adv_issue_ids[0][2]) >= 1:
                 qty = len(adv_issue_ids[0][2])
             else:
