@@ -188,11 +188,14 @@ class sale_order(orm.Model):
         return True
 
     def onchange_partner_id(self, cr, uid, ids, part, lines, context=None):
-        res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'customer_contact': False, 'payment_term': False, 'fiscal_position': False}}
+
         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
         addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
+        pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
+        payment_term = part.property_payment_term and part.property_payment_term.id or False
+        fiscal_position = part.property_account_position and part.property_account_position.id or False
         if part.type == 'contact':
             contact = self.pool['res.partner'].search(cr, uid, [('is_company','=', False),('type','=', 'contact'),('parent_id','=', part.id)], context=context)
             if len(contact) >=1:
@@ -203,7 +206,18 @@ class sale_order(orm.Model):
             contact_id = False
         else: contact_id = addr['contact']
 
+        val = {
+            'partner_invoice_id': addr['invoice'],
+            'partner_shipping_id': addr['delivery'],
+            'payment_term': payment_term,
+            'fiscal_position': fiscal_position,
+            'user_id': uid,
+            'customer_contact': contact_id,
+        }
+        if pricelist:
+            val['pricelist_id'] = pricelist
         result = {}
+        res = {'value': val}
         if lines:
             result['warning'] = {'title':_('Warning'),
                                  'message':_('Changing the Customer can have a change in Agency Discount as a result.'
@@ -211,8 +225,6 @@ class sale_order(orm.Model):
                                              'Before saving the order the order lines and the total amounts may therefor'
                                              'show wrong values.')}
             res.update(result)
-        res['value']['user_id'] = uid
-        res['value']['customer_contact'] = contact_id
         return res
 
     def update_line_discount(self, cr, uid, ids, context=None):
