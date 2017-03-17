@@ -106,18 +106,17 @@
 							   'shop':parent.shop_id, 'uom':product_uom}"
 							   domain="[('categ_id','=', ad_class)]"
                                groups="base.group_user"
-							   on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, False,
+							   on_change="product_id_change(parent.pricelist_id, product_id, actual_unit_price, price_unit, product_uom_qty, False,
 							   product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, adv_issue, adv_issue_ids,
 							   False, discount, parent.fiscal_position, False, context)"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='product_uom_qty']" position="attributes">
-						<attribute name="on_change">product_id_change(parent.pricelist_id, product_id, product_uom_qty,
+						<attribute name="on_change">product_id_change(parent.pricelist_id, product_id, actual_unit_price, price_unit, product_uom_qty,
 								False, product_uos_qty, False, name, parent.partner_id, False, True,
 								parent.date_order, adv_issue, adv_issue_ids, False, discount, parent.fiscal_position, False, context)</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div[@groups='product.group_uos']" position="after">
-						<field name="adv_issue" domain="[('parent_id','=', title)]" attrs="{'invisible':['|',('adv_issue','=',False),('title','=',False)]}"
-							   on_change="onchange_adv_issue_ids(adv_issue, adv_issue_ids)"/>
+						<field name="adv_issue" domain="[('parent_id','=', title)]" attrs="{'invisible':['|',('adv_issue','=',False),('title','=',False)]}"/>
 						<field name="adv_issue_ids" string="Advertising Issues" attrs="{'invisible':['|',('adv_issue','!=',False), ('title','=',False)]}"
 							   domain="[('id','child_of', title)]" on_change="onchange_adv_issue_ids(adv_issue, adv_issue_ids)">
 								<tree>
@@ -136,7 +135,7 @@
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='tax_id']" position="before">
 						<field name="price_unit" readonly="True"/>
-						<field name="actual_unit_price" on_change="onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, price_subtotal, context)"/>
+						<field name="actual_unit_price" on_change="onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, context)"/>
 						<label for="computed_discount" groups="sale.group_discount_per_so_line"/>
 						<div name="computed_discount" groups="sale.group_discount_per_so_line">
 								<field name="computed_discount" class="oe_inline"/> %%

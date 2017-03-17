@@ -377,15 +377,17 @@ class sale_order_line(orm.Model):
 
         return {'value': vals, 'domain': data}
 
-
     def onchange_adv_issue_ids(self, cr, uid, ids, adv_issue_id=False, adv_issue_ids=False, context=None):
         if context is None:
             context = {}
         vals = {}
-        qty = 1
-        if not adv_issue_id and adv_issue_ids:
-            if len(adv_issue_ids[0][2]) > 1:
+        if not adv_issue_id:
+            if len(adv_issue_ids[0][2]) >= 1:
                 qty = len(adv_issue_ids[0][2])
+            else:
+                qty = 1
+        elif adv_issue_id:
+            qty = 1
 
         vals['product_uom_qty'] = qty
         return {'value': vals}
@@ -409,7 +411,7 @@ class sale_order_line(orm.Model):
         return {'value': vals, 'domain' : data}
 
 
-    def onchange_actualup(self, cr, uid, ids, actual_unit_price=False, price_unit=False, qty=0.0, discount=False, price_subtotal=0.0, context=None):
+    def onchange_actualup(self, cr, uid, ids, actual_unit_price=False, price_unit=False, qty=0.0, discount=False, context=None):
         result = {}
         if context is None:
             context = {}
@@ -425,7 +427,7 @@ class sale_order_line(orm.Model):
             if price_unit and price_unit > 0.0:
                 result['actual_unit_price'] = price_unit
             result['computed_discount'] = 0.0
-            result['price_subtotal'] = price_subtotal
+            result['price_subtotal'] = round((float(price_unit) * float(qty) * (1.0 - float(discount)/100.0)),2)
         return {'value': result}
 
     def onchange_price_subtotal(self,cr, uid, ids, qty=0, discount=False, price_subtotal=0.0, context=None):
@@ -438,20 +440,20 @@ class sale_order_line(orm.Model):
                     result['actual_unit_price'] = actual_unit_price
         return {'value': result}
 
-    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False, qty_uos=0, uos=False, name='',
+    def product_id_change(self, cr, uid, ids, pricelist, product, actual_unit_price=0, price_unit=0, qty=0, uom=False, qty_uos=0, uos=False, name='',
             partner_id=False, lang=False, update_tax=True, date_order=False, adv_issue_id=False, adv_issue_ids=False,
             packaging=False, discount=0.0, fiscal_position=False, flag=False, context=None):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
                                                 uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
                                                 lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging,
                                                 fiscal_position=fiscal_position, flag=flag, context=context)
-        qty = 1.00
-        if not adv_issue_id and adv_issue_ids:
-            res1 = self.onchange_adv_issue_ids(cr, uid, ids, adv_issue_id=adv_issue_id, adv_issue_ids=adv_issue_ids,
-                                          context=context)
-            res['value'].update(res1['value'])
-            if 'product_uom_qty' in res['value']:
-                qty = res['value']['product_uom_qty']
+
+        if not adv_issue_id:
+            if len(adv_issue_ids[0][2]) >= 1:
+                qty = len(adv_issue_ids[0][2])
+            else:
+                qty = 1
+            res['value']['product_uom_qty'] = qty
 
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
         if partner.is_ad_agency:
@@ -459,10 +461,11 @@ class sale_order_line(orm.Model):
         res['value'].update({'discount': discount, 'discount_dummy': discount})
         if 'price_unit' in res['value']:
             pu = res['value']['price_unit']
+            if pu != price_unit:
+                actual_unit_price = pu
         else: pu = 0.0
-        res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=pu,
-                                        price_unit=pu, qty=qty, discount=discount,
-                                        price_subtotal=0.0, context=context)
+        res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=actual_unit_price, price_unit=pu, qty=qty, discount=discount,
+                                         context=context)
         res['value'].update(res2['value'])
         return res
 
