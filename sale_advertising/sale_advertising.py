@@ -195,7 +195,10 @@ class sale_order(orm.Model):
         addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
         if part.type == 'contact':
             contact = self.pool['res.partner'].search(cr, uid, [('is_company','=', False),('type','=', 'contact'),('parent_id','=', part.id)], context=context)
-            contact_id = [c.id for c in contact][0]
+            if len(contact) >=1:
+                contact_id = contact[0]
+            else:
+                contact_id = False
         elif addr['contact'] == addr['default']:
             contact_id = False
         else: contact_id = addr['contact']
@@ -327,7 +330,7 @@ class sale_order_line(orm.Model):
         'to_date': fields.date('End of Validity'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'discount_dummy': fields.related('discount', type='float', string='Agency Discount (%)',readonly=True ),
-        'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
+        'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute=dp.get_precision('Actual Unit Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), multi=True),
         'computed_discount' :fields.function(_amount_line, string='Computed Discount (%)', digits_compute=dp.get_precision('Account'), type="float", multi=True),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type="float", multi=True),
@@ -415,6 +418,7 @@ class sale_order_line(orm.Model):
         result = {}
         if context is None:
             context = {}
+        #import pdb; pdb.set_trace()
         if actual_unit_price:
             if price_unit and price_unit > 0.0:
                 cdisc = (float(price_unit) - float(actual_unit_price)) / float(price_unit) * 100.0
@@ -434,9 +438,11 @@ class sale_order_line(orm.Model):
         result = {}
         if context is None:
             context = {}
+        #import pdb;
+        #pdb.set_trace()
         if price_subtotal and price_subtotal > 0.0:
                 if qty > 0.0:
-                    actual_unit_price = round(float(price_subtotal) / float(qty) / (1.0 - float(discount) / 100.0), 2)
+                    actual_unit_price = float(price_subtotal) / float(qty) / (1.0 - float(discount) / 100.0)
                     result['actual_unit_price'] = actual_unit_price
         return {'value': result}
 
