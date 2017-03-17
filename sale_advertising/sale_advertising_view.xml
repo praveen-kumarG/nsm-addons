@@ -20,7 +20,7 @@
                         <button name="approve2" states="approved1" string="Approval Traffic" type="workflow"  class="oe_highlight"
 								groups="sale_advertising.group_traffic_user"/>
                         <button name="refuse" string="Refuse" type="workflow" states="submitted,approved1"
-								groups="sale_advertising.group_traffic_user, base.group_sale_manager"/>
+								groups="base.group_sale_manager"/>
 						<button name="%(sale_advertising.action_view_sale_order_line_create_multi)d"
 									string="Create Multiple Order Lines" type="action" icon="terp-document-new"
 									attrs="{'invisible': [('state','not in',['draft','approved2'])]}"/>
