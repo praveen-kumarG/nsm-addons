@@ -5,7 +5,7 @@
 
 <!-- View for sale.order object inherited from sale module -->
 
-	<record model="ir.ui.view" id="view_order_form_inherit">
+		<record id="view_order_form_inherit" model="ir.ui.view" >
 			<field name="name">sale.order.form.inherit.3</field>
 			<field name="type">form</field>
 			<field name="model">sale.order</field>
@@ -68,11 +68,12 @@
 							   domain="[('is_ad_agency','!=', True),('is_company','=', True),('customer','=', True)]"
 							   attrs="{'readonly':[('state','not in','draft')]}" required="True"/>
 						<field name="partner_id" on_change="onchange_partner_id(partner_id, order_line, context)" string="Payer"
-							   domain="[('customer','=',True), ('is_company','=', True)]" context="{'search_default_customer':1, 'show_address': 1}"
-							   options='{"always_reload": True}'/>
+							   domain="[('customer','=',True), ('is_company','=', True)]" context="{'search_default_customer':1 }"/>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_invoice_id']" position="attributes">
 						<attribute name="string">Payer Invoice Address</attribute>
+						<attribute name="context">{'default_type':'invoice', 'show_address': 1}</attribute>
+						<attribute name="options">{"always_reload": True}</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_shipping_id']" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
@@ -82,33 +83,34 @@
 						<field name="traffic_employee" string="Traffic Employee" groups="sale_advertising.group_traffic_user"/>
 						<field name="traffic_comments" string="Traffic Comments"/>
 						<field name="traffic_appr_date" string="Traffic Approval Date" readonly="True"/>
+						<field name="categ_ids" string="Sales Projects" widget="many2many_tags" options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 					</xpath>
 
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="attributes">
 						<attribute name="invisible">[('published_customer','!=', None)]</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="after">
-						<field name="customer_contact" required="True" context="{'default_parent_id': partner_id}"
-							   domain="[('is_company', '=', False), ('customer', '=', True),('parent_id', '=', partner_id),('type', '=', 'contact')]"/>
+						<field name="customer_contact" required="True" context="{'default_parent_id': partner_id, 'show_email': 1}"
+							   domain="[('is_company', '=', False), ('customer', '=', True),('parent_id', '=', partner_id),('type', '=', 'contact')]"
+							   options='{"always_reload": True}'/>
 						<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"
 							   domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]" attrs="{'readonly':[('state','not in','draft')]}"/>
-						<field name="categ_ids" widget="many2many_tags" placeholder="Tags..." />
 						<field name="opportunity_subject"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="replace">
 						<field name="title" string="Title" domain="[('child_ids','!=', False)]" required="True"
-							   on_change="onchange_title(title)"/>
+							   on_change="onchange_title(title)" options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 						<field name="medium" invisible="1" />
 						<field name="ad_class" on_change="onchange_ad_class(ad_class)" required="1"
-							   domain="[('type','!=', 'view'), ('id','child_of', medium)]"/>
+							   domain="[('type','!=', 'view'), ('id','child_of', medium)]" options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 						<field name="product_id" required="1"
-							   context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id,
-							   'shop':parent.shop_id, 'uom':product_uom}"
+							   context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
 							   domain="[('categ_id','=', ad_class)]"
                                groups="base.group_user"
 							   on_change="product_id_change(parent.pricelist_id, product_id, actual_unit_price, price_unit, product_uom_qty, False,
 							   product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, adv_issue, adv_issue_ids,
-							   False, discount, parent.fiscal_position, False, context)"/>
+							   False, discount, parent.fiscal_position, False, context)"
+							   options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='product_uom_qty']" position="attributes">
 						<attribute name="on_change">product_id_change(parent.pricelist_id, product_id, actual_unit_price, price_unit, product_uom_qty,
@@ -116,9 +118,11 @@
 								parent.date_order, adv_issue, adv_issue_ids, False, discount, parent.fiscal_position, False, context)</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div[@groups='product.group_uos']" position="after">
-						<field name="adv_issue" domain="[('parent_id','=', title)]" attrs="{'invisible':['|',('adv_issue','=',False),('title','=',False)]}"/>
+						<field name="adv_issue" domain="[('parent_id','=', title)]" attrs="{'invisible':['|',('adv_issue','=',False),('title','=',False)]}"
+							   options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 						<field name="adv_issue_ids" string="Advertising Issues" attrs="{'invisible':['|',('adv_issue','!=',False), ('title','=',False)]}"
-							   domain="[('id','child_of', title)]" on_change="onchange_adv_issue_ids(adv_issue, adv_issue_ids)">
+							   domain="[('id','child_of', title)]" on_change="onchange_adv_issue_ids(adv_issue, adv_issue_ids)"
+							   options="{'limit': 10, 'create': false, 'create_edit': false}">
 								<tree>
                         			<field name="name" string="Name"/>
                         		</tree>
@@ -201,6 +205,9 @@
 						<field name="ad_number"/>
 						<field name="page_reference"/>
 					</xpath>
+					<xpath expr="//group[@name='logistics']" position="attributes">
+								<attribute name="groups">base.group_no_one</attribute>
+					</xpath>
 					<xpath expr="/form/sheet/notebook/page/group/group/field[@name='user_id']" position="after">
 						<field name="partner_acc_mgr"/>
 					</xpath>
@@ -221,7 +228,7 @@
 						<field name="partner_acc_mgr"/>
 					</field>
 					<field name="amount_total" position="replace">
-						<field name="amount_untaxed"/>
+						<field name="amount_untaxed" sum="Total Amount Untaxed"/>
 						<field name="traffic_appr_date" string="Traffic Date"/>
 					</field>
 				</data>
@@ -241,7 +248,7 @@
 						<field name="partner_acc_mgr"/>
 					</field>
 					<field name="amount_total" position="replace">
-						<field name="amount_untaxed"/>
+						<field name="amount_untaxed" sum="Total Amount Untaxed"/>
 						<field name="traffic_appr_date" string="Traffic Date"/>
 					</field>
 				</data>
@@ -249,61 +256,20 @@
         </record>
 
 
-
-<!-- View for sale.order.line object inherited from sale module -->
-		<!--record model="ir.ui.view" id="view_order_form_inherit1">
-			<field name="name">sale.order.form.inherit.line</field>
-			<field name="type">form</field>
-			<field name="model">sale.order</field>
-			<field name="inherit_id" ref="sale.view_order_form"/>
-			<field name="arch" type="xml">
-				<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="before">
-					<field name="adv_issue" on_change="onchange_adv_issue(adv_issue, context)"/>
-					<field name="ad_class" on_change="onchange_ad_class(ad_class, context)"/>
-				</xpath>
-				<xpath expr="/form/sheet/notebook/page/field/form/label[@for='name']" position="before">
-						<group>
-							<field name="page_reference"/>
-							<field name="from_date"/>
-							<field name="to_date"/>
-							<separator string="Layout Remark" colspan="2"/>
-							<field name="layout_remark" colspan="2" nolabel="1"/>
-						</group>
-				</xpath>
-			</field>
-		</record-->
-
 		<record model="ir.ui.view" id="sale_view_inherit123_return">
             <field name="name">sale.order.inherit</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale_crm.sale_view_inherit123"/>
             <field name="arch" type="xml">
-				<field name="categ_ids" position="replace"/>
+				<data>
+					<field name="section_id" position="attributes">
+						<attribute name="invisible">True</attribute>
+					</field>
+					<field name="categ_ids" position="replace">
+					</field>
+				</data>
             </field>
         </record>
-
-		<record model="ir.ui.view" id="view_order_form_inherit2">
-			<field name="name">sale.order.line.form.inherit.line2</field>
-			<field name="type">form</field>
-			<field name="model">sale.order.line</field>
-			<field name="inherit_id" ref="sale.view_order_line_form2"/>
-			<field name="arch" type="xml">
-				<xpath expr="/form/sheet/label[@for='name']" position="before">
-					<notebook>
-						<page string="Advertising">
-							<group>
-								<field name="adv_issue" />
-								<field name="page_reference"/>
-								<field name="from_date"/>
-								<field name="to_date"/>
-								<separator string="Layout Remark" colspan="4"/>
-								<field name="layout_remark" colspan="4" nolabel="1"/>
-							</group>
-						</page>
-					</notebook>
-				</xpath>
-			</field>
-		</record>
 
 		<record id="view_sales_order_filter_inherit" model="ir.ui.view">
             <field name="name">sale.order.list.select</field>
@@ -333,9 +299,58 @@
             </field>
         </record>
 
+		<!--record model="ir.ui.view" id="view_order_form_inherit1">
+			<field name="name">sale.order.form.inherit.line</field>
+			<field name="type">form</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="before">
+					<field name="adv_issue" on_change="onchange_adv_issue(adv_issue, context)"/>
+					<field name="ad_class" on_change="onchange_ad_class(ad_class, context)"/>
+				</xpath>
+				<xpath expr="/form/sheet/notebook/page/field/form/label[@for='name']" position="before">
+						<group>
+							<field name="page_reference"/>
+							<field name="from_date"/>
+							<field name="to_date"/>
+							<separator string="Layout Remark" colspan="2"/>
+							<field name="layout_remark" colspan="2" nolabel="1"/>
+						</group>
+				</xpath>
+			</field>
+		</record-->
+
+
+<!-- Views for sale.order.line object inherited from sale module -->
+
+		<record model="ir.ui.view" id="view_order_form_inherit2">
+			<field name="name">sale.order.line.form.inherit.line2</field>
+			<field name="type">form</field>
+			<field name="model">sale.order.line</field>
+			<field name="inherit_id" ref="sale.view_order_line_form2"/>
+			<field name="arch" type="xml">
+				<xpath expr="/form/sheet/label[@for='name']" position="before">
+					<notebook>
+						<page string="Advertising">
+							<group>
+								<field name="adv_issue" />
+								<field name="page_reference"/>
+								<field name="from_date"/>
+								<field name="to_date"/>
+								<separator string="Layout Remark" colspan="4"/>
+								<field name="layout_remark" colspan="4" nolabel="1"/>
+							</group>
+						</page>
+					</notebook>
+				</xpath>
+			</field>
+		</record>
+
+
 
 <!-- View for sale.advertising.issue object -->
-	<record model="ir.ui.view" id="sale_advertising_issue_form">
+		<record model="ir.ui.view" id="sale_advertising_issue_form">
 			<field name="name">sale.advertising.issue.form</field>
 			<field name="type">form</field>
 			<field name="model">sale.advertising.issue</field>
@@ -353,6 +368,7 @@
 				</form>
 			</field>
 		</record>
+
 		<record model="ir.ui.view" id="sale_advertising_issue_tree">
 			<field name="name">sale.advertising.issue.tree</field>
 			<field name="type">tree</field>
@@ -382,7 +398,7 @@
 		<menuitem name="Advertising Issue" id="menu_sale_advertising_issue" parent="menu_sale_advertising" action="action_sale_advertising_issue"/>
 		
 <!-- View for sale.advertising.proof object -->
-	<record model="ir.ui.view" id="sale_advertising_proof_form">
+		<record model="ir.ui.view" id="sale_advertising_proof_form">
 			<field name="name">sale.advertising.proof.form</field>
 			<field name="type">form</field>
 			<field name="model">sale.advertising.proof</field>
@@ -397,6 +413,7 @@
 				</form>
 			</field>
 		</record>
+
 		<record model="ir.ui.view" id="sale_advertising_proof_tree">
 			<field name="name">sale.advertising.proof.tree</field>
 			<field name="type">tree</field>
@@ -409,6 +426,7 @@
 				</tree>
 			</field>
 		</record>
+
 		<record model="ir.actions.act_window" id="action_sale_advertising_proof">
 			<field name="name">Advertising Proof</field>
 			<field name="type">ir.actions.act_window</field>
@@ -418,82 +436,46 @@
 		</record>
 		
 		<menuitem name="Advertising Proof" id="menu_sale_advertising_proof" parent="menu_sale_advertising" action="action_sale_advertising_proof"/>
-		
-<!-- View for product.product object inherit -->
-	<!--record model="ir.ui.view" id="product_normal_form_view_inherit">
-			<field name="name">product.product.form.inherit</field>
-			<field name="type">form</field>
-			<field name="model">product.product</field>
-			<field name="inherit_id" ref="product.product_normal_form_view"/>
-			<field name="arch" type="xml">
-				<field name="product_manager" position="after" >
-					<field name="equivalency_in_A4" select="2"/>
-					<newline/>
-				</field>
-			</field>
-	</record-->
 
 <!-- New Menuitem -->
 
-	<record model="ir.actions.act_window" id="advertising_sale_order_action">
-		<field name="name">All Advertising Sale Orders</field>
-		<field name="type">ir.actions.act_window</field>
-		<field name="res_model">sale.order</field>
-		<field name="view_type">form</field>
-		<field name="view_mode">tree,form</field>
-		<field name="domain">[('published_customer','&lt;&gt;', False)]</field>
-	</record>
+		<record model="ir.actions.act_window" id="advertising_sale_order_action">
+			<field name="name">All Advertising Sale Orders</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.order</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="domain">[('published_customer','&lt;&gt;', False)]</field>
+		</record>
 	
-	<menuitem name="All Advertising Sale Orders" id="menu_sale_advertising_sale_order" parent="menu_sale_advertising" action="advertising_sale_order_action"/>
+		<menuitem name="All Advertising Sale Orders" id="menu_sale_advertising_sale_order" parent="menu_sale_advertising" action="advertising_sale_order_action"/>
+
+<!-- Product.Category Views -->
+		 <record id="product_category_tree_view_inh" model="ir.ui.view">
+				<field name="name">product.category.tree</field>
+				<field name="model">product.category</field>
+				<field name="inherit_id" ref="product.product_category_tree_view"/>
+				<field name="arch" type="xml">
+						<field name="name" position="replace">
+							<field name="complete_name" />
+						</field>
+				</field>
+		 </record>
+
+<!-- Product.template Views -->
+		 <record id="product_template_form_view" model="ir.ui.view">
+				<field name="name">product.template.form.inherit</field>
+				<field name="model">product.template</field>
+				<field name="priority">5</field>
+				<field name="inherit_id" ref="account.product_template_form_view"/>
+				<field name="arch" type="xml">
+					<page string="Accounting" position="attributes">
+						<attribute name="groups">account.group_account_invoice,sale_advertising.group_traffic_user</attribute>
+					</page>
+				</field>
+		 </record>
 
 
-		<!-- Product.Category Views -->
-	 <record id="product_category_tree_view_inh" model="ir.ui.view">
-            <field name="name">product.category.tree</field>
-            <field name="model">product.category</field>
-		 	<field name="inherit_id" ref="product.product_category_tree_view"/>
-            <field name="arch" type="xml">
-                    <field name="name" position="replace">
-						<field name="complete_name" />
-					</field>
-            </field>
-     </record>
-
-		<!-- Product.template Views -->
-	 <record id="product_template_form_view" model="ir.ui.view">
-            <field name="name">product.template.form.inherit</field>
-            <field name="model">product.template</field>
-            <field name="priority">5</field>
-            <field name="inherit_id" ref="account.product_template_form_view"/>
-            <field name="arch" type="xml">
-				<page string="Accounting" position="attributes">
-					<attribute name="groups">account.group_account_invoice,sale_advertising.group_traffic_user</attribute>
-				</page>
-			</field>
-	 </record>
-
-		<!-- CRM lead/opportunities Views -->
-	 <record model="ir.ui.view" id="crm_case_form_view_oppor">
-            <field name="name">Opportunities</field>
-            <field name="model">crm.lead</field>
-            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
-            <field name="arch" type="xml">
-				<button name="case_mark_won" position="attributes" >
-					<attribute name="groups" >sale_advertising.group_traffic_user</attribute>
-				</button>
-			</field>
-	 </record>
-
-	 <record id="view_crm_make_sale" model="ir.ui.view">
-          <field name="name">crm.make.sale.form</field>
-          <field name="model">crm.make.sale</field>
-		  <field name="inherit_id" ref="sale_crm.view_crm_make_sale"/>
-          <field name="arch" type="xml">
-			  	<field name="close" position="attributes">
-			  		<attribute name="groups" >sale_advertising.group_traffic_user</attribute>
-		  		</field>
-          </field>
-	 </record>
 
 
 

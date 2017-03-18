@@ -114,7 +114,7 @@ class sale_order(orm.Model):
         'traffic_appr_date': fields.date('Traffic Confirmation Date', select=True, help="Date on which sales order is confirmed bij Traffic."),
         'opportunity_subject': fields.char('Opportunity Subject', size=64,
                               help="Subject of Opportunity from which this Sales Order is derived."),
-        'partner_acc_mgr': fields.related('published_customer', 'user_id', type='many2one', relation='res.users', string='Account Manager', store=True ),
+        'partner_acc_mgr': fields.related('published_customer', 'user_id', type='many2one', relation='res.users', string='Account Manager', store=True , readonly=True),
         'date_from': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date from"),
         'date_to': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date to"),
         'state': fields.selection([
@@ -504,7 +504,7 @@ class sale_advertising_proof(orm.Model):
         'number': 1,
     }
 
-class crm_make_sale(osv.osv_memory):
+'''class crm_make_sale(osv.osv_memory):
     """ Make sale  order for crm """
     _inherit = "crm.make.sale"
 
@@ -597,7 +597,7 @@ class crm_make_sale(osv.osv_memory):
                     'name': _('Quotation'),
                     'res_id': new_ids
                 }
-            return value
+            return value'''
 
 
 
