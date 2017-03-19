@@ -338,19 +338,6 @@
         <!-- CRM lead/opportunities Views -->
 
 
-
-
-		 <record id="view_crm_make_sale" model="ir.ui.view">
-			  <field name="name">crm.make.sale.form</field>
-			  <field name="model">crm.make.sale</field>
-			  <field name="inherit_id" ref="sale_crm.view_crm_make_sale"/>
-			  <field name="arch" type="xml">
-					<field name="close" position="attributes">
-						<attribute name="groups" >sale_advertising.group_traffic_user</attribute>
-					</field>
-			  </field>
-		 </record>
-
         <!--
             OPPORTUNITY
         -->
@@ -365,13 +352,12 @@
                     <attribute name="invisible" >True</attribute>
                 </button>
                 <xpath  expr="/form/sheet/group/group/field[@name='partner_id']" position="attributes">
-                    <attribute name="invisible">True</attribute>
+                    <attribute name="invisible">False</attribute>
                     <attribute name="on_change">onchange_partner(partner_id, context)</attribute>
                 </xpath>
                 <xpath  expr="/form/sheet/group/group/field[@name='partner_id']" position="after">
                     <field name="partner_invoice_id" string="Payer Invoice Address" invisible="True"
                            domain="[('is_company','!=', True),('customer','=', True),('type', '=', 'invoice')]"/>
-                    <!--label for="published_customer" string="Advertiser (Payer)" attrs="{'invisible': [('ad_agency_id','!=',False)]}"/-->
                     <field name="published_customer" string="Advertiser" domain="[('is_ad_agency','!=', True),('is_company','=', True),('customer','=', True)]"
                            on_change="onchange_published_customer(published_customer, context)"/>
                     <field name="ad_agency_id" string="Agency (Payer)" domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"

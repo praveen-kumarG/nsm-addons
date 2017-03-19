@@ -63,10 +63,6 @@ class crm_make_sale(orm.TransientModel):
         res = self._select(cr, uid, context=context)
         return res['agent'] if res else False
 
-
-    def view_init(self, cr, uid, fields_list, context=None):
-        return super(crm_make_sale, self).view_init(cr, uid, fields_list, context=context)
-
     def makeOrder(self, cr, uid, ids, context=None):
         """
         This function  create Quotation on given case.
@@ -94,15 +90,15 @@ class crm_make_sale(orm.TransientModel):
             partner = make.partner_id
             advertiser = make.advertiser
             agent = make.agent
-            partner_addr = partner_obj.address_get(cr, uid, [partner.id],
-                                                   ['default', 'invoice', 'delivery', 'contact'])
-            pricelist = partner.property_product_pricelist.id
-            fpos = partner.property_account_position and partner.property_account_position.id or False
-            payment_term = partner.property_payment_term and partner.property_payment_term.id or False
             new_ids = []
             vals = {}
             for case in case_obj.browse(cr, uid, data, context=context):
-                if partner and partner.id != case.partner_id or advertiser.id != case.advertiser or agent.id != case.agent:
+                if partner and partner.id != case.partner_id.id or advertiser.id != case.published_customer.id or agent.id != case.ad_agency_id.id:
+                    partner_addr = partner_obj.address_get(cr, uid, [partner.id],
+                                                           ['default', 'invoice', 'delivery', 'contact'])
+                    pricelist = partner.property_product_pricelist.id
+                    fpos = partner.property_account_position and partner.property_account_position.id or False
+                    payment_term = partner.property_payment_term and partner.property_payment_term.id or False
                     if advertiser:
                         vals['published_customer'] = advertiser and advertiser.id or False,
                     if partner:
@@ -113,16 +109,33 @@ class crm_make_sale(orm.TransientModel):
                     if partner_addr:
                         vals['partner_invoice_id'] = partner_addr['invoice']
                         vals['partner_shipping_id'] = partner_addr['delivery']
+                        if partner.type == 'contact':
+                            contact = self.pool['res.partner'].search(cr, uid, [('is_company', '=', False),
+                                                                                ('type', '=', 'contact'),
+                                                                                ('parent_id', '=', partner.id)],
+                                                                                context=context)
+                            if len(contact) >= 1:
+                                contact_id = contact[0]
+                            else:
+                                contact_id = False
+                        elif partner_addr['contact'] == partner_addr['default']:
+                            contact_id = False
+                        else:
+                            contact_id = partner_addr['contact']
+                        vals['customer_contact'] = contact_id
                     else:
                         vals['partner_shipping_id'] = partner and partner.id or False
                         vals['partner_invoice_id'] = partner and partner.id or False
-                    if case.partner_contact_id:
-                        vals['customer_contact'] = case.partner_contact_id and case.partner_contact_id.id or False
+                        vals['customer_contact'] = False
+
                     if False in partner_addr.values():
                         raise osv.except_osv(_('Insufficient Data!'), _('No address(es) defined for this customer.'))
                 elif not partner:
                     raise osv.except_osv(_('Insufficient Data!'), _('Something is wrong. No Partner.'))
                 else:
+                    pricelist = case.partner_id.property_product_pricelist.id
+                    fpos = case.partner_id.property_account_position and case.partner_id.property_account_position.id or False
+                    payment_term = case.partner_id.property_payment_term and case.partner_id.property_payment_term.id or False
                     if case.published_customer:
                         vals['published_customer'] = case.published_customer and case.published_customer.id or False,
                     if case.partner_id:
@@ -136,7 +149,7 @@ class crm_make_sale(orm.TransientModel):
                     else: vals['partner_shipping_id'] = case.partner_id and case.partner_id.id or False
                     if case.partner_contact_id:
                         vals['customer_contact'] = case.partner_contact_id and case.partner_contact_id.id or False
-                vals = {
+                vals1 = {
                     'origin': _('Opportunity: %s') % str(case.id),
                     'section_id': case.section_id and case.section_id.id or False,
                     'categ_ids': [(6, 0, [categ_id.id for categ_id in case.categ_ids])],
@@ -148,6 +161,7 @@ class crm_make_sale(orm.TransientModel):
                     'user_id': uid,
                     'opportunity_subject': case.name,
                 }
+                vals.update(vals1)
                 new_id = sale_obj.create(cr, uid, vals, context=context)
                 sale_order = sale_obj.browse(cr, uid, new_id, context=context)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
@@ -192,17 +206,52 @@ class crm_make_sale(orm.TransientModel):
         'agent': fields.many2one('res.partner', 'Agency', domain=[('customer','=',True),('is_company','=',True),('is_ad_agency','=',True)]),
         'advertiser': fields.many2one('res.partner', 'Advertiser',required=True,
                                       domain=[('customer','=',True),('is_company','=',True),('is_ad_agency','!=',True)]),
-        'partner_id': fields.many2one('res.partner', 'Payer', required=True),
+        'partner_id': fields.many2one('res.partner', 'Payer', required=True, invisible=True),
+        'partner_dummy': fields.related('partner_id', string='Payer', type='many2one', relation='res.partner', readonly=True),
         'close': fields.boolean('Mark Won', help='Check this to close the opportunity after having created the sales order.'),
+        'update': fields.boolean('Update Advertiser/Agency',
+                                help='Check this to be able to choose (other) advertiser/Agency.'),
     }
     _defaults = {
         'shop_id': _get_shop_id,
+        'update': False,
         'close': False,
-        'partner_id': _selectPartner,
         'advertiser': _selectAdvertiser,
+        'partner_id': _selectPartner,
+        'partner_dummy': _selectPartner,
         'agent': _selectAgent,
     }
 
-crm_make_sale()
+
+    def onchange_advertiser(self, cr, uid, ids, advertiser, update, context):
+        if not update:
+            return True
+        data = {'partner_id': advertiser, 'agent': False, 'partner_dummy': advertiser}
+        return {'value': data}
+
+
+    def onchange_agent(self, cr, uid, ids, agent, update, context):
+        if not update:
+            return True
+        if agent:
+            data = {'partner_id': agent, 'partner_dummy': agent}
+            return {'value': data}
+        return True
+
+    '''def onchange_partner_id(self, cr, uid, ids, part, context=None):
+        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
+        if part.type == 'contact':
+            contact = self.pool['res.partner'].search(cr, uid, [('is_company','=', False),('type','=', 'contact'),('parent_id','=', part.id)], context=context)
+            if len(contact) >=1:
+                contact_id = contact[0]
+            else:
+                contact_id = False
+        elif addr['contact'] == addr['default']:
+            contact_id = False
+        else: contact_id = addr['contact']
+        res['value']['user_id'] = uid
+        res['value']['customer_contact'] = contact_id
+        return res'''
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -68,7 +68,8 @@
 							   domain="[('is_ad_agency','!=', True),('is_company','=', True),('customer','=', True)]"
 							   attrs="{'readonly':[('state','not in','draft')]}" required="True"/>
 						<field name="partner_id" on_change="onchange_partner_id(partner_id, order_line, context)" string="Payer"
-							   domain="[('customer','=',True), ('is_company','=', True)]" context="{'search_default_customer':1 }"/>
+							   domain="[('customer','=',True), ('is_company','=', True)]" invisible="True"
+							   context="{'search_default_customer':1 }"/>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_invoice_id']" position="attributes">
 						<attribute name="string">Payer Invoice Address</attribute>

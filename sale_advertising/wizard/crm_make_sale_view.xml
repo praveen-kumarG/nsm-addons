@@ -8,14 +8,22 @@
           <field name="model">crm.make.sale</field>
           <field name="inherit_id" ref="sale_crm.view_crm_make_sale"/>
           <field name="arch" type="xml">
-                <field name="partner_id" position="replace">
-                    <group>
-                        <field name="advertiser" required="1"/>
-                        <field name="partner_id" required="1" string="Payer"/>
-                        <field name="agent" required="0"/>
-                    </group>
-                </field>
-
+                <data>
+                    <field name="partner_id" position="replace">
+                        <group>
+                            <field name="update" />
+                            <field name="advertiser" required="1" on_change="onchange_advertiser(advertiser, update, context)"
+                                   attrs="{'readonly': [('update','=',False)]}"/>
+                            <field name="partner_id" string="Payer" invisible="True"/>
+                            <field name="partner_dummy" string="Payer"/>
+                            <field name="agent" required="0" on_change="onchange_agent(agent, update, context)"
+                                   attrs="{'readonly': [('update','=',False)]}"/>
+                        </group>
+                    </field>
+                    <field name="close" position="attributes">
+                            <attribute name="groups" >sale_advertising.group_traffic_user</attribute>
+                    </field>
+                </data>
           </field>
        </record>
 

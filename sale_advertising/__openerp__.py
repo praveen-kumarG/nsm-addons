@@ -25,7 +25,7 @@
     'category': 'Sale',
     'description': """
 This module allows you to use both CRM and Sales Management to run your advertising sales
-=====================================================================================
+=========================================================================================
 
 
     """,
