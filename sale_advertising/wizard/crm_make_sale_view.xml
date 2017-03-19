@@ -1,0 +1,23 @@
+<openerp>
+   <data>
+
+        <!-- crm make sale's inherited view -->
+
+       <record id="view_crm_make_sale_inherit" model="ir.ui.view">
+          <field name="name">crm.make.sale.form</field>
+          <field name="model">crm.make.sale</field>
+          <field name="inherit_id" ref="sale_crm.view_crm_make_sale"/>
+          <field name="arch" type="xml">
+                <field name="partner_id" position="replace">
+                    <group>
+                        <field name="advertiser" required="1"/>
+                        <field name="partner_id" required="1" string="Payer"/>
+                        <field name="agent" required="0"/>
+                    </group>
+                </field>
+
+          </field>
+       </record>
+
+   </data>
+</openerp>

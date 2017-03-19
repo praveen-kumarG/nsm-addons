@@ -26,7 +26,7 @@ import res_partner
 import res_company
 import crm_lead
 import wizard
-import crm_lead_to_opportunity
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -38,6 +38,9 @@ class crm_lead(orm.Model):
         'partner_invoice_id': fields.many2one('res.partner', 'Payer Invoice Address', ondelete='set null',
                                       select=True,
                                       help="Linked partner (optional). Usually created when converting the lead."),
+        'partner_shipping_id': fields.many2one('res.partner', 'Payer Delivery Address', ondelete='set null',
+                                              select=True,
+                                              help="Linked partner (optional). Usually created when converting the lead."),
         'partner_contact_id': fields.many2one('res.partner', 'Contact Person', ondelete='set null', track_visibility='onchange',
                                         select=True,
                                         help="Linked Contact Person (optional). Usually created when converting the lead."),
@@ -105,6 +108,7 @@ class crm_lead(orm.Model):
             'state_id': invoice.state_id and invoice.state_id.id or False,
             'country_id': invoice.country_id and invoice.country_id.id or False,
             'partner_invoice_id': addr['invoice'],
+            'partner_shipping_id': addr['delivery'],
             'partner_contact_id': contact_id,
         }
         return {'value' : values}
@@ -127,38 +131,63 @@ class crm_lead(orm.Model):
             values['contact_name'] = False
         return {'value' : values}
 
-    def _convert_opportunity_data(self, cr, uid, lead, customer, section_id=False, context=None):
+    def _convert_opportunity_data(self, cr, uid, lead, advertiser, section_id=False, context=None):
         crm_stage = self.pool.get('crm.case.stage')
-        contact_id = False
-        if customer:
-            contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['default']
+
         if not section_id:
             section_id = lead.section_id and lead.section_id.id or False
+
         val = {
             'planned_revenue': lead.planned_revenue,
             'probability': lead.probability,
             'name': lead.name,
-            'partner_id': customer and customer.id or False,
+            'partner_name': lead.partner_name,
+            'contact_name': lead.contact_name,
+            'street': lead.street,
+            'street2': lead.street2,
+            'zip': lead.zip,
+            'city': lead.city,
+            'state_id': lead.state_id and lead.state_id.id or False,
+            'country_id': lead.country_id and lead.country_id.id or False,
+            'title': lead.title and lead.title.id or False,
+            'email_from': lead.email_from,
+            'function': lead.function,
+            'phone': lead.phone,
+            'mobile': lead.mobile,
+            'fax': lead.fax,
+            'categ_ids': [(6, 0, [categ_id.id for categ_id in lead.categ_ids])],
             'user_id': (lead.user_id and lead.user_id.id),
             'type': 'opportunity',
             'date_action': fields.datetime.now(),
             'date_open': fields.datetime.now(),
-            'email_from': customer and customer.email or lead.email_from,
-            'phone': customer and customer.phone or lead.phone,
         }
+        if advertiser:
+            val['published_customer'] = advertiser and advertiser.id or False,
+        if lead.partner_id:
+            val['partner_id'] = lead.partner_id and lead.partner_id.id or False,
+        if lead.ad_agency_id:
+            val['ad_agency_id'] = lead.ad_agency_id and lead.ad_agency_id.id or False,
+        if lead.partner_invoice_id:
+            val['partner_invoice_id'] = lead.partner_invoice_id and lead.partner_invoice_id.id or False,
+        if lead.partner_shipping_id:
+            val['partner_shipping_id'] = lead.partner_shipping_id and lead.partner_shipping_id.id or False,
+        if lead.partner_contact_id:
+            val['partner_contact_id'] = lead.partner_contact_id and lead.partner_contact_id.id or False,
+
         if not lead.stage_id or lead.stage_id.type=='lead':
             val['stage_id'] = self.stage_find(cr, uid, [lead], section_id, [('state', '=', 'draft'),('type', 'in', ('opportunity','both'))], context=context)
         return val
 
-    def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
-        customer = False
-        if partner_id:
+    def convert_opportunity(self, cr, uid, ids, advertiser, user_ids=False, section_id=False, context=None):
+        payer = False
+        if advertiser:
             partner = self.pool.get('res.partner')
-            customer = partner.browse(cr, uid, partner_id, context=context)
+            adv = partner.browse(cr, uid, advertiser, context=context)
+
         for lead in self.browse(cr, uid, ids, context=context):
             if lead.state in ('done', 'cancel'):
                 continue
-            vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
+            vals = self._convert_opportunity_data(cr, uid, lead, adv, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
         self.message_post(cr, uid, ids, body=_("Lead <b>converted into an Opportunity</b>"), subtype="crm.mt_lead_convert_to_opportunity", context=context)
 
@@ -167,7 +196,7 @@ class crm_lead(orm.Model):
 
         return True
 
-    def handle_partner_assignation(self, cr, uid, ids, action='create', partner_id=False, context=None):
+    def handle_partner_assignation(self, cr, uid, ids, action='create', advertiser=False, context=None):
         """
         Handle partner assignation during a lead conversion.
         if action is 'create', create new partner with contact and assign lead to new partner_id.
@@ -179,16 +208,16 @@ class crm_lead(orm.Model):
         :return dict: dictionary organized as followed: {lead_id: partner_assigned_id}
         """
         #TODO this is a duplication of the handle_partner_assignation method of crm_phonecall
-        partner_ids = {}
+        advertiser_ids = {}
         # If a partner_id is given, force this partner for all elements
-        force_partner_id = partner_id
+        force_advertiser_id = advertiser
         for lead in self.browse(cr, uid, ids, context=context):
             # If the action is set to 'create' and no partner_id is set, create a new one
             if action == 'create':
-                partner_id = force_partner_id or self._create_lead_partner(cr, uid, lead, context)
-            self._lead_set_partner(cr, uid, lead, partner_id, context=context)
-            partner_ids[lead.id] = partner_id
-        return partner_ids
+                advertiser = force_advertiser_id or self._create_lead_partner(cr, uid, lead, context)
+            self._lead_set_partner(cr, uid, lead, advertiser, context=context)
+            advertiser_ids[lead.id] = advertiser
+        return advertiser_ids
 
     def allocate_salesman(self, cr, uid, ids, user_ids=None, team_id=False, context=None):
         """
@@ -217,102 +246,29 @@ class crm_lead(orm.Model):
                 self.write(cr, uid, [lead_id], value, context=context)
         return True
 
-
-
-class crm_make_sale(osv.osv_memory):
-    """ Make sale  order for crm """
-    _inherit = "crm.make.sale"
-
-    def makeOrder(self, cr, uid, ids, context=None):
+    def _lead_set_partner(self, cr, uid, lead, advertiser, context=None):
         """
-        This function  create Quotation on given case.
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of crm make sales' ids
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary value of created sales order.
+        Assign a advertiser to a lead.
 
-        Override from sale_crm.crm_make_sale, in which user_id is not
-        taken from partner, but just uid.
+        :param object lead: browse record of the lead to process
+        :param int advertiser: identifier of the advertiser to assign
+        :return bool: True if the advertiser has properly been assigned
         """
-        if context is None:
-            context = {}
-        # update context: if come from phonecall, default state values can make the quote crash lp:1017353
-        context.pop('default_state', False)
+        res = False
+        res_partner = self.pool.get('res.partner')
+        if advertiser:
+            res_partner.write(cr, uid, advertiser, {'section_id': lead.section_id and lead.section_id.id or False})
+            contact_id = res_partner.address_get(cr, uid, [advertiser])['default']
+            res = lead.write({'published_customer': advertiser}, context=context)
+            message = _("<b>Advertiser</b> set to <em>%s</em>." % (lead.published_customer.name))
+            self.message_post(cr, uid, [lead.id], body=message, context=context)
+        return res
 
-        case_obj = self.pool.get('crm.lead')
-        sale_obj = self.pool.get('sale.order')
-        partner_obj = self.pool.get('res.partner')
-        data = context and context.get('active_ids', []) or []
 
-        for make in self.browse(cr, uid, ids, context=context):
-            partner = make.partner_id
-            partner_addr = partner_obj.address_get(cr, uid, [partner.id],
-                                                   ['default', 'invoice', 'delivery', 'contact'])
-            pricelist = partner.property_product_pricelist.id
-            fpos = partner.property_account_position and partner.property_account_position.id or False
-            payment_term = partner.property_payment_term and partner.property_payment_term.id or False
-            new_ids = []
-            for case in case_obj.browse(cr, uid, data, context=context):
-                if not partner and case.partner_id:
-                    partner = case.partner_id
-                    fpos = partner.property_account_position and partner.property_account_position.id or False
-                    payment_term = partner.property_payment_term and partner.property_payment_term.id or False
-                    partner_addr = partner_obj.address_get(cr, uid, [partner.id],
-                                                           ['default', 'invoice', 'delivery', 'contact'])
-                    pricelist = partner.property_product_pricelist.id
-                if False in partner_addr.values():
-                    raise osv.except_osv(_('Insufficient Data!'), _('No address(es) defined for this customer.'))
 
-                vals = {
-                    'origin': _('Opportunity: %s') % str(case.id),
-                    'section_id': case.section_id and case.section_id.id or False,
-                    'categ_ids': [(6, 0, [categ_id.id for categ_id in case.categ_ids])],
-                    'shop_id': make.shop_id.id,
-                    'partner_id': partner.id,
-                    'pricelist_id': pricelist,
-                    'partner_invoice_id': partner_addr['invoice'],
-                    'partner_shipping_id': partner_addr['delivery'],
-                    'date_order': fields.date.context_today(self, cr, uid, context=context),
-                    'fiscal_position': fpos,
-                    'payment_term': payment_term,
-                    'user_id': uid,
-                    'opportunity_subject': case.name,
-                }
-                new_id = sale_obj.create(cr, uid, vals, context=context)
-                sale_order = sale_obj.browse(cr, uid, new_id, context=context)
-                case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
-                new_ids.append(new_id)
-                message = _("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
-                case.message_post(body=message)
-            if make.close:
-                case_obj.case_close(cr, uid, data)
-            if not new_ids:
-                return {'type': 'ir.actions.act_window_close'}
-            if len(new_ids) <= 1:
-                value = {
-                    'domain': str([('id', 'in', new_ids)]),
-                    'view_type': 'form',
-                    'view_mode': 'form',
-                    'res_model': 'sale.order',
-                    'view_id': False,
-                    'type': 'ir.actions.act_window',
-                    'name': _('Quotation'),
-                    'res_id': new_ids and new_ids[0]
-                }
-            else:
-                value = {
-                    'domain': str([('id', 'in', new_ids)]),
-                    'view_type': 'form',
-                    'view_mode': 'tree,form',
-                    'res_model': 'sale.order',
-                    'view_id': False,
-                    'type': 'ir.actions.act_window',
-                    'name': _('Quotation'),
-                    'res_id': new_ids
-                }
-            return value
+
+
+
 
 
 

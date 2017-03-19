@@ -371,9 +371,10 @@
                 <xpath  expr="/form/sheet/group/group/field[@name='partner_id']" position="after">
                     <field name="partner_invoice_id" string="Payer Invoice Address" invisible="True"
                            domain="[('is_company','!=', True),('customer','=', True),('type', '=', 'invoice')]"/>
+                    <!--label for="published_customer" string="Advertiser (Payer)" attrs="{'invisible': [('ad_agency_id','!=',False)]}"/-->
                     <field name="published_customer" string="Advertiser" domain="[('is_ad_agency','!=', True),('is_company','=', True),('customer','=', True)]"
                            on_change="onchange_published_customer(published_customer, context)"/>
-                    <field name="ad_agency_id" string="Agency" domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"
+                    <field name="ad_agency_id" string="Agency (Payer)" domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"
                            on_change="onchange_agency(ad_agency_id, context)" attrs="{'invisible': [('published_customer','=',False)]}"/>
                 </xpath>
                 <xpath  expr="/form/sheet/notebook/page/group/group/label[@for='street']" position="attributes">
@@ -389,6 +390,9 @@
                 </xpath>
                 <xpath expr="/form/sheet/div/h2/field[@name='probability']" position="attributes">
                     <attribute name="readonly" >True</attribute>
+                </xpath>
+                <xpath expr="/form/sheet/group/group/field[@name='categ_ids']" position="attributes">
+                    <attribute name="string" >Sales Projects</attribute>
                 </xpath>
                 <xpath expr="/form/sheet/group/group/field[@name='priority']" position="attributes">
                     <attribute name="groups" >base.groups_no_one</attribute>

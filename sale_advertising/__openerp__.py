@@ -24,7 +24,7 @@
     'version': '1.0',
     'category': 'Sale',
     'description': """
-This module allow you to use the Sale Management to encode your advertising sales
+This module allows you to use both CRM and Sales Management to run your advertising sales
 =====================================================================================
 
 
@@ -35,14 +35,15 @@ This module allow you to use the Sale Management to encode your advertising sale
                 ],
     'data': ["security/ir.model.access.csv",
              "security/security.xml",
-             "wizard/sale_line_create_multi.xml",
+             "wizard/sale_line_create_multi_view.xml",
+             "wizard/crm_lead_to_opportunity_view.xml",
+             "wizard/crm_make_sale_view.xml",
              "sale_advertising_view.xml",
              "res_partner_view.xml",
              "crm_lead_view.xml",
              "res_company_view.xml",
              "sale_workflow.xml",
              "crm_menu_view.xml",
-             "crm_lead_to_opportunity_view.xml",
              ],
     'demo': ['sale_advertising_demo.xml'],
     'installable': True
