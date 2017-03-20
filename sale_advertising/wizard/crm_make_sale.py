@@ -238,20 +238,5 @@ class crm_make_sale(orm.TransientModel):
             return {'value': data}
         return True
 
-    '''def onchange_partner_id(self, cr, uid, ids, part, context=None):
-        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
-        if part.type == 'contact':
-            contact = self.pool['res.partner'].search(cr, uid, [('is_company','=', False),('type','=', 'contact'),('parent_id','=', part.id)], context=context)
-            if len(contact) >=1:
-                contact_id = contact[0]
-            else:
-                contact_id = False
-        elif addr['contact'] == addr['default']:
-            contact_id = False
-        else: contact_id = addr['contact']
-        res['value']['user_id'] = uid
-        res['value']['customer_contact'] = contact_id
-        return res'''
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
