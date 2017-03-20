@@ -321,6 +321,7 @@ class sale_order_line(orm.Model):
         'title': fields.many2one('sale.advertising.issue', 'Title', domain=[('child_ids','=', True)]),
         'adv_issue_ids': fields.many2many('sale.advertising.issue','sale_order_line_adv_issue_rel', 'order_line_id',
                                           'adv_issue_id',  'Advertising Issues'),
+        'dates': fields.one2many('sale.order.line.dates', 'order_line_id', 'Advertising Dates'),
         'adv_issue': fields.many2one('sale.advertising.issue','Advertising Issue'),
         'medium': fields.related('title', 'medium', type='many2one', relation='product.category',string='Medium', ),
         'ad_class': fields.many2one('product.category', 'Advertising Class'),
@@ -413,6 +414,9 @@ class sale_order_line(orm.Model):
             vals['product_id'] = False
         return {'value': vals, 'domain' : data}
 
+    def onchange_dates(self, cr, uid, adv_issue, dates):
+        return
+
 
     def onchange_actualup(self, cr, uid, ids, actual_unit_price=False, price_unit=False, qty=0.0, discount=False, context=None):
         result = {}
@@ -504,6 +508,31 @@ class sale_advertising_proof(orm.Model):
         'number': 1,
     }
 
+class sale_order_line_date(orm.Model):
+
+    _name = "sale.order.line.date"
+    _description= "Advertising Order Line Dates"
+    _order = "order_line_id,sequence,id"
+
+    _columns = {
+        'sequence': fields.integer('Sequence', help="Gives the sequence of this line ."),
+        'order_line_id': fields.many2one('sale.order.line', 'Line', ondelete='cascade', select=True, required=True),
+        'from_date': fields.date('Start of Validity'),
+        'to_date': fields.date('End of Validity'),
+        'issue_date': fields.date('Date of Issue'),
+        'name': fields.char('Name', size=32, required=True),
+        'type':fields.selection([
+            ('validity','Valid Date Range'),
+            ('date', 'Date of Publication'),
+            ('newsletter', 'Submitted for Approval'),
+            ('online', 'Approved by Sales Mgr'),
+        ], 'Type'),
+
+    }
+    _defaults = {
+        'type': 'date',
+        'sequence': 10,
+    }
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
