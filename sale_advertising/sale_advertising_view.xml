@@ -8,10 +8,16 @@
 		<record id="view_order_form_inherit" model="ir.ui.view" >
 			<field name="name">sale.order.form.inherit.3</field>
 			<field name="type">form</field>
+			<field name="priority" eval="21"/>
 			<field name="model">sale.order</field>
-			<field name="inherit_id" ref="sale_stock.view_order_form_inherit"/>
+			<field name="inherit_id" ref="sale.view_order_form"/>
 			<field name="arch" type="xml">
 				<data>
+				  <field name="categ_ids" position="replace"/>
+				  <field name="section_id" position="attributes">
+				      <attribute name="invisible">True</attribute>
+				  </field>
+
 					<button name="invoice_recreate" position="before">
 						<button name="submit" states="draft" type="workflow" string="Submit Opportunity" class="oe_highlight"
 								groups="base.group_sale_salesman"/>
@@ -84,7 +90,6 @@
 						<field name="traffic_employee" string="Traffic Employee" groups="sale_advertising.group_traffic_user"/>
 						<field name="traffic_comments" string="Traffic Comments"/>
 						<field name="traffic_appr_date" string="Traffic Approval Date" readonly="True"/>
-						<field name="section_id" invisible="True"/>
 						<field name="categ_ids" string="Sales Projects" widget="many2many_tags" options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 					</xpath>
 
@@ -257,22 +262,6 @@
             </field>
         </record>
 
-		<delete id="sale_crm.sale_view_inherit123" model="ir.ui.view" />
-
-		<!--record id="sale_view_inherit123_return" model="ir.ui.view" >
-            <field name="name">sale.order.inherit</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale_crm.sale_view_inherit123"/>
-            <field name="arch" type="xml">
-				<data>
-					<field name="section_id" position="attributes">
-						<attribute name="invisible">True</attribute>
-					</field>
-					<field name="categ_ids" position="replace">
-					</field>
-				</data>
-            </field>
-        </record-->
 
 		<record id="view_sales_order_filter_inherit" model="ir.ui.view">
             <field name="name">sale.order.list.select</field>
