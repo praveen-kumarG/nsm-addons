@@ -3,6 +3,22 @@
 	<data>
 
 
+
+		<record id="view_advertising_issue_data_tree" model="ir.ui.view">
+            <field name="name">sale.order.line.date.tree.view</field>
+            <field name="model">sale.order.line.date</field>
+			<field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Ad Dates">
+                    <field name="name"/>
+                    <field name="from_date" />
+                    <field name="to_date"/>
+                    <field name="issue_date" />
+                    <field name="type"/>
+                </tree>
+            </field>
+        </record>
+
 <!-- View for sale.order object inherited from sale module -->
 
 		<record id="view_order_form_inherit" model="ir.ui.view" >
@@ -75,6 +91,7 @@
 						<attribute name="string">Payer Invoice Address</attribute>
 						<attribute name="context">{'default_type':'invoice', 'show_address': 1}</attribute>
 						<attribute name="options">{"always_reload": True}</attribute>
+						<attribute name="domain">[('id','child_of',partner_id)]</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='partner_shipping_id']" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
@@ -125,10 +142,19 @@
 						<field name="adv_issue_ids" string="Advertising Issues" attrs="{'invisible':['|',('adv_issue','!=',False), ('title','=',False)]}"
 							   domain="[('id','child_of', title)]" on_change="onchange_adv_issue_ids(adv_issue, adv_issue_ids)"
 							   options="{'limit': 10, 'create': false, 'create_edit': false}">
-								<tree>
+								<tree >
                         			<field name="name" string="Name"/>
                         		</tree>
 						</field>
+						<page string="Advertising Dates">
+							<field name="dates" string="Advertising Dates" attrs="{'invisible':['|',('adv_issue','!=',False), ('title','=',False)]}"
+								   on_change="onchange_dates(adv_issue, dates)">
+									<tree string="Ad Dates" editable="bottom">
+										<field name="sequence" widget="handle" />
+										<field name="issue_date" string="Ad Date" />
+									</tree>
+							</field>
+						</page>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='price_unit']" position="replace">
 					</xpath>
