@@ -4,7 +4,7 @@
 
 
 
-		<record id="view_advertising_issue_data_tree" model="ir.ui.view">
+		<!--record id="view_advertising_issue_data_tree" model="ir.ui.view">
             <field name="name">sale.order.line.date.tree.view</field>
             <field name="model">sale.order.line.date</field>
 			<field name="type">tree</field>
@@ -17,7 +17,7 @@
                     <field name="type"/>
                 </tree>
             </field>
-        </record>
+        </record-->
 
 <!-- View for sale.order object inherited from sale module -->
 
@@ -151,15 +151,27 @@
                         			<field name="name" string="Name"/>
                         		</tree>
 						</field>
-						<page string="Advertising Dates">
-							<field name="dates" string="Advertising Dates" attrs="{'invisible':['|',('adv_issue','!=',False), ('title','=',False)]}"
-								   on_change="onchange_dates(adv_issue, dates)">
-									<tree string="Ad Dates" editable="bottom">
-										<field name="sequence" widget="handle" />
-										<field name="issue_date" string="Ad Date" />
-									</tree>
-							</field>
-						</page>
+						<field name="date_type" invisible="False"/>
+						<field name="dates" string="Advertising Dates" attrs="{'invisible':['|','|',('adv_issue','=',False),('title','=',False),('date_type','=','validity')]}"
+								   on_change="onchange_dates(adv_issue, dates)"  >
+								<tree string="Ad Dates" editable="bottom">
+									<field name="sequence" widget="handle" />
+									<field name="issue_date" string="Ad Date" required="True" />
+									<field name="from_date" string="Start of Validity"  readonly="True"/>
+									<field name="to_date" string="End of Validity" readonly="True"/>
+									<field name="name" string="Comment" />
+								</tree>
+						</field>
+						<field name="dates" string="Advertising Dates" attrs="{'invisible':['|','|',('adv_issue','=',False), ('title','=',False),('date_type','=','date')]}"
+								   on_change="onchange_dates(adv_issue, dates)"  >
+								<tree string="Ad Periods" editable="bottom">
+									<field name="sequence" widget="handle" />
+									<field name="issue_date" string="Ad Date" readonly="True"/>
+									<field name="from_date" string="Start of Validity" required="True"/>
+									<field name="to_date" string="End of Validity" required="True"/>
+									<field name="name" string="Comment" />
+								</tree>
+						</field>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='price_unit']" position="replace">
 					</xpath>
@@ -379,6 +391,7 @@
 						<field name="parent_id" string="Title"/>
 						<field name="analytic_account_id" string="Related Analytic Account"/>
 						<field name="issue_date" string="Issue Date" readonly="True"/>
+						<field name="date_type" string="Date Type" />
 						<field name="medium" string="Medium"/>
 						<field name="default_note" string="Default Note" />
 						<field name="state" string="State" />
@@ -397,6 +410,7 @@
 						<field name="parent_id" string="Title"/>
 						<field name="analytic_account_id" string="Related Analytic Account"/>
 						<field name="issue_date" string="Issue Date"/>
+						<field name="date_type" string="Date Type" />
 						<field name="medium" string="Medium"/>
 						<field name="default_note" string="Default Note" />
 						<field name="state" string="State" />
