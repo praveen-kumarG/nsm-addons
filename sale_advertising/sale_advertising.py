@@ -261,6 +261,13 @@ class sale_advertising_issue(orm.Model):
                                       string='Related Analytic Account', ondelete='restrict',
                                       help='Analytic-related data of the issue'),
         'issue_date': fields.related('analytic_account_id','date_publish', type='date', string='Issue Date',),
+        'date_type': fields.selection([
+            ('validity', 'Validity Date Range'),
+            ('date', 'Date of Publication'),
+            ('newsletter', 'Newsletter'),
+            ('online', 'Online'),
+            ('issue_date', 'Issue Date'),
+        ], 'Date Type', required=True),
         'medium': fields.many2one('product.category','Medium', required=True),
         'state': fields.selection([('open','Open'),('close','Close')], 'State'),
         'default_note': fields.text('Default Note'),
@@ -321,7 +328,15 @@ class sale_order_line(orm.Model):
         'title': fields.many2one('sale.advertising.issue', 'Title', domain=[('child_ids','=', True)]),
         'adv_issue_ids': fields.many2many('sale.advertising.issue','sale_order_line_adv_issue_rel', 'order_line_id',
                                           'adv_issue_id',  'Advertising Issues'),
-        'dates': fields.one2many('sale.order.line.dates', 'order_line_id', 'Advertising Dates'),
+        'dates': fields.one2many('sale.order.line.date', 'order_line_id', 'Advertising Dates'),
+        #'date_type': fields.related('adv_issue', 'date_type', type='selection', string='Date Type', store=True ),
+        'date_type': fields.selection([
+            ('validity', 'Validity Date Range'),
+            ('date', 'Date of Publication'),
+            ('newsletter', 'Newsletter'),
+            ('online', 'Online'),
+            ('issue_date', 'Issue Date'),
+        ], 'Date Type', required=True),
         'adv_issue': fields.many2one('sale.advertising.issue','Advertising Issue'),
         'medium': fields.related('title', 'medium', type='many2one', relation='product.category',string='Medium', ),
         'ad_class': fields.many2one('product.category', 'Advertising Class'),
@@ -391,6 +406,10 @@ class sale_order_line(orm.Model):
             else:
                 qty = 1
         elif adv_issue_id:
+            #import pdb; pdb.set_trace()
+            ad_iss = self.pool['sale.advertising.issue'].browse(cr, uid, adv_issue_id, context=context)
+            if ad_iss:
+                vals['date_type'] = ad_iss.date_type
             qty = 1
 
         vals['product_uom_qty'] = qty
@@ -414,8 +433,9 @@ class sale_order_line(orm.Model):
             vals['product_id'] = False
         return {'value': vals, 'domain' : data}
 
-    def onchange_dates(self, cr, uid, adv_issue, dates):
-        return
+
+    def onchange_dates(self, cr, uid, adv_issue, dates, context):
+        return True
 
 
     def onchange_actualup(self, cr, uid, ids, actual_unit_price=False, price_unit=False, qty=0.0, discount=False, context=None):
@@ -494,6 +514,27 @@ class sale_order_line(orm.Model):
         res['account_analytic_id'] = line.adv_issue.analytic_account_id and line.adv_issue.analytic_account_id.id or False
         return res
 
+class sale_order_line_date(orm.Model):
+
+    _name = "sale.order.line.date"
+    _description= "Advertising Order Line Dates"
+    _order = "order_line_id,sequence,id"
+
+    _columns = {
+        'sequence': fields.integer('Sequence', help="Gives the sequence of this line ."),
+        'order_line_id': fields.many2one('sale.order.line', 'Line', ondelete='cascade', select=True, required=True),
+        'from_date': fields.date('Start of Validity'),
+        'to_date': fields.date('End of Validity'),
+        'issue_date': fields.date('Date of Issue'),
+        'name': fields.char('Name', size=64),
+        'type':fields.related('order_line_id', 'date_type', type='selection', string='Date Type', store=True ),
+
+    }
+    _defaults = {
+        'type': 'date',
+        'sequence': 10,
+    }
+
 
 class sale_advertising_proof(orm.Model):
     _name = "sale.advertising.proof"
@@ -533,6 +574,7 @@ class sale_order_line_date(orm.Model):
         'type': 'date',
         'sequence': 10,
     }
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
