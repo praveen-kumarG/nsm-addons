@@ -329,6 +329,7 @@ class sale_order_line(orm.Model):
         'adv_issue_ids': fields.many2many('sale.advertising.issue','sale_order_line_adv_issue_rel', 'order_line_id',
                                           'adv_issue_id',  'Advertising Issues'),
         'dates': fields.one2many('sale.order.line.date', 'order_line_id', 'Advertising Dates'),
+        'dateperiods': fields.one2many('sale.order.line.dateperiod', 'order_line_id', 'Advertising Date Periods'),
         #'date_type': fields.related('adv_issue', 'date_type', type='selection', string='Date Type', store=True ),
         'date_type': fields.selection([
             ('validity', 'Validity Date Range'),
@@ -345,10 +346,11 @@ class sale_order_line(orm.Model):
         'from_date': fields.date('Start of Validity'),
         'to_date': fields.date('End of Validity'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
-        'discount_dummy': fields.related('discount', type='float', string='Agency Discount (%)',readonly=True ),
+        'discount_dummy': fields.related('discount', type='float', string='Agency Commission (%)',readonly=True ),
         'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute=dp.get_precision('Actual Unit Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), multi=True),
         'computed_discount' :fields.function(_amount_line, string='Computed Discount (%)', digits_compute=dp.get_precision('Account'), type="float", multi=True),
+        'subtotal_before_agency_discount': fields.function(_amount_line, string='Subtotal before Commission', digits_compute=dp.get_precision('Account'), type="float", multi=True),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type="float", multi=True),
     }
 
@@ -442,8 +444,8 @@ class sale_order_line(orm.Model):
         result = {}
         if context is None:
             context = {}
-        #import pdb; pdb.set_trace()
-        if actual_unit_price:
+        import pdb; pdb.set_trace()
+        if actual_unit_price >= 0.0:
             if price_unit and price_unit > 0.0:
                 cdisc = (float(price_unit) - float(actual_unit_price)) / float(price_unit) * 100.0
                 result['computed_discount'] = cdisc
@@ -523,15 +525,35 @@ class sale_order_line_date(orm.Model):
     _columns = {
         'sequence': fields.integer('Sequence', help="Gives the sequence of this line ."),
         'order_line_id': fields.many2one('sale.order.line', 'Line', ondelete='cascade', select=True, required=True),
-        'from_date': fields.date('Start of Validity'),
-        'to_date': fields.date('End of Validity'),
         'issue_date': fields.date('Date of Issue'),
         'name': fields.char('Name', size=64),
-        'type':fields.related('order_line_id', 'date_type', type='selection', string='Date Type', store=True ),
+        'page_reference': fields.char('Reference of the Page', size=32),
+        'ad_number': fields.char('Advertising Reference', size=32),
 
     }
     _defaults = {
-        'type': 'date',
+        #'type': 'date',
+        'sequence': 10,
+    }
+
+class sale_order_line_dateperiod(orm.Model):
+
+    _name = "sale.order.line.dateperiod"
+    _description= "Advertising Order Line Date Periods"
+    _order = "order_line_id,sequence,id"
+
+    _columns = {
+        'sequence': fields.integer('Sequence', help="Gives the sequence of this line ."),
+        'order_line_id': fields.many2one('sale.order.line', 'Line', ondelete='cascade', select=True, required=True),
+        'from_date': fields.date('Start of Validity'),
+        'to_date': fields.date('End of Validity'),
+        'name': fields.char('Name', size=64),
+        'page_reference': fields.char('Reference of the Page', size=32),
+        'ad_number': fields.char('Advertising Reference', size=32),
+
+    }
+    _defaults = {
+        #'type': 'date',
         'sequence': 10,
     }
 
@@ -549,31 +571,6 @@ class sale_advertising_proof(orm.Model):
         'number': 1,
     }
 
-class sale_order_line_date(orm.Model):
-
-    _name = "sale.order.line.date"
-    _description= "Advertising Order Line Dates"
-    _order = "order_line_id,sequence,id"
-
-    _columns = {
-        'sequence': fields.integer('Sequence', help="Gives the sequence of this line ."),
-        'order_line_id': fields.many2one('sale.order.line', 'Line', ondelete='cascade', select=True, required=True),
-        'from_date': fields.date('Start of Validity'),
-        'to_date': fields.date('End of Validity'),
-        'issue_date': fields.date('Date of Issue'),
-        'name': fields.char('Name', size=32, required=True),
-        'type':fields.selection([
-            ('validity','Valid Date Range'),
-            ('date', 'Date of Publication'),
-            ('newsletter', 'Submitted for Approval'),
-            ('online', 'Approved by Sales Mgr'),
-        ], 'Type'),
-
-    }
-    _defaults = {
-        'type': 'date',
-        'sequence': 10,
-    }
 
 
 

@@ -153,26 +153,6 @@
                         		</tree>
 						</field>
 						<field name="date_type" invisible="False"/>
-						<field name="dates" string="Advertising Dates" attrs="{'invisible':['|','|',('adv_issue','=',False),('title','=',False),('date_type','=','validity')]}"
-								   on_change="onchange_dates(adv_issue, dates)"  >
-								<tree string="Ad Dates" editable="bottom">
-									<field name="sequence" widget="handle" />
-									<field name="issue_date" string="Ad Date" required="True" />
-									<field name="from_date" string="Start of Validity"  readonly="True"/>
-									<field name="to_date" string="End of Validity" readonly="True"/>
-									<field name="name" string="Comment" />
-								</tree>
-						</field>
-						<field name="dates" string="Advertising Dates" attrs="{'invisible':['|','|',('adv_issue','=',False), ('title','=',False),('date_type','=','date')]}"
-								   on_change="onchange_dates(adv_issue, dates)"  >
-								<tree string="Ad Periods" editable="bottom">
-									<field name="sequence" widget="handle" />
-									<field name="issue_date" string="Ad Date" readonly="True"/>
-									<field name="from_date" string="Start of Validity" required="True"/>
-									<field name="to_date" string="End of Validity" required="True"/>
-									<field name="name" string="Comment" />
-								</tree>
-						</field>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='price_unit']" position="replace">
 					</xpath>
@@ -222,6 +202,30 @@
 
 					<xpath expr="/form/sheet/notebook/page/field/form/label[@for='name']" position="before">
 						<group>
+							<field name="dates" string="Advertising Dates" colspan="4" nolabel="1"
+							   attrs="{'invisible':['|','|',('adv_issue','=',False),('title','=',False),('date_type','!=','date')]}">
+								<tree string="Ad Dates" editable="bottom">
+									<field name="sequence" widget="handle" />
+									<field name="issue_date" string="Ad Date" required="True" />
+									<!--field name="from_date" string="Start of Validity"  readonly="True"/>
+									<field name="to_date" string="End of Validity" readonly="True"/-->
+									<field name="name" string="Comment" />
+									<field name="page_reference" string="Ref" />
+									<field name="ad_number" string="Ad No." />
+								</tree>
+							</field>
+							<field name="dateperiods" string="Advertising Dates" colspan="4" nolabel="1"
+							   attrs="{'invisible':['|','|',('adv_issue','=',False), ('title','=',False),('date_type','!=','validity')]}">
+								<tree string="Ad Periods" editable="bottom">
+									<!--field name="sequence" widget="handle" /-->
+									<!--field name="issue_date" string="Ad Date" readonly="True"/-->
+									<field name="from_date" string="Start of Validity" required="True"/>
+									<field name="to_date" string="End of Validity" required="True"/>
+									<field name="name" string="Comment" />
+									<field name="page_reference" string="Ref" />
+									<field name="ad_number" string="Ad No." />
+								</tree>
+							</field>
 							<field name="ad_number"/>
 							<field name="page_reference"/>
 							<field name="from_date"/>
