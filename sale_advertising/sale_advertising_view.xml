@@ -30,10 +30,12 @@
 			<field name="inherit_id" ref="sale.view_order_form"/>
 			<field name="arch" type="xml">
 				<data>
-				  <field name="categ_ids" position="replace"/>
-				  <field name="section_id" position="attributes">
-				      <attribute name="invisible">True</attribute>
-				  </field>
+				  	<xpath expr="/form/sheet/notebook/page/group/group/field[@name='categ_ids']" position="replace">
+				  	</xpath>
+					<xpath expr="/form/sheet/notebook/page/group/group/field[@name='section_id']" position="attributes">
+				      	<attribute name="invisible">True</attribute>
+					</xpath>
+				  
 
 					<button name="invoice_recreate" position="before">
 						<button name="submit" states="draft" type="workflow" string="Submit Opportunity" class="oe_highlight"
