@@ -13,11 +13,13 @@
                         <group>
                             <field name="update" />
                             <field name="advertiser" required="1" on_change="onchange_advertiser(advertiser, update, context)"
-                                   attrs="{'readonly': [('update','=',False)]}"/>
+                                   attrs="{'readonly': [('update','=',False)]}"
+                                   domain="[('is_ad_agency','!=', True),('is_company','=', True),('customer','=', True)]"/>
                             <field name="partner_id" string="Payer" invisible="True"/>
                             <field name="partner_dummy" string="Payer"/>
-                            <field name="agent" required="0" on_change="onchange_agent(agent, update, context)"
-                                   attrs="{'readonly': [('update','=',False)]}"/>
+                            <field name="agent" on_change="onchange_agent(agent, update, context)"
+                                   attrs="{'readonly': [('update','=',False)]}"
+                                   domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"/>
                         </group>
                     </field>
                     <field name="close" position="attributes">

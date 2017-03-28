@@ -35,10 +35,15 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         'agent': fields.many2one('res.partner', 'Agency'),
         'advertiser': fields.many2one('res.partner', 'Advertiser'),
         'partner_id': fields.many2one('res.partner', 'Payer'),
+        'partner_dummy': fields.related('partner_id', string='Payer', type='many2one', relation='res.partner',
+                                        readonly=True),
+        'update': fields.boolean('Update Advertiser/Agency',
+                                 help='Check this to be able to choose (other) Advertiser/Agency.'),
     }
 
     _defaults = {
         'action': 'nothing',
+        'update': False,
     }
 
     def onchange_action(self, cr, uid, ids, action, context=None):
@@ -53,6 +58,21 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             res = self._find_matching_partner(cr, uid, context=context)
 
         return {'value': res}
+
+    def onchange_advertiser(self, cr, uid, ids, advertiser, update, context):
+        if not update:
+            return True
+        data = {'partner_id': advertiser, 'agent': False, 'partner_dummy': advertiser}
+        return {'value': data}
+
+
+    def onchange_agent(self, cr, uid, ids, agent, update, context):
+        if not update:
+            return True
+        if agent:
+            data = {'partner_id': agent, 'partner_dummy': agent}
+            return {'value': data}
+        return True
 
     def default_get(self, cr, uid, fields, context=None):
         """

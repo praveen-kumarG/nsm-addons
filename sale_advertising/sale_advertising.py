@@ -227,7 +227,12 @@ class sale_order(orm.Model):
             for line in self.pool['sale.order.line'].browse(cr, uid, line_ids):
                 product = self.pool['product.product'].browse(cr, uid, line.product_id.id)
                 tax = self.pool['account.fiscal.position'].map_tax(cr, uid, fpos, product.taxes_id)
-                self.pool['sale.order.line'].write(cr, uid, line.id, {'discount': discount,'tax_id': [(6,0,tax)]}, context=context)
+                vals = {}
+                vals['discount'] = discount
+                vals['tax_id'] = [(6,0,tax)]
+
+                self.pool['sale.order.line'].write(cr, uid, line.id, vals, context=context)
+
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -261,19 +266,10 @@ class sale_advertising_issue(orm.Model):
                                       string='Related Analytic Account', ondelete='restrict',
                                       help='Analytic-related data of the issue'),
         'issue_date': fields.related('analytic_account_id','date_publish', type='date', string='Issue Date',),
-        'date_type': fields.selection([
-            ('validity', 'Validity Date Range'),
-            ('date', 'Date of Publication'),
-            ('newsletter', 'Newsletter'),
-            ('online', 'Online'),
-            ('issue_date', 'Issue Date'),
-        ], 'Date Type', required=True),
         'medium': fields.many2one('product.category','Medium', required=True),
         'state': fields.selection([('open','Open'),('close','Close')], 'State'),
         'default_note': fields.text('Default Note'),
     }
-
-    # voor nsm_modules 7.0, date_publish bestaat alleen in nsm.
 
     _defaults = {
         'state': 'open',
@@ -315,10 +311,12 @@ class sale_order_line(orm.Model):
             if unit_price > 0.0:
                 comp_discount = (unit_price - line.actual_unit_price)/unit_price * 100.0
             price = line.actual_unit_price * (1 - discount / 100.0)
+            subtotal_bad = line.actual_unit_price * line.product_uom_qty
             taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, order_partner_id)
             cur = line.order_id.pricelist_id.currency_id
             res[line.id]['price_unit'] = unit_price
             res[line.id]['computed_discount'] = comp_discount
+            res[line.id]['subtotal_before_agency_disc'] = subtotal_bad
             res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
 
@@ -330,16 +328,16 @@ class sale_order_line(orm.Model):
                                           'adv_issue_id',  'Advertising Issues'),
         'dates': fields.one2many('sale.order.line.date', 'order_line_id', 'Advertising Dates'),
         'dateperiods': fields.one2many('sale.order.line.dateperiod', 'order_line_id', 'Advertising Date Periods'),
-        #'date_type': fields.related('adv_issue', 'date_type', type='selection', string='Date Type', store=True ),
-        'date_type': fields.selection([
-            ('validity', 'Validity Date Range'),
-            ('date', 'Date of Publication'),
-            ('newsletter', 'Newsletter'),
-            ('online', 'Online'),
-            ('issue_date', 'Issue Date'),
-        ], 'Date Type', required=True),
+        'date_type': fields.related('ad_class', 'date_type', type='selection',
+                       selection=[
+                            ('validity', 'Validity Date Range'),
+                            ('date', 'Date of Publication'),
+                            ('newsletter', 'Newsletter'),
+                            ('online', 'Online'),
+                            ('issue_date', 'Issue Date'),
+                       ], relation='product.category', string='Date Type', readonly=True),
         'adv_issue': fields.many2one('sale.advertising.issue','Advertising Issue'),
-        'medium': fields.related('title', 'medium', type='many2one', relation='product.category',string='Medium', ),
+        'medium': fields.related('title', 'medium', type='many2one', relation='product.category',string='Medium', readonly=True ),
         'ad_class': fields.many2one('product.category', 'Advertising Class'),
         'page_reference': fields.char('Reference of the Page', size=32),
         'ad_number': fields.char('Advertising Reference', size=32),
@@ -349,8 +347,8 @@ class sale_order_line(orm.Model):
         'discount_dummy': fields.related('discount', type='float', string='Agency Commission (%)',readonly=True ),
         'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute=dp.get_precision('Actual Unit Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), multi=True),
-        'computed_discount' :fields.function(_amount_line, string='Computed Discount (%)', digits_compute=dp.get_precision('Account'), type="float", multi=True),
-        'subtotal_before_agency_discount': fields.function(_amount_line, string='Subtotal before Commission', digits_compute=dp.get_precision('Account'), type="float", multi=True),
+        'computed_discount' :fields.function(_amount_line, string='Discount (%)', digits_compute=dp.get_precision('Account'), type="float", multi=True),
+        'subtotal_before_agency_disc': fields.function(_amount_line, string='Subtotal before Commission', digits_compute=dp.get_precision('Account'), type="float", multi=True),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type="float", multi=True),
     }
 
@@ -358,6 +356,8 @@ class sale_order_line(orm.Model):
         'actual_unit_price': 0.0,
         'computed_discount': 0.0,
     }
+
+
 
     def onchange_title(self, cr, uid, ids, title=False, context=None):
         if context is None:
@@ -370,11 +370,12 @@ class sale_order_line(orm.Model):
             child_id = [x.id for x in ad_issue.child_ids]
             if len(child_id) == 1:
                 vals['adv_issue'] = child_id
-                vals['adv_issue_ids'] = False
+                vals['adv_issue_ids'] = [(6,0,[])]
                 vals['ad_class'] = False
                 vals['product_id'] = False
-                vals['actual_unit_price'] = 0.0
+                #vals['actual_unit_price'] = 0.0
                 ac = ad_issue.medium and ad_issue.medium.id or False
+                vals['medium'] = ac
                 data = {'ad_class': [('id', 'child_of', ac), ('type', '!=', 'view')]}
                 ac_child = self.pool['product.category'].search(cr, uid,
                                                                 [('id', 'child_of', ac), ('type', '!=', 'view')],
@@ -387,8 +388,9 @@ class sale_order_line(orm.Model):
                 vals['adv_issue'] = False
                 vals['ad_class'] = False
                 vals['product_id'] = False
-                vals['actual_unit_price'] = 0.0
+                #vals['actual_unit_price'] = 0.0
                 ac = ad_issue.medium and ad_issue.medium.id or False
+                vals['medium'] = ac
                 data = {'ad_class': [('id', 'child_of', ac), ('type', '!=', 'view')]}
                 ac_child = self.pool['product.category'].search(cr, uid,
                                                                 [('id', 'child_of', ac), ('type', '!=', 'view')],
@@ -403,15 +405,11 @@ class sale_order_line(orm.Model):
             context = {}
         vals = {}
         if not adv_issue_id and adv_issue_ids:
-            if len(adv_issue_ids[0][2]) >= 1:
+            if len(adv_issue_ids[0][2]) > 1:
                 qty = len(adv_issue_ids[0][2])
             else:
                 qty = 1
         elif adv_issue_id:
-            #import pdb; pdb.set_trace()
-            ad_iss = self.pool['sale.advertising.issue'].browse(cr, uid, adv_issue_id, context=context)
-            if ad_iss:
-                vals['date_type'] = ad_iss.date_type
             qty = 1
 
         vals['product_uom_qty'] = qty
@@ -423,6 +421,7 @@ class sale_order_line(orm.Model):
             context = {}
         vals = {}
         data = {}
+        result = {}
         if ad_class:
             product_ids = self.pool.get('product.product').search(cr, uid, [('categ_id', '=', ad_class)], context=context )
             if product_ids:
@@ -431,60 +430,111 @@ class sale_order_line(orm.Model):
                     vals['product_id'] = product_ids[0]
                 else:
                     vals['product_id'] = False
+            a_c = self.pool.get('product.category').browse(cr, uid, ad_class, context=context )
+            date_type = a_c.date_type or False
+            if date_type:
+                vals['date_type'] = date_type
+            else: result = {'title':_('Warning'),
+                                 'message':_('The Ad Class has no Date Type. You have to define one')}
         else:
             vals['product_id'] = False
-        return {'value': vals, 'domain' : data}
+            vals['date_type'] = False
+        return {'value': vals, 'domain' : data, 'warning': result}
+
+    def onchange_date_type(self, cr, uid, ids, date_type=False, dates=False, dateperiods=False, adv_issue_ids=False, context=None):
+        if context is None:
+            context = {}
+        vals = {}
+        if date_type:
+            if date_type == 'date':
+                if dateperiods:
+                    vals['dateperiods'] = [(2,x[1]) for x in dateperiods]
+                if adv_issue_ids:
+                    vals['adv_issue_ids'] = [(6,0,[])]
+            elif date_type == 'validity':
+                if dates:
+                    vals['dates'] = [(2, x[1]) for x in dates]
+                if adv_issue_ids:
+                    vals['adv_issue_ids'] = [(6,0,[])]
+            elif date_type == 'issue_date':
+                if dates:
+                    vals['dates'] = [(2, x[1]) for x in dates]
+                if dateperiods:
+                    vals['dateperiods'] = [(2, x[1]) for x in dateperiods]
+        return {'value': vals}
 
 
-    def onchange_dates(self, cr, uid, adv_issue, dates, context):
-        return True
+    def onchange_dates(self, cr, uid, ids, dates=False, context=None):
+        if context is None:
+            context = {}
+        #import pdb; pdb.set_trace()
+        vals = {}
+        if dates:
+            if len(dates) > 1:
+                qty = len(dates)
+            else:
+                qty = 1
+        else:
+            qty = 1
+
+        vals['product_uom_qty'] = qty
+        return {'value': vals}
 
 
     def onchange_actualup(self, cr, uid, ids, actual_unit_price=False, price_unit=False, qty=0.0, discount=False, context=None):
         result = {}
         if context is None:
             context = {}
-        import pdb; pdb.set_trace()
-        if actual_unit_price >= 0.0:
+        if actual_unit_price and actual_unit_price > 0.0:
             if price_unit and price_unit > 0.0:
                 cdisc = (float(price_unit) - float(actual_unit_price)) / float(price_unit) * 100.0
                 result['computed_discount'] = cdisc
-                result['price_subtotal'] = round((float(actual_unit_price) * float(qty) * (1.0 - float(discount)/100.0)),2)
+                result['subtotal_before_agency_disc'] = round((float(actual_unit_price) * float(qty)), 2)
+                result['price_subtotal'] = round((float(actual_unit_price) * float(qty) * (1.0 - float(discount)/100.0)), 2)
             else:
                 result['computed_discount'] = 0.0
-                result['price_subtotal'] = round((float(actual_unit_price) * float(qty) * (1.0 - float(discount)/100.0)),2)
+                result['subtotal_before_agency_disc'] = round((float(actual_unit_price) * float(qty)), 2)
+                result['price_subtotal'] = round((float(actual_unit_price) * float(qty) * (1.0 - float(discount)/100.0)), 2)
         else:
             if price_unit and price_unit > 0.0:
-                result['actual_unit_price'] = price_unit
-            result['computed_discount'] = 0.0
-            result['price_subtotal'] = round((float(price_unit) * float(qty) * (1.0 - float(discount)/100.0)),2)
+                result['actual_unit_price'] = 0.0
+            result['computed_discount'] = 100.0
+            result['subtotal_before_agency_disc'] = round((float(actual_unit_price) * float(qty)), 2)
+            result['price_subtotal'] = round((float(actual_unit_price) * float(qty) * (1.0 - float(discount)/100.0)), 2)
         return {'value': result}
 
-    def onchange_price_subtotal(self,cr, uid, ids, qty=0, discount=False, price_subtotal=0.0, context=None):
+    def onchange_price_subtotal(self,cr, uid, ids, discount=0.0, qty=0, subtotal_before_agency_disc=0.0, context=None):
         result = {}
         if context is None:
             context = {}
-        #import pdb;
-        #pdb.set_trace()
-        if price_subtotal and price_subtotal > 0.0:
+        if subtotal_before_agency_disc and subtotal_before_agency_disc > 0.0:
                 if qty > 0.0:
-                    actual_unit_price = float(price_subtotal) / float(qty) / (1.0 - float(discount) / 100.0)
+                    actual_unit_price = float(subtotal_before_agency_disc) / float(qty)
                     result['actual_unit_price'] = actual_unit_price
+                    result['price_subtotal'] = round((float(subtotal_before_agency_disc) * (1.0 - float(discount) / 100.0)), 2)
         return {'value': result}
 
     def product_id_change(self, cr, uid, ids, pricelist, product, actual_unit_price=0, price_unit=0, qty=0, uom=False, qty_uos=0, uos=False, name='',
-            partner_id=False, lang=False, update_tax=True, date_order=False, adv_issue_id=False, adv_issue_ids=False,
+            partner_id=False, lang=False, update_tax=True, date_order=False, adv_issue_ids=False, dates=False, date_type=False,
             packaging=False, discount=0.0, fiscal_position=False, flag=False, context=None):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
                                                 uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
                                                 lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging,
                                                 fiscal_position=fiscal_position, flag=flag, context=context)
-
-        if not adv_issue_id and adv_issue_ids:
-            if len(adv_issue_ids[0][2]) >= 1:
-                qty = len(adv_issue_ids[0][2])
+        mqty = False
+        if date_type == 'issue_date' and adv_issue_ids:
+            if len(adv_issue_ids[0][2]) > 1:
+                mqty = len(adv_issue_ids[0][2])
             else:
-                qty = 1
+                mqty = 1
+
+        if date_type == 'date' and dates:
+            if len(dates) > 1:
+                mqty = len(dates)
+            else:
+                mqty = 1
+        if mqty:
+            qty = mqty
             res['value']['product_uom_qty'] = qty
 
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)

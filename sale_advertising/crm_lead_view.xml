@@ -352,7 +352,7 @@
                     <attribute name="invisible" >True</attribute>
                 </button>
                 <xpath  expr="/form/sheet/group/group/field[@name='partner_id']" position="attributes">
-                    <attribute name="invisible">False</attribute>
+                    <attribute name="invisible">True</attribute>
                     <attribute name="on_change">onchange_partner(partner_id, context)</attribute>
                 </xpath>
                 <xpath  expr="/form/sheet/group/group/field[@name='partner_id']" position="after">
@@ -360,7 +360,7 @@
                            domain="[('is_company','!=', True),('customer','=', True),('type', '=', 'invoice')]"/>
                     <field name="published_customer" string="Advertiser" domain="[('is_ad_agency','!=', True),('is_company','=', True),('customer','=', True)]"
                            on_change="onchange_published_customer(published_customer, context)"/>
-                    <field name="ad_agency_id" string="Agency (Payer)" domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"
+                    <field name="ad_agency_id" string="Agency" domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"
                            on_change="onchange_agency(ad_agency_id, context)" attrs="{'invisible': [('published_customer','=',False)]}"/>
                 </xpath>
                 <xpath  expr="/form/sheet/notebook/page/group/group/label[@for='street']" position="attributes">

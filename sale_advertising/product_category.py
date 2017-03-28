@@ -59,6 +59,13 @@ class product_category(osv.osv):
 
     _columns = {
         'complete_name': fields.function(_name_get_fnc, type="char", string='Name'),
+        'date_type': fields.selection([
+            ('validity', 'Validity Date Range'),
+            ('date', 'Date of Publication'),
+            ('newsletter', 'Newsletter'),
+            ('online', 'Online'),
+            ('issue_date', 'Issue Date'),
+        ], 'Date Type Advertising products', required=True),
     }
 
 

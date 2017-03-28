@@ -7,13 +7,19 @@
             <field name="model">crm.lead2opportunity.partner</field>
             <field name="inherit_id" ref="crm.view_crm_lead2opportunity_partner"/>
             <field name="arch" type="xml">
-                <field name="partner_id" position="before" >
-                    <field name="advertiser"
-                            attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
-                            class="oe_inline"/>
-                    <field name="agent"
-                           attrs="{'invisible':[('action','!=','exist')]}"
-                           class="oe_inline"/>
+                <field name="partner_id" position="replace" >
+
+                            <field name="update" />
+                            <field name="advertiser" attrs="{'required': [('action', '=', 'exist')],
+                                                            'invisible':[('action','!=','exist')],'readonly': [('update','=',False)]}"
+                                   domain="[('is_ad_agency','!=', True),('is_company','=', True),('customer','=', True)]"
+                                   class="oe_inline" on_change="onchange_advertiser(advertiser, update, context)"/>
+                            <field name="partner_id" string="Payer" invisible="True"/>
+                            <field name="partner_dummy" string="Payer"/>
+                            <field name="agent" on_change="onchange_agent(agent, update, context)" class="oe_inline"
+                                   domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"
+                                   attrs="{'readonly': [('update','=',False)],'invisible':[('action','!=','exist')]}"/>
+
                 </field>
 
 

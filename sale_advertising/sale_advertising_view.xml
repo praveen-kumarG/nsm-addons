@@ -85,6 +85,8 @@
 					<field name="state" position="attributes">
 						<attribute name="statusbar_visible">draft,submitted,approved1,approved2,sent,progress,done</attribute>
 					</field>
+
+					<!--Order Header /-->
 					<xpath expr="/form/sheet/group/group/field[@name='partner_id']" position="replace">
 						<field name="published_customer"  on_change="onchange_published_customer(published_customer, context)"
 							   context="{'tree_view_ref': 'nsm_crm.view_partner_tree_nsm_crm'}"
@@ -122,6 +124,8 @@
 							   domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]" attrs="{'readonly':[('state','not in','draft')]}"/>
 						<field name="opportunity_subject"/>
 					</xpath>
+
+					<!--Order Line Form /-->
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="replace">
 						<field name="title" string="Title" domain="[('child_ids','!=', False)]" required="True"
 							   on_change="onchange_title(title)" options="{'limit': 10, 'create': false, 'create_edit': false}"/>
@@ -133,14 +137,14 @@
 							   domain="[('categ_id','=', ad_class)]"
                                groups="base.group_user"
 							   on_change="product_id_change(parent.pricelist_id, product_id, actual_unit_price, price_unit, product_uom_qty, False,
-							   product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, adv_issue, adv_issue_ids,
+							   product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, adv_issue_ids, dates, date_type,
 							   False, discount, parent.fiscal_position, False, context)"
 							   options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='product_uom_qty']" position="attributes">
 						<attribute name="on_change">product_id_change(parent.pricelist_id, product_id, actual_unit_price, price_unit, product_uom_qty,
 								False, product_uos_qty, False, name, parent.partner_id, False, True,
-								parent.date_order, adv_issue, adv_issue_ids, False, discount, parent.fiscal_position, False, context)</attribute>
+								parent.date_order, adv_issue_ids, dates, date_type, False, discount, parent.fiscal_position, False, context)</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div[@groups='product.group_uos']" position="after">
 						<field name="adv_issue" domain="[('parent_id','=', title)]" attrs="{'invisible':['|',('adv_issue','=',False),('title','=',False)]}"
@@ -152,7 +156,6 @@
                         			<field name="name" string="Name"/>
                         		</tree>
 						</field>
-						<field name="date_type" invisible="False"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='price_unit']" position="replace">
 					</xpath>
@@ -167,16 +170,19 @@
 						<field name="price_unit" readonly="True"/>
 						<field name="actual_unit_price" on_change="onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, context)"/>
 						<label for="computed_discount" groups="sale.group_discount_per_so_line"/>
-						<div name="computed_discount" groups="sale.group_discount_per_so_line">
+							<div name="computed_discount" groups="sale.group_discount_per_so_line">
 								<field name="computed_discount" class="oe_inline"/> %%
-						</div>
+							</div>
+						<field name="subtotal_before_agency_disc" readonly="False"
+							   on_change="onchange_price_subtotal(discount, product_uom_qty, subtotal_before_agency_disc, context)"/>
 						<label for="discount" groups="sale.group_discount_per_so_line"/>
-						<div name="discount" groups="sale.group_discount_per_so_line">
+							<div name="discount" groups="sale.group_discount_per_so_line">
 								<field name="discount" invisible="1"/>
 								<field name="discount_dummy" class="oe_inline"/> %%
-						</div>
-						<field name="price_subtotal" readonly="False"
-							   on_change="onchange_price_subtotal(product_uom_qty, discount, price_subtotal, context)"/>
+							</div>
+						<field name="price_subtotal" readonly="True" />
+						<field name="date_type" on_change="onchange_date_type(date_type, dates, dateperiods, adv_issue_ids, context)"
+								invisible="False"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='tax_id']" position="attributes">
 							<attribute name="groups">groups="sale_advertising.group_traffic_user"</attribute>
@@ -202,23 +208,20 @@
 
 					<xpath expr="/form/sheet/notebook/page/field/form/label[@for='name']" position="before">
 						<group>
-							<field name="dates" string="Advertising Dates" colspan="4" nolabel="1"
+							<field name="dates" string="Advertising Dates" colspan="4" on_change="onchange_dates(dates)"
 							   attrs="{'invisible':['|','|',('adv_issue','=',False),('title','=',False),('date_type','!=','date')]}">
 								<tree string="Ad Dates" editable="bottom">
 									<field name="sequence" widget="handle" />
 									<field name="issue_date" string="Ad Date" required="True" />
-									<!--field name="from_date" string="Start of Validity"  readonly="True"/>
-									<field name="to_date" string="End of Validity" readonly="True"/-->
 									<field name="name" string="Comment" />
 									<field name="page_reference" string="Ref" />
 									<field name="ad_number" string="Ad No." />
 								</tree>
 							</field>
-							<field name="dateperiods" string="Advertising Dates" colspan="4" nolabel="1"
+							<field name="dateperiods" string="Advertising Periods" colspan="4"
 							   attrs="{'invisible':['|','|',('adv_issue','=',False), ('title','=',False),('date_type','!=','validity')]}">
 								<tree string="Ad Periods" editable="bottom">
-									<!--field name="sequence" widget="handle" /-->
-									<!--field name="issue_date" string="Ad Date" readonly="True"/-->
+									<field name="sequence" widget="handle" />
 									<field name="from_date" string="Start of Validity" required="True"/>
 									<field name="to_date" string="End of Validity" required="True"/>
 									<field name="name" string="Comment" />
@@ -226,26 +229,36 @@
 									<field name="ad_number" string="Ad No." />
 								</tree>
 							</field>
-							<field name="ad_number"/>
-							<field name="page_reference"/>
-							<field name="from_date"/>
-							<field name="to_date"/>
+							<field name="ad_number" attrs="{'invisible':['|','|',('adv_issue','=',False), ('title','=',False),('date_type','in',['date','validity'])]}"/>
+							<field name="page_reference" attrs="{'invisible':['|','|',('adv_issue','=',False), ('title','=',False),('date_type','in',['date','validity'])]}"/>
+							<field name="from_date" attrs="{'invisible':['|','|',('adv_issue','=',False), ('title','=',False),('date_type','in',['date','validity'])]}"/>
+							<field name="to_date" attrs="{'invisible':['|','|',('adv_issue','=',False), ('title','=',False),('date_type','in',['date','validity'])]}"/>
 							<separator string="Layout Remark" colspan="2"/>
 							<field name="layout_remark" colspan="2" nolabel="1"/>
 						</group>
 					</xpath>
+
+					<!--Order Line Tree /-->
 					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_id']" position="before">
 						<field name="title" />
 						<field name="adv_issue" />
 						<field name="ad_class" required="1"/>
 					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_uom_qty']" position="replace">
+					</xpath>
+					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='tax_id']" position="attributes" >
+						<attribute name="groups">account.group_account_invoice, sale_advertising.group_traffic_user</attribute>
+					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='price_unit']" position="replace">
 						<field name="price_unit"/>
 						<field name="product_uom_qty"/>
 						<field name="actual_unit_price"/>
-						<field name="computed_discount"/>
+						<field name="computed_discount" />
+						<field name="subtotal_before_agency_disc" />
+						<field name="discount_dummy" />
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_uom_qty']" position="replace">
+					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='discount']" position="attributes">
+						<attribute name="invisible">True</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_uom']" position="replace">
 					</xpath>
@@ -255,8 +268,10 @@
 						<field name="ad_number"/>
 						<field name="page_reference"/>
 					</xpath>
+
+					<!--End Order Line Tree /-->
 					<xpath expr="//group[@name='logistics']" position="attributes">
-								<attribute name="groups">base.group_no_one</attribute>
+						<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/group/group/field[@name='user_id']" position="after">
 						<field name="partner_acc_mgr"/>
@@ -396,7 +411,6 @@
 						<field name="parent_id" string="Title"/>
 						<field name="analytic_account_id" string="Related Analytic Account"/>
 						<field name="issue_date" string="Issue Date" readonly="True"/>
-						<field name="date_type" string="Date Type" />
 						<field name="medium" string="Medium"/>
 						<field name="default_note" string="Default Note" />
 						<field name="state" string="State" />
@@ -415,7 +429,6 @@
 						<field name="parent_id" string="Title"/>
 						<field name="analytic_account_id" string="Related Analytic Account"/>
 						<field name="issue_date" string="Issue Date"/>
-						<field name="date_type" string="Date Type" />
 						<field name="medium" string="Medium"/>
 						<field name="default_note" string="Default Note" />
 						<field name="state" string="State" />
@@ -495,7 +508,19 @@
 				<field name="arch" type="xml">
 						<field name="name" position="replace">
 							<field name="complete_name" />
+							<field name="date_type" />
 						</field>
+				</field>
+		 </record>
+
+		 <record id="product_category_form_view_inherit" model="ir.ui.view">
+				<field name="name">product.category.form.inherit</field>
+				<field name="model">product.category</field>
+				<field name="inherit_id" ref="product.product_category_form_view"/>
+				<field name="arch" type="xml">
+					<field name="type" position="after">
+							<field name="date_type"/>
+					</field>
 				</field>
 		 </record>
 
