@@ -47,8 +47,9 @@
                         <button name="refuse" string="Refuse" type="workflow" states="submitted,approved1"
 								groups="base.group_sale_manager"/>
 						<button name="%(sale_advertising.action_view_sale_order_line_create_multi)d"
-									string="Create Multiple Order Lines" type="action" icon="terp-document-new"
-									attrs="{'invisible': [('state','not in',['draft','approved2'])]}"/>
+								string="Create Multiple Order Lines" type="action" icon="terp-document-new"
+								attrs="{'invisible': [('state','in',['cancel','draft','submitted','approved1','approved2'])]}"
+								groups="sale_advertising.group_traffic_user"/>
 					</button>
 					<button name="invoice_recreate" position="attributes">
 						<attribute name="groups">base.group_no_one</attribute>
@@ -57,16 +58,18 @@
 						<attribute name="groups">base.group_no_one</attribute>
 					</button>
 					<xpath expr="/form/header/button[@name='action_quotation_send' and @class='oe_highlight']" position="attributes">
-						<attribute name="groups">base.group_no_one</attribute>
+						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
+						<attribute name="states">approved2</attribute>
 					</xpath>
 					<xpath expr="/form/header/button[@name='action_quotation_send' and @states='sent,progress,manual']" position="attributes">
-						<attribute name="groups">base.group_no_one</attribute>
+						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
 					</xpath>
 					<xpath expr="/form/header/button[@name='print_quotation' and @class='oe_highlight']" position="attributes">
-						<attribute name="groups">base.group_no_one</attribute>
+						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
+						<attribute name="states">approved2</attribute>
 					</xpath>
 					<xpath expr="/form/header/button[@name='print_quotation' and @states='sent,progress,manual']" position="attributes">
-						<attribute name="groups">base.group_no_one</attribute>
+						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
 					</xpath>
 					<xpath expr="/form/header/button[@name='action_button_confirm' and @states='sent']" position="attributes">
 						<attribute name="groups">sale_advertising.group_traffic_user</attribute>
@@ -187,7 +190,7 @@
 								invisible="False"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='tax_id']" position="attributes">
-							<attribute name="groups">groups="sale_advertising.group_traffic_user"</attribute>
+							<attribute name="groups">sale_advertising.group_traffic_user</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='type']" position="attributes">
 							<attribute name="groups">base.group_no_one</attribute>
