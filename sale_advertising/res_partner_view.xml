@@ -13,6 +13,9 @@
                     <field name="user_id" position="attributes">
                         <attribute name="invisible">True</attribute>
                     </field>
+                    <field name="section_id" position="attributes">
+                        <attribute name="groups">account.group_account_user</attribute>
+                    </field>
                     <field name="company_id" position="after">
                         <field name="is_ad_agency"/>
                         <field name="agency_discount" attrs="{'invisible': [('is_ad_agency', '=', False)]}"/>
@@ -34,6 +37,7 @@
                     </field>
                     <field name="user_id" position="attributes">
                         <attribute name="invisible">False</attribute>
+                        <attribute name="string">Account Manager</attribute>
                     </field>
                 </data>
             </field>
@@ -49,7 +53,7 @@
                     <field name="function" />
                     <field name="phone"/>
                     <field name="email"/>
-                    <field name="user_id" />
+                    <field name="user_id" string="Account Manager"/>
                     <field name="is_company" />
                     <field name="country" />
                     <field name="parent_id" />
@@ -78,10 +82,10 @@
                    <filter string="Ad Agencies" name="agency" domain="[('is_ad_agency','=',1)]" help="Ad Agency Partners"/>
                    <separator/>
                    <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
-                   <field name="user_id"/>
+                   <field name="user_id" string="Account Manager"/>
                    <field name="parent_id" domain="[('is_company','=',1)]" operator="child_of"/>
                    <group expand="0" string="Group By...">
-                       <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+                       <filter string="Account Manager" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
                        <filter string="Company" context="{'group_by': 'parent_id'}"/>
                        <filter string="Country" context="{'group_by': 'country_id'}"/>
                    </group>
