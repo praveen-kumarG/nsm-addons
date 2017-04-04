@@ -185,7 +185,7 @@
 							</div>
 						<field name="subtotal_before_agency_disc" readonly="False"
 							   on_change="onchange_price_subtotal(discount, product_uom_qty, subtotal_before_agency_disc, context)"/>
-						<label for="discount" groups="sale.group_discount_per_so_line"/>
+						<label for="discount" string="Agency Commission" groups="sale.group_discount_per_so_line"/>
 							<div name="discount" groups="sale.group_discount_per_so_line">
 								<field name="discount" invisible="1"/>
 								<field name="discount_dummy" class="oe_inline"/> %%
