@@ -192,7 +192,7 @@
 							</div>
 						<field name="price_subtotal" readonly="True" />
 						<field name="date_type" on_change="onchange_date_type(date_type, dates, dateperiods, adv_issue_ids, context)"
-								invisible="False"/>
+								invisible="True"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='tax_id']" position="attributes">
 							<attribute name="groups">sale_advertising.group_traffic_user</attribute>

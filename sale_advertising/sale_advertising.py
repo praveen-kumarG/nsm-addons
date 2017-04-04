@@ -363,7 +363,7 @@ class sale_order_line(orm.Model):
     _defaults = {
         'actual_unit_price': 0.0,
         'computed_discount': 0.0,
-        'product_uom_qty': False
+        'product_uom_qty': 0.0
     }
 
 
@@ -414,10 +414,10 @@ class sale_order_line(orm.Model):
             context = {}
         vals = {}
         if not adv_issue_id and adv_issue_ids:
-            if len(adv_issue_ids[0][2]) > 1:
+            if len(adv_issue_ids[0][2]) >= 1:
                 qty = len(adv_issue_ids[0][2])
             else:
-                qty = 1
+                qty = 0
         elif adv_issue_id:
             qty = 1
 
@@ -478,12 +478,12 @@ class sale_order_line(orm.Model):
             context = {}
         vals = {}
         if dates:
-            if len(dates) > 1:
+            if len(dates) >= 1:
                 qty = len(dates)
             else:
-                qty = 1
+                qty = 0
         else:
-            qty = 1
+            qty = 0
 
         vals['product_uom_qty'] = qty
         return {'value': vals}
@@ -543,16 +543,16 @@ class sale_order_line(orm.Model):
                                      packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
         mqty = False
         if date_type == 'issue_date' and adv_issue_ids:
-            if len(adv_issue_ids[0][2]) > 1:
+            if len(adv_issue_ids[0][2]) >= 1:
                 mqty = len(adv_issue_ids[0][2])
             else:
-                mqty = 1
+                mqty = 0
 
         if date_type == 'date' and dates:
-            if len(dates) > 1:
+            if len(dates) >= 1:
                 mqty = len(dates)
             else:
-                mqty = 1
+                mqty = 0
         if mqty:
             qty = mqty
             res['value']['product_uom_qty'] = qty
