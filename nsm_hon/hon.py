@@ -168,19 +168,22 @@ class hon_issue(orm.Model):
         return {'value': res, 'warning': war}
 
     def manual_invoice(self, cr, uid, ids, context=None):
-           #create invoices for the given hon issues (ids), and open the form
-           #view of one of the newly created invoices
+        '''
+        create invoices for the given hon issues (ids), and open the form
+        view of one of the newly created invoices
+        '''
+
         mod_obj = self.pool.get('ir.model.data')
         wf_service = netsvc.LocalService("workflow")
 
-           # create invoices through the hon issues' workflow
+        '''create invoices through the hon issues' workflow'''
         inv_ids0 = set(inv.id for issue in self.browse(cr, uid, ids, context) for inv in issue.invoice_ids)
         for id in ids:
            wf_service.trg_validate(uid, 'hon.issue', id, 'manual_invoice', cr)
         inv_ids1 = set(inv.id for issue in self.browse(cr, uid, ids, context) for inv in issue.invoice_ids)
-            # determine newly created invoices
-        new_inv_ids = list(inv_ids1 - inv_ids0)
 
+        # determine newly created invoices
+        new_inv_ids = list(inv_ids1 - inv_ids0)
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
         res_id = res and res[1] or False,
 
@@ -299,6 +302,9 @@ class hon_issue(orm.Model):
                     {'state': 'cancel'})
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
+
+    #def action_done(self, cr, uid, ids, context=None):
+    #    return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
 
 
