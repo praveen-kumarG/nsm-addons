@@ -108,6 +108,7 @@ class sale_order(orm.Model):
     _columns = {
         'published_customer': fields.many2one('res.partner', 'Advertiser', domain=[('customer','=',True)]),
         'advertising_agency': fields.many2one('res.partner', 'Advertising Agency', domain=[('customer','=',True)]),
+        'nett_nett': fields.boolean('Netto Netto Deal', ),
         'customer_contact': fields.many2one('res.partner', 'Payer Contact Person', domain=[('customer','=',True)]),
         'traffic_employee': fields.many2one('res.users', 'Traffic Employee',),
         'traffic_comments': fields.text('Traffic Comments'),
@@ -156,6 +157,9 @@ class sale_order(orm.Model):
                                         },
                                 multi='sums'),
 
+    }
+    _defaults = {
+        'nett_nett': False,
     }
 
     def onchange_published_customer(self, cr, uid, ids, published_customer, context):
@@ -220,6 +224,8 @@ class sale_order(orm.Model):
             ids = [ids]
         order = self.browse(cr, uid, ids[0], context=context)
         discount = order.partner_id.agency_discount or 0.0
+        if order.nett_nett:
+            discount = 0.0
         fiscal_position = order.partner_id.property_account_position.id
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         line_ids = self.pool['sale.order.line'].search(cr, uid, [('order_id', 'in', ids)], context=context)
@@ -238,7 +244,7 @@ class sale_order(orm.Model):
     def write(self, cr, uid, ids, vals, context=None):
         res = super(sale_order, self).write(
             cr, uid, ids, vals, context=context)
-        if 'partner_id' in vals:
+        if 'partner_id' in vals or 'nett_nett' in vals:
             self.update_line_discount(cr, uid, ids, context=context)
         return res
 
@@ -302,6 +308,8 @@ class sale_order_line(orm.Model):
             product_id = line.product_id and line.product_id.id or False
             order_partner_id = line.order_id.partner_id and line.order_id.partner_id.id or False
             discount = line.discount or 0.0
+            if line.order_id.nett_nett:
+                discount = 0.0
             product_uom = line.product_uom and line.product_uom.id or False
             if product_id:
                 unit_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id,
@@ -355,6 +363,7 @@ class sale_order_line(orm.Model):
     _defaults = {
         'actual_unit_price': 0.0,
         'computed_discount': 0.0,
+        'product_uom_qty': False
     }
 
 
@@ -467,7 +476,6 @@ class sale_order_line(orm.Model):
     def onchange_dates(self, cr, uid, ids, dates=False, context=None):
         if context is None:
             context = {}
-        #import pdb; pdb.set_trace()
         vals = {}
         if dates:
             if len(dates) > 1:
@@ -512,15 +520,27 @@ class sale_order_line(orm.Model):
                     actual_unit_price = float(subtotal_before_agency_disc) / float(qty)
                     result['actual_unit_price'] = actual_unit_price
                     result['price_subtotal'] = round((float(subtotal_before_agency_disc) * (1.0 - float(discount) / 100.0)), 2)
+        else:
+            result['actual_unit_price'] = 0.0
+            result['price_subtotal'] = 0.0
         return {'value': result}
 
-    def product_id_change(self, cr, uid, ids, pricelist, product, actual_unit_price=0, price_unit=0, qty=0, uom=False, qty_uos=0, uos=False, name='',
+    def onchange_price_unit(self, cr, uid, ids, price_unit=0.0, context=None):
+        if context is None:
+            context = {}
+        vals = {}
+        if price_unit > 0.0:
+            vals['actual_unit_price'] = price_unit
+        return {'value': vals}
+
+
+    def qty_change(self, cr, uid, ids, actual_unit_price=0.0, price_unit=0.0, pricelist=False, product=False, qty=0, uom=False, qty_uos=0, uos=False, name='',
             partner_id=False, lang=False, update_tax=True, date_order=False, adv_issue_ids=False, dates=False, date_type=False,
-            packaging=False, discount=0.0, fiscal_position=False, flag=False, context=None):
-        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
-                                                uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
-                                                lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging,
-                                                fiscal_position=fiscal_position, flag=flag, context=context)
+            packaging=False, nett_nett=False, fiscal_position=False, flag=False, context=None):
+        res = self.product_id_change(cr, uid, ids, pricelist=pricelist, product=product, qty=qty, uom=uom,
+                                     qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id, lang=lang,
+                                     update_tax=update_tax, date_order=date_order,
+                                     packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
         mqty = False
         if date_type == 'issue_date' and adv_issue_ids:
             if len(adv_issue_ids[0][2]) > 1:
@@ -536,20 +556,23 @@ class sale_order_line(orm.Model):
         if mqty:
             qty = mqty
             res['value']['product_uom_qty'] = qty
-
         partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-        if partner.is_ad_agency:
+        if partner.is_ad_agency and not nett_nett:
             discount = partner.agency_discount
+        else:
+            discount = 0.0
         res['value'].update({'discount': discount, 'discount_dummy': discount})
         if 'price_unit' in res['value']:
             pu = res['value']['price_unit']
             if pu != price_unit:
                 actual_unit_price = pu
-        else: pu = 0.0
-        res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=actual_unit_price, price_unit=pu, qty=qty, discount=discount,
-                                         context=context)
+        else:
+            pu = 0.0
+        res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=actual_unit_price, price_unit=pu, qty=qty,
+                                      discount=discount, context=context)
         res['value'].update(res2['value'])
         return res
+
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         """Prepare the dict of values to create the new invoice line for a

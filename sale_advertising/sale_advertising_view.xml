@@ -125,8 +125,12 @@
 						<field name="customer_contact" required="True" context="{'default_parent_id': partner_id, 'show_email': 1}"
 							   domain="[('is_company', '=', False), ('customer', '=', True),('parent_id', '=', partner_id),('type', '=', 'contact')]"
 							   options='{"always_reload": True}'/>
-						<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"
-							   domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]" attrs="{'readonly':[('state','not in','draft')]}"/>
+						<group col="4" colspan="2">
+							<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"
+							   domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"
+							   attrs="{'readonly':[('state','not in','draft')]}"/>
+							<field name="nett_nett" />
+						</group>
 						<field name="opportunity_subject"/>
 					</xpath>
 
@@ -138,18 +142,19 @@
 						<field name="ad_class" on_change="onchange_ad_class(ad_class)" required="1"
 							   domain="[('type','!=', 'view'), ('id','child_of', medium)]" options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 						<field name="product_id" required="1"
-							   context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
+							   context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty,
+							   				'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
 							   domain="[('categ_id','=', ad_class)]"
                                groups="base.group_user"
-							   on_change="product_id_change(parent.pricelist_id, product_id, actual_unit_price, price_unit, product_uom_qty, False,
-							   product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, adv_issue_ids, dates, date_type,
-							   False, discount, parent.fiscal_position, False, context)"
+							   on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, False,
+							   				product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, False,
+							   				parent.fiscal_position, False, context)"
 							   options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='product_uom_qty']" position="attributes">
-						<attribute name="on_change">product_id_change(parent.pricelist_id, product_id, actual_unit_price, price_unit, product_uom_qty,
+						<attribute name="on_change">qty_change(actual_unit_price, price_unit, parent.pricelist_id, product_id, product_uom_qty,
 								False, product_uos_qty, False, name, parent.partner_id, False, True,
-								parent.date_order, adv_issue_ids, dates, date_type, False, discount, parent.fiscal_position, False, context)</attribute>
+								parent.date_order, adv_issue_ids, dates, date_type, False, parent.nett_nett, parent.fiscal_position, False, context)</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div[@groups='product.group_uos']" position="after">
 						<field name="adv_issue" domain="[('parent_id','=', title)]" attrs="{'invisible':['|',('adv_issue','=',False),('title','=',False)]}"
@@ -172,7 +177,7 @@
 						<attribute name="invisible">False</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='tax_id']" position="before">
-						<field name="price_unit" readonly="True"/>
+						<field name="price_unit" readonly="True" on_change="onchange_price_unit(price_unit, context)"/>
 						<field name="actual_unit_price" on_change="onchange_actualup(actual_unit_price, price_unit, product_uom_qty, discount, context)"/>
 						<label for="computed_discount" groups="sale.group_discount_per_so_line"/>
 							<div name="computed_discount" groups="sale.group_discount_per_so_line">
