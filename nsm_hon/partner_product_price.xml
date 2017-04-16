@@ -22,10 +22,8 @@
                  <field name="analytic_account_ids" position="after">
                      <field name="product_price_ids" string="Product Prices per Vendor">
                          <tree string="Product Prices per Vendor" editable="bottom">
-                             <!--field name="analytic_account_id"/-->
                              <field name="product_id"/>
                              <field name="price_unit" />
-                             <!--field name="price_unit" attrs="{'invisible': [('product_id','!=',True)]}"/-->
                              <field name="company_id" invisible="1"/>
                              <field name="comment" />
                          </tree>

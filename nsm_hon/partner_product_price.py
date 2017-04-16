@@ -50,7 +50,7 @@ class res_partner(orm.Model):
 
     _columns = {
 
-        'product_price_ids': fields.one2many('partner.product.price', 'partner_id','Product Price per Title', ),
+        'product_price_ids': fields.one2many('partner.product.price', 'partner_id','Product Price for this Supplier', ),
 
     }
 
