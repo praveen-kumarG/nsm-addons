@@ -10,6 +10,7 @@
                 <tree string="Hon Issues">
                     <field name="account_analytic_id"/>
                     <field name="date_publish"/>
+                    <field name="invoiced" string="All Lines Invoiced"/>
                     <field name="state" invisible="0"/>
                 </tree>
             </field>
