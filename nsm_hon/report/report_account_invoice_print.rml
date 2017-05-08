@@ -81,7 +81,13 @@
         <para style="Standard">[[ setLang(o.partner_id.lang) ]]</para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
-        <para style="Standard"><font color="white">[[ "e" ]]</font></para>
+        <blockTable colWidths="450.0" style="Tableau2">
+            <tr>
+                <td>
+                    <para style="Standard">[[ o.product_category.hon_type == "letter_a" and 'Betaalreferentie:' or removeParentNode('blockTable')]] [[ (o.supplier_invoice_number) or '' ]]</para>
+                </td>
+            </tr>
+        </blockTable>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
@@ -121,7 +127,7 @@
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
 
-            <blockTable colWidths="50.0,170.0,50.0,50.0,35.0,65.0" style="Tableau2">
+            <blockTable colWidths="80.0,170.0,50.0,50.0,35.0,65.0" style="Tableau2">
                 <tr>
                     <td>
                          <para style="Standard">[[ o.product_category.hon_type == "letter_b" and 'Pagina nr.' or removeParentNode('blockTable')]]</para>

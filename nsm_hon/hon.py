@@ -58,15 +58,9 @@ class hon_issue(orm.Model):
         res = {}
         for issue in self.browse(cursor, user, ids, context=context):
             res[issue.id] = True
-            invoice_existence = False
-            for invoice in issue.invoice_ids:
-                if invoice.state!='cancel':
-                    invoice_existence = True
-                    if invoice.state != 'paid':
-                        res[issue.id] = False
-                        break
-            if not invoice_existence or issue.state == 'manual':
-                res[issue.id] = False
+            for line in issue.hon_issue_line:
+                if not line.invoice_line_id and not line.employee and not line.gratis:
+                    res[issue.id] = False
         return res
 
     def _invoiced_search(self, cursor, user, obj, name, args, context=None):
@@ -114,8 +108,6 @@ class hon_issue(orm.Model):
             ('cancel', 'Cancelled'),
             ('draft','Draft'),
             ('open','Open'),
-            ('manual', 'To Invoice'),
-            ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ],'Status', select=True, readonly=True,
             help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Honorarium Issue. \
@@ -129,7 +121,7 @@ class hon_issue(orm.Model):
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced Ratio', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced',
                                     fnct_search=_invoiced_search, type='boolean',
-                                    help="It indicates that an invoice has been paid."),
+                                    help="It indicates that all issue lines have been invoiced."),
         'invoice_exists': fields.function(_invoice_exists, string='Invoiced',
                                           fnct_search=_invoiced_search, type='boolean',
                                           help="It indicates that hon issue has at least one invoice."),
@@ -174,12 +166,9 @@ class hon_issue(orm.Model):
         '''
 
         mod_obj = self.pool.get('ir.model.data')
-        wf_service = netsvc.LocalService("workflow")
 
-        '''create invoices through the hon issues' workflow'''
         inv_ids0 = set(inv.id for issue in self.browse(cr, uid, ids, context) for inv in issue.invoice_ids)
-        for id in ids:
-           wf_service.trg_validate(uid, 'hon.issue', id, 'manual_invoice', cr)
+        self.action_invoice_create(cr, uid, ids, date_invoice=False, context=None)
         inv_ids1 = set(inv.id for issue in self.browse(cr, uid, ids, context) for inv in issue.invoice_ids)
 
         # determine newly created invoices
@@ -236,18 +225,6 @@ class hon_issue(orm.Model):
         himi.make_invoices_from_issues(cr, uid, ids, context=context)
         return True
 
-    def action_invoice_end(self, cr, uid, ids, context=None):
-        for this in self.browse(cr, uid, ids, context=context):
-            for line in this.hon_issue_line:
-                if line.state == 'exception':
-                    line.write({'state': 'confirmed'})
-            if this.state == 'invoice_except':
-                this.write({'state': 'open'})
-        return True
-
-    def action_invoice_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state': 'invoice_except'}, context=context)
-        return True
 
     def action_button_confirm(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
@@ -298,13 +275,22 @@ class hon_issue(orm.Model):
             for r in self.read(cr, uid, ids, ['invoice_ids']):
                 for inv in r['invoice_ids']:
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
-            hon_issue_line_obj.write(cr, uid, [l.id for l in  issue.hon_issue_line],
+            hon_issue_line_obj.write(cr, uid, [l.id for l in issue.hon_issue_line],
                     {'state': 'cancel'})
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
-    #def action_done(self, cr, uid, ids, context=None):
-    #    return self.write(cr, uid, ids, {'state': 'done'}, context=context)
+    def action_done(self, cr, uid, ids, context=None):
+        data_hon = self.browse(cr, uid, ids, context=context)
+        a = []
+        for issue in data_hon:
+            if issue.invoiced:
+                a.append(issue.id)
+            else:
+                raise osv.except_osv(
+                        _('Cannot finalise this issue!'),
+                        _('First invoice all hon_lines attached to this issue.'))
+        return self.write(cr, uid, a, {'state': 'done'}, context=context)
 
 
 

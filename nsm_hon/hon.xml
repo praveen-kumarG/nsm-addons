@@ -23,13 +23,15 @@
                 <form string="Hon Issue" version="7.0">
                     <header>
                         <button name="issue_confirm" states="draft" string="Confirm Hon Issue" type="workflow" groups="base.group_user"/>
-                        <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('invoice_exists', '=', False)]}" groups="base.group_user"/>
-                        <button name="manual_invoice" string="Create Invoices" type="object" states="open" class="oe_highlight" groups="base.group_user"/>
-                        <button name="cancel" states="draft,open,manual" string="Cancel Issue" type="workflow" groups="base.group_user"/>
+                        <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
+                                attrs="{'invisible': [('invoice_exists', '=', False)]}" groups="base.group_user"/>
+                        <button name="manual_invoice" string="Create Invoices" type="object"  class="oe_highlight"
+                                attrs="{'invisible': ['|',('invoiced', '=', True),('state', '!=', 'open')]}" groups="base.group_user"/>
+                        <button name="cancel" states="draft,open" string="Cancel Issue" type="workflow" groups="base.group_user"/>
                         <button name="back_draft" states="open" string="back to Draft" type="workflow" groups="base.group_user"/>
-                        <!--button name="cancel" states="manual,open" string="Cancel Issue" type="workflow" groups="base.group_user"/-->
-                        <button name="invoice_cancel" states="invoice_except" string="Cancel Issue" type="workflow" groups="base.group_user"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,open,manual,done" statusbar_colors='{"draft":"blue", "open":"red","manual":"blue"}'/>
+                        <button name="action_done" string="Finalise Issue" type="workflow" class="oe_highlight"
+                                attrs="{'invisible': ['|',('invoiced', '=', False),('state', '!=', 'open')]}" groups="base.group_user"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"draft":"blue", "open":"red","done":"blue"}'/>
                     </header>
 
                     <h1>
@@ -100,15 +102,10 @@
                     <field name="account_analytic_id" string="Issue" filter_domain="[ ('account_analytic_id','ilike',self)]"/>
                     <filter name="state" string="State" domain="[('state','=','draft')]" help="Draft issues"/>
                     <filter name="state" string="State" domain="[('state','=','open')]" help="Confirmed issues"/>
-                    <filter name="state" string="State" domain="[('state','=','manual')]" help="Invoiced issues"/>
+                    <filter name="state" string="State" domain="[('state','=','done')]" help="Finalised issues"/>
                     <separator/>
                     <field name="account_analytic_id" operator="child_of"/>
                     <separator/>
-                    <group expand="0" string="Group By">
-                    	<filter name="group_by_debtor" string="Debtor" context="{'group_by':'zpartner'}"/>
-                        <filter name="group_by_batchcode" string="Batchcode" context="{'group_by':'batchcode'}"/>
-                    <separator/>
-                    </group>
                </search>
             </field>
         </record>

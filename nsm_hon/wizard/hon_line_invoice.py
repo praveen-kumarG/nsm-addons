@@ -41,7 +41,12 @@ class hon_issue_line_make_invoice(osv.osv_memory):
     _description = "Honorarium Issue Line Make_invoice"
 
     def _prepare_invoice(self, cr, uid, partner, issue, category, lines, context=None):
-
+        issue_invoices = self.pool['hon.issue'].browse(cr, uid, issue.id, context=context)
+        invoices = self.pool['account.invoice'].search(cr, uid, [('id','in', [x.id for x in issue_invoices.invoice_ids]),('partner_id','=',partner.id)], context=context)
+        if len(invoices) >= 1:
+            inv_count = len(invoices) + 1
+        else:
+            inv_count = 1
         a = partner.property_account_payable.id
         if partner and partner.property_supplier_payment_term.id:
             pay_term = partner.property_supplier_payment_term.id
@@ -52,7 +57,7 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             'hon': True,
             'origin': issue.account_analytic_id.name,
             'type': 'in_invoice',
-            'reference': "P%dHON%d" % (partner.id, issue.id),
+            'reference': False,
             'date_publish': issue.date_publish,
             'account_id': a,
             'partner_id': partner.id,
@@ -61,7 +66,7 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             'payment_term': pay_term,
             'journal_id': issue.company_id.hon_journal and issue.company_id.hon_journal.id or False,
             'fiscal_position': partner.property_account_position.id,
-            'supplier_invoice_number': "P%dHON%dD%d" % (partner.id, issue.id, time.time()),
+            'supplier_invoice_number': "HON%dNo%d" % (issue.id, inv_count),
             'section_id': issue.account_analytic_id.section_ids[0] and issue.account_analytic_id.section_ids[0].id or False,
             'user_id': uid,
             'company_id': issue.company_id and issue.company_id.id or False,
@@ -106,12 +111,13 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             """
             inv = self._prepare_invoice(cr, uid, partner, issue, category, lines, context=context)
             inv_id = self.pool.get('account.invoice').create(cr, uid, inv)
+            cr.execute('insert into hon_issue_invoice_rel (issue_id,invoice_id) values (%s,%s)', (issue.id, inv_id))
             return inv_id
 
         hon_issue_line_obj = self.pool.get('hon.issue.line')
         hon_issue_obj = self.pool.get('hon.issue')
         wf_service = netsvc.LocalService('workflow')
-        #import pdb; pdb.set_trace()
+
         for line in hon_issue_line_obj.browse(cr, uid, lids, context=context):
             if (not line.invoice_line_id) and (line.state not in ('draft', 'cancel')) and (not line.employee) and (not line.gratis):
                 if not (line.issue_id.id, line.partner_id.id, line.product_category_id.id) in invoices:
@@ -137,15 +143,6 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             category = self.pool.get('product.category').browse(cr, uid, category_id, context=context)
             res = make_invoice(partner, issue, category, il,)
-            flag = True
-            data_hon = hon_issue_obj.browse(cr, uid, issue.id, context=context)
-            for line in data_hon.hon_issue_line:
-                if not line.invoice_line_id and not line.employee :
-                    flag = False
-                    break
-            if flag:
-                line.issue_id.write({'state': 'manual'})
-                wf_service.trg_validate(uid, 'hon.issue', issue.id, 'all_lines', cr)
 
         if context.get('open_invoices', False):
             return self.open_invoices(cr, uid, res, context=context)
