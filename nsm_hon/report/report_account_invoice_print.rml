@@ -110,8 +110,8 @@
             <tr>
                 <td>
                     <para style="Standard">Voor onderstaand(e) artikel(en), gepubliceerd in [[ (o.origin or '') ]] d.d. [[ get_date(o.date_publish) or '' ]]</para>
-                    <para style="Standard">ontvangt u op uw IBAN nummer [[ (o.partner_bank_id.acc_number or '') ]] </para>
-                    <para style="Standard">[[ o.product_category.hon_type == "letter_a" and 'het volgende bedrag:' or removeParentNode('tr')]] </para>
+                    <para style="Standard">ontvangt u op uw IBAN nummer [[ (o.partner_bank_id.acc_number or '') ]] het volgende bedrag:</para>
+                    <para style="Standard"><font color="white">[[ o.product_category.hon_type == "letter_a" or removeParentNode('tr')]] </font></para>
                 </td>
             </tr>
             <tr>
@@ -127,68 +127,54 @@
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
         <para style="Standard"><font color="white">[[ "e" ]]</font></para>
 
-            <blockTable colWidths="80.0,170.0,50.0,50.0,35.0,65.0" style="Tableau2">
-                <tr>
-                    <td>
-                         <para style="Standard">[[ o.product_category.hon_type == "letter_b" and 'Pagina nr.' or removeParentNode('blockTable')]]</para>
-                    </td>
-                    <td>
-                         <para style="Standard">Omschrijving</para>
-                    </td>
-                     <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                        <para style="Standard">Publicatie rechten</para>
-                    </td>
-                </tr>
-            </blockTable>
+        <blockTable colWidths="60.0,290.0,35.0,65.0" style="Tableau2">
+            <tr>
+                <td>
+                     <para style="Standard">[[ o.product_category.hon_type == "letter_b" and 'Pagina nr.' or removeParentNode('blockTable')]]</para>
+                </td>
+                <td>
+                     <para style="Standard">Omschrijving</para>
+                </td>
+                <td>
+                </td>
+                <td>
+                    <para style="terp_default_Right_9">Publicatie rechten</para>
+                </td>
+            </tr>
+        </blockTable>
 
         <section>
-            <para style="Standard">[[ repeatIn(o.invoice_line,'l') ]]</para>
-            <condPageBreak height="5cm"/>
-            <blockTable colWidths="50.0,170.0,50.0,50.0,35.0,65.0" style="Tableau2" rowHeights="10">
-                <tr>
-                    <td>
-                        <para style="Standard">[[ l.hon_issue_line_id.page_number or '' ]]</para>
-                    </td>
-                    <td>
-                        <para style="Standard">[[ o.product_category.hon_type == "letter_a" and (l.product_id.description or '') or removeParentNode('para')]] [[ l.name ]]</para>
-                        <para style="Standard">[[ o.product_category.hon_type == "letter_b" and (l.name or '') or removeParentNode('para')]]</para>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                    </td>
-                    <td>
-                        <para style="Standard">[[ o.currency_id.symbol or "" ]]</para>
-                    </td>
-                    <td>
-                        <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal, digits=get_digits(dp='Account')) or "" ]]</para>
-                    </td>
-                </tr>
-            </blockTable>
+        <para style="Standard">[[ repeatIn(o.invoice_line,'l') ]]</para>
+        <condPageBreak height="5cm"/>
+        <blockTable colWidths="60.0,290.0,35.0,65.0" style="Tableau2" rowHeights="10">
+            <tr>
+                <td>
+                    <para style="Standard">[[ l.hon_issue_line_id.page_number or '' ]]</para>
+                </td>
+                <td>
+                    <para style="Standard">[[ o.product_category.hon_type == "letter_a" and (l.product_id.description or '') or removeParentNode('para')]] [[ l.name ]]</para>
+                    <para style="Standard">[[ o.product_category.hon_type == "letter_b" and (l.name or '') or removeParentNode('para')]]</para>
+                </td>
+                <td>
+                    <para style="Standard">[[ o.currency_id.symbol or "" ]]</para>
+                </td>
+                <td>
+                    <para style="terp_default_Right_9">[[ formatLang(l.price_subtotal, digits=get_digits(dp='Account')) or "" ]]</para>
+                </td>
+            </tr>
+        </blockTable>
         </section>
 
 
 
 
-        <blockTable colWidths="50.0,170.0,50.0,50.0,35.0,65.0" style="Tableau2">
+        <blockTable colWidths="60.0,290.0,35.0,65.0" style="Tableau2">
             <tr>
                 <td>
                     <para style="Standard"></para>
                 </td>
                 <td>
                     <para style="Standard"></para>
-                </td>
-                <td>
-                    <para style="Standard"></para>
-                </td>
-                <td>
-                    <para style="terp_default_Right_9_bold"></para>
                 </td>
                 <td>
                     <para style="Standard"></para>
@@ -202,13 +188,6 @@
                     <para style="terp_default_Left_9_bold">Totaal</para>
                 </td>
                 <td>
-
-                </td>
-                <td>
-                    <para style="Standard"></para>
-                </td>
-                <td>
-                    <para style="Standard"></para>
                 </td>
                 <td>
                     <para style="Standard_bold">[[ o.currency_id.symbol or "" ]]</para>
