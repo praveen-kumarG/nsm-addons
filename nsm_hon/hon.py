@@ -78,15 +78,15 @@ class hon_issue(orm.Model):
                 no_invoiced = True
 
         cursor.execute('SELECT rel.issue_id ' \
-                'FROM hon_issue_invoice_rel AS rel, account_invoice AS inv '+ issue_clause + \
-                'WHERE rel.invoice_id = inv.id ' + clause)
+                       'FROM hon_issue_invoice_rel AS rel, account_invoice AS inv '+ issue_clause + \
+                       'WHERE rel.invoice_id = inv.id ' + clause)
         res = cursor.fetchall()
         if no_invoiced:
             cursor.execute('SELECT issue.id ' \
-                    'FROM hon_issue AS issue ' \
-                    'WHERE issue.id NOT IN ' \
-                        '(SELECT rel.issue_id ' \
-                        'FROM hon_issue_invoice_rel AS rel) and issue.state != \'cancel\'')
+                           'FROM hon_issue AS issue ' \
+                           'WHERE issue.id NOT IN ' \
+                           '(SELECT rel.issue_id ' \
+                           'FROM hon_issue_invoice_rel AS rel) and issue.state != \'cancel\'')
             res.extend(cursor.fetchall())
         if not res:
             return [('id', '=', 0)]
@@ -117,7 +117,7 @@ class hon_issue(orm.Model):
         'invoice_ids': fields.many2many('account.invoice', 'hon_issue_invoice_rel', 'issue_id', 'invoice_id',
                                         'Invoices', readonly=True,
                                         help="This is the list of invoices that have been generated for this issue. "
-                                             "The same issue may have been invoiced in several times (by line for example)."),
+                                             "The same issue may have been invoiced several times (by line for example)."),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced Ratio', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoiced',
                                     fnct_search=_invoiced_search, type='boolean',
@@ -275,9 +275,21 @@ class hon_issue(orm.Model):
             for r in self.read(cr, uid, ids, ['invoice_ids']):
                 for inv in r['invoice_ids']:
                     wf_service.trg_validate(uid, 'account.invoice', inv, 'invoice_cancel', cr)
+                    cr.execute('delete from hon_issue_invoice_rel where issue_id=%s and invoice_id=%s',
+                               (issue.id, inv))
             hon_issue_line_obj.write(cr, uid, [l.id for l in issue.hon_issue_line],
-                    {'state': 'cancel'})
+                    {'state': 'cancel','invoice_line_id': False})
+
         self.write(cr, uid, ids, {'state': 'cancel'})
+        return True
+
+    # go from canceled state to draft state
+    def action_cancel_draft(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state':'draft'})
+        wf_service = netsvc.LocalService("workflow")
+        for issue_id in ids:
+            wf_service.trg_delete(uid, 'hon.issue', issue_id, cr)
+            wf_service.trg_create(uid, 'hon.issue', issue_id, cr)
         return True
 
     def action_done(self, cr, uid, ids, context=None):

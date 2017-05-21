@@ -110,7 +110,7 @@
             <tr>
                 <td>
                     <para style="Standard">Voor onderstaand(e) artikel(en), gepubliceerd in [[ (o.origin or '') ]] d.d. [[ get_date(o.date_publish) or '' ]]</para>
-                    <para style="Standard">ontvangt u binnenkort op uw IBAN nummer [[ (o.partner_bank_id.acc_number or '') ]] </para>
+                    <para style="Standard">ontvangt u op uw IBAN nummer [[ (o.partner_bank_id.acc_number or '') ]] </para>
                     <para style="Standard">[[ o.product_category.hon_type == "letter_a" and 'het volgende bedrag:' or removeParentNode('tr')]] </para>
                 </td>
             </tr>
