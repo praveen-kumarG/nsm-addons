@@ -34,12 +34,15 @@
         <record model="ir.ui.menu" id="crm.menu_crm_lead_categ">
             <field name="groups_id" eval="[(6,0,[ref('sale_advertising.group_traffic_user')])]"/>
         </record>
-        <record model="ir.ui.menu" id="crm.menu_crm_case_channel">
-            <field name="groups_id" eval="[(6,0,[ref('sale_advertising.group_traffic_user')])]"/>
-        </record>
-        <record model="ir.ui.menu" id="crm.menu_crm_case_resource_type_act">
-            <field name="groups_id" eval="[(6,0,[ref('sale_advertising.group_traffic_user')])]"/>
-        </record>
+        <!--
+            Menu: 'crm_tracking_medium_action' no longer exists in Odoo 8
+        -->
+        <!--<record model="ir.ui.menu" id="crm.menu_crm_case_channel">-->
+            <!--<field name="groups_id" eval="[(6,0,[ref('sale_advertising.group_traffic_user')])]"/>-->
+        <!--</record>-->
+        <!--<record model="ir.ui.menu" id="crm.menu_crm_case_resource_type_act">-->
+            <!--<field name="groups_id" eval="[(6,0,[ref('sale_advertising.group_traffic_user')])]"/>-->
+        <!--</record>-->
         <record model="ir.ui.menu" id="account_analytic_analysis.menu_action_hr_tree_invoiced_all">
             <field name="groups_id" eval="[(6,0,[ref('account.group_account_user')])]"/>
         </record>
@@ -55,7 +58,9 @@
         <record model="ir.ui.menu" id="base.menu_action_res_partner_bank_typeform">
             <field name="groups_id" eval="[(6,0,[ref('account.group_account_user')])]"/>
         </record>
-        <record model="ir.ui.menu" id="base_calendar.mail_menu_calendar">
+
+        <!--<record model="ir.ui.menu" id="base_calendar.mail_menu_calendar">-->
+        <record model="ir.ui.menu" id="calendar.mail_menu_calendar">
             <field name="parent_id" eval="ref('crm.menu_crm_case_phone')"/>
             <field name="groups_id" eval="[(6,0,[ref('base.group_sale_salesman')])]"/>
         </record>

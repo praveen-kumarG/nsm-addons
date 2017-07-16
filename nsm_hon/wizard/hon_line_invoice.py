@@ -52,6 +52,12 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             pay_term = partner.property_supplier_payment_term.id
         else:
             pay_term = False
+
+        # -- deep: validation added
+        HonJournalID = issue.company_id.hon_journal and issue.company_id.hon_journal.id or False
+        if not HonJournalID:
+            raise osv.except_osv(_('Warning!'), _('Please map "Honorarium Journal" in the Company master.'))
+
         return {
             'name': lines['name'] or '',
             'hon': True,
@@ -64,10 +70,16 @@ class hon_issue_line_make_invoice(osv.osv_memory):
             'invoice_line': [(6, 0, lines['lines'])],
             'comment': issue.comment,
             'payment_term': pay_term,
-            'journal_id': issue.company_id.hon_journal and issue.company_id.hon_journal.id or False,
+            # 'journal_id': issue.company_id.hon_journal and issue.company_id.hon_journal.id or False,
+            'journal_id': HonJournalID,
+
             'fiscal_position': partner.property_account_position.id,
             'supplier_invoice_number': "HON%dNo%d" % (issue.id, inv_count),
-            'section_id': issue.account_analytic_id.section_ids[0] and issue.account_analytic_id.section_ids[0].id or False,
+
+            # TODO: FIXME
+            # Migration fixes: section_ids no longer exists in Analytic
+            # 'section_id': issue.account_analytic_id.section_ids[0] and issue.account_analytic_id.section_ids[0].id or False,
+
             'user_id': uid,
             'company_id': issue.company_id and issue.company_id.id or False,
             'date_invoice': context.get('date_invoice', []) or fields.date.today(),

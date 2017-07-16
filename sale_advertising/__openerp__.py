@@ -32,6 +32,8 @@ This module allows you to use both CRM and Sales Management to run your advertis
     'author': 'Magnus - Willem Hulshof',
     'website': 'http://www.magnus.nl',
     'depends': ['sale_stock', 'sale_crm', 'nsm_analytic', 'nsm_supportal_extension',
+                # 'base_partner_merge', -- Error due to Hirechichal clashes, while migrating to 9
+                'calendar'
                 ],
     'data': ["security/ir.model.access.csv",
              "security/security.xml",

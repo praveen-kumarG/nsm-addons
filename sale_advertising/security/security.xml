@@ -6,9 +6,10 @@
             <field name="name">Traffic User</field>
             <field name="category_id" ref="base.module_category_sales_management"/>
             <field name="implied_ids" eval="[(4, ref('base.group_sale_manager')),
-                                            (4, ref('base_partner_merge.group_partner_merge')),
                                             (4, ref('mass_editing_auth.me_normal_user'))]"/>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
+                                        <!-- No longer exists
+                                            (4, ref('base_partner_merge.group_partner_merge')),-->
         </record>
         <record id="base.group_sale_salesman" model="res.groups">
             <field name="name">See Own Leads</field>

@@ -94,8 +94,10 @@ class account_invoice(osv.osv):
 
 
     def _setting_change(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+        # if context is None:
+        #     context = {}
+        context = dict(context or {})
+
         context['company_ids'] = ids
         context['verif_setting_change'] = True
         res = ids

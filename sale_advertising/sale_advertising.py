@@ -191,7 +191,7 @@ class sale_order(orm.Model):
                        {'state': 'approved2', 'traffic_appr_date': fields.date.context_today(self, cr, uid, context=context)})
         return True
 
-    def onchange_partner_id(self, cr, uid, ids, part, lines, context=None):
+    def onchange_partner_id2(self, cr, uid, ids, part, lines, context=None):
         res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'customer_contact': False, 'payment_term': False, 'fiscal_position': False}}

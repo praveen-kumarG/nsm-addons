@@ -35,15 +35,23 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         'agent': fields.many2one('res.partner', 'Agency'),
         'advertiser': fields.many2one('res.partner', 'Advertiser'),
         'partner_id': fields.many2one('res.partner', 'Payer'),
+
         'partner_dummy': fields.related('partner_id', string='Payer', type='many2one', relation='res.partner',
                                         readonly=True),
-        'update': fields.boolean('Update Advertiser/Agency',
+
+        # ---
+        # Keyword: 'update' causes conflicts hence renamed it to 'update1'
+        # --deep
+        # 'update': fields.boolean('Update Advertiser/Agency',
+        #                          help='Check this to be able to choose (other) Advertiser/Agency.'),
+        'update1': fields.boolean('Update Advertiser/Agency',
                                  help='Check this to be able to choose (other) Advertiser/Agency.'),
     }
 
     _defaults = {
         'action': 'nothing',
-        'update': False,
+        # 'update': False,
+        'update1': False,
     }
 
     def onchange_action(self, cr, uid, ids, action, context=None):
@@ -61,18 +69,67 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
     def onchange_advertiser(self, cr, uid, ids, advertiser, update, context):
         if not update:
-            return True
+            # return True
+            return {'value': {}}
         data = {'partner_id': advertiser, 'agent': False, 'partner_dummy': advertiser}
         return {'value': data}
 
 
     def onchange_agent(self, cr, uid, ids, agent, update, context):
         if not update:
-            return True
+            # return True
+            return {'value': {}}
         if agent:
             data = {'partner_id': agent, 'partner_dummy': agent}
             return {'value': data}
-        return True
+        # return True
+        return {'value': {}}
+
+    # -- commented by deep
+    # def default_get(self, cr, uid, fields, context=None):
+    #     """
+    #     Default get for name, opportunity_ids.
+    #     If there is an exisitng partner link to the lead, find all existing
+    #     opportunities links with this partner to merge all information together
+    #     """
+    #     lead_obj = self.pool.get('crm.lead')
+    #     partner_id = self._find_matching_partner(cr, uid, context=context)
+    #     #res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
+    #     res = {}
+    #     if context.get('active_id'):
+    #         tomerge = set([int(context['active_id'])])
+    #
+    #         email = False
+    #         #partner_id = res.get('partner_id')
+    #         lead = lead_obj.browse(cr, uid, int(context['active_id']), context=context)
+    #
+    #         #TOFIX: use mail.mail_message.to_mail
+    #         email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
+    #
+    #         if partner_id:
+    #             # Search for opportunities that have the same partner and that arent done or cancelled
+    #             ids = lead_obj.search(cr, uid, [('published_customer', '=', partner_id['advertiser']), ('partner_id','=', partner_id['partner_id']),  ('state', '!=', 'done')])
+    #             for id in ids:
+    #                 tomerge.add(id)
+    #         if email:
+    #             ids = lead_obj.search(cr, uid, [('email_from', '=ilike', email[0]), ('state', '!=', 'done')])
+    #             for id in ids:
+    #                 tomerge.add(id)
+    #
+    #         if 'action' in fields:
+    #             res.update({'action' : partner_id['partner_id'] and 'exist'})
+    #         if 'partner_id' in fields:
+    #             res.update({'partner_id' : partner_id['partner_id']})
+    #         if 'advertiser' in fields:
+    #             res.update({'advertiser': partner_id['advertiser']})
+    #         if 'agent' in fields:
+    #             res.update({'agent': partner_id['advertiser']})
+    #         if 'name' in fields:
+    #             res.update({'name' : len(tomerge) >= 2 and 'merge' or 'convert'})
+    #         if 'opportunity_ids' in fields and len(tomerge) >= 2:
+    #             res.update({'opportunity_ids': list(tomerge)})
+    #
+    #     return res
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -81,41 +138,41 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         opportunities links with this partner to merge all information together
         """
         lead_obj = self.pool.get('crm.lead')
+
+        # res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
         partner_id = self._find_matching_partner(cr, uid, context=context)
-        #res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
+
+        partnerID = partner_id.get('partner_id', False)
+        partner = self.pool.get('res.partner').browse(cr, uid, partnerID)
         res = {}
+
         if context.get('active_id'):
-            tomerge = set([int(context['active_id'])])
+            tomerge = [int(context['active_id'])]
 
-            email = False
-            #partner_id = res.get('partner_id')
+            # partner_id = res.get('partner_id')
             lead = lead_obj.browse(cr, uid, int(context['active_id']), context=context)
+            # email = lead.partner_id and lead.partner_id.email or lead.email_from
+            email = partner and partner.email or lead.email_from
 
-            #TOFIX: use mail.mail_message.to_mail
-            email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
+            tomerge.extend(self._get_duplicated_leads(cr, uid, partner_id, email, include_lost=True, context=context))
+            tomerge = list(set(tomerge))
 
-            if partner_id:
-                # Search for opportunities that have the same partner and that arent done or cancelled
-                ids = lead_obj.search(cr, uid, [('published_customer', '=', partner_id['advertiser']), ('partner_id','=', partner_id['partner_id']),  ('state', '!=', 'done')])
-                for id in ids:
-                    tomerge.add(id)
-            if email:
-                ids = lead_obj.search(cr, uid, [('email_from', '=ilike', email[0]), ('state', '!=', 'done')])
-                for id in ids:
-                    tomerge.add(id)
-
-            if 'action' in fields:
-                res.update({'action' : partner_id['partner_id'] and 'exist'})
+            if 'action' in fields and not res.get('action'):
+                res.update({'action' : partnerID and 'exist' or 'nothing'})
             if 'partner_id' in fields:
-                res.update({'partner_id' : partner_id['partner_id']})
+                res.update({'partner_id' : partnerID})
             if 'advertiser' in fields:
-                res.update({'advertiser': partner_id['advertiser']})
+                res.update({'advertiser': partner_id.get('advertiser', False)})
             if 'agent' in fields:
-                res.update({'agent': partner_id['advertiser']})
+                res.update({'agent': partner_id.get('advertiser', False)})
             if 'name' in fields:
                 res.update({'name' : len(tomerge) >= 2 and 'merge' or 'convert'})
             if 'opportunity_ids' in fields and len(tomerge) >= 2:
-                res.update({'opportunity_ids': list(tomerge)})
+                res.update({'opportunity_ids': tomerge})
+            if lead.user_id:
+                res.update({'user_id': lead.user_id.id})
+            if lead.section_id:
+                res.update({'section_id': lead.section_id.id})
 
         return res
 
@@ -181,6 +238,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         lead = self.pool.get('crm.lead')
         res = False
         partner_ids_map = self._create_partner(cr, uid, ids, context=context)
+
         lead_ids = vals.get('lead_ids', [])
         team_id = vals.get('section_id', False)
         for lead_id in lead_ids:
@@ -208,5 +266,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         data = self.browse(cr, uid, ids, context=context)[0]
         advertiser = data.advertiser and data.advertiser.id or False
         return lead.handle_partner_assignation(cr, uid, lead_ids, data.action, advertiser, context=context)
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

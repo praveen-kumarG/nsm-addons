@@ -97,7 +97,7 @@
 							   context="{'tree_view_ref': 'nsm_crm.view_partner_tree_nsm_crm'}"
 							   domain="[('is_ad_agency','!=', True),('is_company','=', True),('customer','=', True)]"
 							   attrs="{'readonly':[('state','not in','draft')]}" required="True"/>
-						<field name="partner_id" on_change="onchange_partner_id(partner_id, order_line, context)" string="Payer"
+						<field name="partner_id" on_change="onchange_partner_id2(partner_id, order_line, context)" string="Payer"
 							   domain="[('customer','=',True), ('is_company','=', True)]" invisible="True"
 							   context="{'search_default_customer':1 }"/>
 					</xpath>
@@ -125,7 +125,7 @@
 						<field name="customer_contact" required="True" context="{'default_parent_id': partner_id, 'show_email': 1}"
 							   domain="[('is_company', '=', False), ('customer', '=', True),('parent_id', '=', partner_id),('type', '=', 'contact')]"
 							   options='{"always_reload": True}'/>
-						<group col="4" colspan="2">
+						<group col="2" colspan="2">
 							<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"
 							   domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"
 							   attrs="{'readonly':[('state','not in','draft')]}"/>
@@ -143,13 +143,15 @@
 							   domain="[('type','!=', 'view'), ('id','child_of', medium)]" options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 						<field name="product_id" required="1"
 							   context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty,
-							   				'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
+							   				'pricelist':parent.pricelist_id, 'uom':product_uom}"
 							   domain="[('categ_id','=', ad_class)]"
                                groups="base.group_user"
 							   on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, False,
 							   				product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, False,
 							   				parent.fiscal_position, False, context)"
 							   options="{'limit': 10, 'create': false, 'create_edit': false}"/>
+
+							   <!--, 'shop':parent.shop_id-->
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/div/field[@name='product_uom_qty']" position="attributes">
 						<attribute name="on_change">qty_change(actual_unit_price, price_unit, parent.pricelist_id, product_id, product_uom_qty,
@@ -197,9 +199,9 @@
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='tax_id']" position="attributes">
 							<attribute name="groups">sale_advertising.group_traffic_user</attribute>
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='type']" position="attributes">
-							<attribute name="groups">base.group_no_one</attribute>
-					</xpath>
+					<!--<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='type']" position="attributes">-->
+							<!--<attribute name="groups">base.group_no_one</attribute>-->
+					<!--</xpath>-->
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='th_weight']" position="attributes">
 							<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
@@ -212,9 +214,9 @@
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group[2]/div[3]" position="attributes">
 							<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='property_ids']" position="attributes">
-							<attribute name="groups">base.group_no_one</attribute>
-					</xpath>
+					<!--<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='property_ids']" position="attributes">-->
+							<!--<attribute name="groups">base.group_no_one</attribute>-->
+					<!--</xpath>-->
 
 					<xpath expr="/form/sheet/notebook/page/field/form/label[@for='name']" position="before">
 						<group>

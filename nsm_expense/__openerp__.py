@@ -44,6 +44,7 @@ defined.
                 'analytic',
                 'hr_expense',
                 'megis_auth',
+                 "base_vat",
     ],
     'data'    : ["ir_rule.xml",
                  "hr_expense_view.xml",

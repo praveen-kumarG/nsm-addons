@@ -22,6 +22,8 @@
 from openerp.osv import fields, orm, osv
 from openerp.tools.translate import _
 
+from openerp import models, fields as fields2, api, _
+
 
 class crm_make_sale(orm.TransientModel):
     """ Make sale  order for crm """
@@ -137,7 +139,7 @@ class crm_make_sale(orm.TransientModel):
                     fpos = case.partner_id.property_account_position and case.partner_id.property_account_position.id or False
                     payment_term = case.partner_id.property_payment_term and case.partner_id.property_payment_term.id or False
                     if case.published_customer:
-                        vals['published_customer'] = case.published_customer and case.published_customer.id or False,
+                        vals['published_customer'] = case.published_customer and case.published_customer.id or False
                     if case.partner_id:
                         vals['partner_id'] = case.partner_id and case.partner_id.id or False
                     if case.ad_agency_id:
@@ -153,7 +155,7 @@ class crm_make_sale(orm.TransientModel):
                     'origin': _('Opportunity: %s') % str(case.id),
                     'section_id': case.section_id and case.section_id.id or False,
                     'categ_ids': [(6, 0, [categ_id.id for categ_id in case.categ_ids])],
-                    'shop_id': make.shop_id.id,
+                    # 'shop_id': make.shop_id.id,
                     'pricelist_id': pricelist,
                     'date_order': fields.date.context_today(self, cr, uid, context=context),
                     'fiscal_position': fpos,
@@ -196,25 +198,33 @@ class crm_make_sale(orm.TransientModel):
                 }
             return value
 
-    def _get_shop_id(self, cr, uid, ids, context=None):
-        cmpny_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
-        shop = self.pool.get('sale.shop').search(cr, uid, [('company_id', '=', cmpny_id)])
-        return shop and shop[0] or False
+    # def _get_shop_id(self, cr, uid, ids, context=None):
+    #     cmpny_id = self.pool.get('res.users')._get_company(cr, uid, context=context)
+    #     shop = self.pool.get('sale.shop').search(cr, uid, [('company_id', '=', cmpny_id)])
+    #     return shop and shop[0] or False
 
     _columns = {
-        'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
+        # 'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
         'agent': fields.many2one('res.partner', 'Agency', domain=[('customer','=',True),('is_company','=',True),('is_ad_agency','=',True)]),
         'advertiser': fields.many2one('res.partner', 'Advertiser',required=True,
                                       domain=[('customer','=',True),('is_company','=',True),('is_ad_agency','!=',True)]),
         'partner_id': fields.many2one('res.partner', 'Payer', required=True, invisible=True),
         'partner_dummy': fields.related('partner_id', string='Payer', type='many2one', relation='res.partner', readonly=True),
         'close': fields.boolean('Mark Won', help='Check this to close the opportunity after having created the sales order.'),
-        'update': fields.boolean('Update Advertiser/Agency',
+
+
+        # ---
+        # Keyword: 'update' causes conflicts hence renamed it to 'update1'
+        # --deep
+        # 'update': fields.boolean('Update Advertiser/Agency',
+        #                         help='Check this to be able to choose (other) advertiser/Agency.'),
+        'update1': fields.boolean('Update Advertiser/Agency',
                                 help='Check this to be able to choose (other) advertiser/Agency.'),
     }
     _defaults = {
-        'shop_id': _get_shop_id,
-        'update': False,
+        # 'shop_id': _get_shop_id,
+        # 'update': False,
+        'update1': False,
         'close': False,
         'advertiser': _selectAdvertiser,
         'partner_id': _selectPartner,
@@ -225,18 +235,22 @@ class crm_make_sale(orm.TransientModel):
 
     def onchange_advertiser(self, cr, uid, ids, advertiser, update, context):
         if not update:
-            return True
+            # return True
+            return {'value': {}}
         data = {'partner_id': advertiser, 'agent': False, 'partner_dummy': advertiser}
         return {'value': data}
 
 
     def onchange_agent(self, cr, uid, ids, agent, update, context):
         if not update:
-            return True
+            # return True
+            return {'value': {}}
         if agent:
             data = {'partner_id': agent, 'partner_dummy': agent}
             return {'value': data}
-        return True
+        # return True
+        return {'value': {}}
+
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

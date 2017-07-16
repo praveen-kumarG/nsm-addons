@@ -40,6 +40,7 @@ This module adds "publishing date" to analytic account.
     'website' : 'http://www.magnus.nl',
     'depends' : ['account',
 		'analytic',
+        'megis_auth'
     ],
     'data' : ["analytic_view.xml",
     ],

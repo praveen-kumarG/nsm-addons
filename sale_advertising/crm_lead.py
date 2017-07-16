@@ -24,6 +24,8 @@ from openerp.osv import fields, osv, orm
 import openerp.addons.decimal_precision as dp
 import time
 from openerp.tools.translate import _
+from openerp.tools import email_re, email_split
+
 
 class crm_lead(orm.Model):
     _inherit = "crm.lead"
@@ -53,6 +55,7 @@ class crm_lead(orm.Model):
     }
 
     def onchange_published_customer(self, cr, uid, ids, published_customer, context):
+        values = {}
         if published_customer:
             advertiser = self.pool.get('res.partner').browse(cr, uid, published_customer, context=context)
             values = {
@@ -185,8 +188,8 @@ class crm_lead(orm.Model):
             adv = partner.browse(cr, uid, advertiser, context=context)
 
         for lead in self.browse(cr, uid, ids, context=context):
-            if lead.state in ('done', 'cancel'):
-                continue
+            # if lead.state in ('done', 'cancel'):
+            #     continue
             vals = self._convert_opportunity_data(cr, uid, lead, adv, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
         self.message_post(cr, uid, ids, body=_("Lead <b>converted into an Opportunity</b>"), subtype="crm.mt_lead_convert_to_opportunity", context=context)
@@ -213,7 +216,8 @@ class crm_lead(orm.Model):
         force_advertiser_id = advertiser
         for lead in self.browse(cr, uid, ids, context=context):
             # If the action is set to 'create' and no partner_id is set, create a new one
-            if action == 'create':
+            # if action == 'create':
+            if action in ('create', 'nothing'):
                 advertiser = force_advertiser_id or self._create_lead_partner(cr, uid, lead, context)
             self._lead_set_partner(cr, uid, lead, advertiser, context=context)
             advertiser_ids[lead.id] = advertiser
@@ -259,16 +263,36 @@ class crm_lead(orm.Model):
         if advertiser:
             res_partner.write(cr, uid, advertiser, {'section_id': lead.section_id and lead.section_id.id or False})
             contact_id = res_partner.address_get(cr, uid, [advertiser])['default']
-            res = lead.write({'published_customer': advertiser}, context=context)
+            # res = lead.write({'published_customer': advertiser}, context=context)
+            # TODO: FIXME, check is this correct?
+            res = lead.write({'published_customer': advertiser, 'partner_id': advertiser}, context=context)
             message = _("<b>Advertiser</b> set to <em>%s</em>." % (lead.published_customer.name))
             self.message_post(cr, uid, [lead.id], body=message, context=context)
         return res
 
 
 
+    # -- deep added
+    def _get_duplicated_leads_by_emails(self, cr, uid, partner_id, email, include_lost=False, context=None):
+        """
+        Search for opportunities that have   the same partner and that arent done or cancelled
+        """
 
+        final_stage_domain = [('stage_id.probability', '<', 100), '|', ('stage_id.probability', '>', 0), ('stage_id.sequence', '<=', 1)]
+        partner_match_domain = []
+        for email in set(email_split(email) + [email]):
+            partner_match_domain.append(('email_from', '=ilike', email))
+        if partner_id:
+            partner_match_domain.append(('partner_id', '=', partner_id['partner_id']))
+            partner_match_domain.append(('published_customer', '=', partner_id['advertiser']))
+        partner_match_domain = ['|'] * (len(partner_match_domain) - 1) + partner_match_domain
+        if not partner_match_domain:
+            return []
+        domain = partner_match_domain
+        if not include_lost:
+            domain += final_stage_domain
 
-
+        return self.search(cr, uid, domain, context=context)
 
 
 

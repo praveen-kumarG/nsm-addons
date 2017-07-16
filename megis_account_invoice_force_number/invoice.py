@@ -22,11 +22,23 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, orm
+# from openerp.osv import fields, orm
+
+from openerp import models, fields, api, _
+
+# class account_invoice(orm.Model):
+#     _inherit = "account.invoice"
+#     _columns = {
+#         'internal_number': fields.char(
+#             'Invoice Number', size=32, readonly=True,
+#             states={'draft': [('readonly', False)]}),
+#     }
 
 
-class account_invoice(orm.Model):
-    _inherit = "account.invoice"
-    _columns = {
-        'internal_number': fields.char('Invoice Number', size=32, readonly=True, states={'draft': [('readonly', False)]}),
-    }
+class Invoice(models.Model):
+    _inherit = ["account.invoice"]
+
+    internal_number = fields.Char(string='Invoice Number', readonly=True,
+        default=False, copy=False,
+        states={'draft': [('readonly', False)]},
+        help="Unique number of the invoice, computed automatically when the invoice is created.")

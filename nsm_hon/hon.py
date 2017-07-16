@@ -481,7 +481,9 @@ class hon_issue_line(orm.Model):
         if context is None:
             context = {}
         if not partner_id :
-            raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
+            # raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
+            return {'value':{}}
+
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         result = {}
         if part.employee :
@@ -527,9 +529,13 @@ class hon_issue_line(orm.Model):
         context = dict(context)
         context.update({'company_id': company_id, 'force_company': company_id})
         if not partner_id :
-            raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
+            # raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
+            return {'value':{}}
+
         if not product:
-            raise osv.except_osv(_('No Product Defined!'),_("You must first select a Product!") )
+            # raise osv.except_osv(_('No Product Defined!'),_("You must first select a Product!") )
+            return {'value':{}}
+
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         if part.lang:
             context.update({'lang': part.lang})

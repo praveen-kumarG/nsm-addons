@@ -91,10 +91,16 @@ class sale_order_line_create_multi_lines(orm.TransientModel):
                        'product_uos_qty': uos_qty,}
                 vals = sales_order_line_obj.copy_data(cr, uid, ol.id, default=res, context=context)
                 mol_id = sales_order_line_obj.create(cr, uid, vals, context=context)
-                del context['__copy_data_seen']
+
+                try:
+                    del context['__copy_data_seen']
+                except: pass
                 lines.append(mol_id)
 
-            sales_order_line_obj.unlink(cr, uid, [ol.id])
+            # TODO: FIXME
+            # sales_order_line_obj.unlink(cr, uid, [ol.id])
+            cr.execute("delete from sale_order_line where id = %s"%(ol.id))
+
 
         return
 

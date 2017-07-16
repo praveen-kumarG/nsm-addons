@@ -1,7 +1,9 @@
-# -*- coding: utf-8 -*-
+# -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    Copyright 2014 BAS Solutions
+#    OpenERP, Open Source Management Solution
+#    This module copyright (C) 2014 Akretion
+#    (<http://www.akretion.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -17,16 +19,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from openerp.osv import osv
-import openerp.addons.decimal_precision as dp
-from openerp.osv import fields
 
 
-class res_company(osv.osv):
-    _inherit = 'res.company'
+from openerp.openupgrade import openupgrade, openupgrade_80
 
-    _columns = {
-        'decl_journal_id': fields.many2one('account.journal', 'Declaration Journal', domain=[('type','=','purchase')], required=True),
 
-    }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
+@openupgrade.migrate()
+def migrate(cr, version):
+
+    cr.execute("update ir_module_module set state = 'to install' where name = 'account_banking_payment_transfer';")
+
+

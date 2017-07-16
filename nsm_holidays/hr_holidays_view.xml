@@ -23,7 +23,8 @@
         <record model="ir.ui.view" id="allocation_leave_new_hrs">
             <field name="name">Allocation Request</field>
             <field name="model">hr.holidays</field>
-            <field name="inherit_id" ref="hr_holidays.allocation_leave_new"/>
+            <!--<field name="inherit_id" ref="hr_holidays.allocation_leave_new"/>-->
+            <field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>
             <field name="arch" type="xml">
                 <field name="number_of_days_temp" position="replace">
                     <field name="number_of_days_temp" class="oe_inline"/> hours 

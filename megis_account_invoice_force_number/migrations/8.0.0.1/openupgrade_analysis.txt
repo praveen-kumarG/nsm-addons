@@ -1,0 +1,30 @@
+---Fields in module 'megis_account_invoice_force_number'---
+megis_account_invoice_force_number / account.invoice          / account_id (many2one)         : DEL relation: account.account, required: required
+megis_account_invoice_force_number / account.invoice          / check_total (float)           : DEL 
+megis_account_invoice_force_number / account.invoice          / comment (text)                : DEL 
+megis_account_invoice_force_number / account.invoice          / company_id (many2one)         : DEL relation: res.company, required: required, req_default: function
+megis_account_invoice_force_number / account.invoice          / currency_id (many2one)        : DEL relation: res.currency, required: required, req_default: function
+megis_account_invoice_force_number / account.invoice          / date_due (date)               : DEL 
+megis_account_invoice_force_number / account.invoice          / date_invoice (date)           : DEL 
+megis_account_invoice_force_number / account.invoice          / fiscal_position (many2one)    : DEL relation: account.fiscal.position
+megis_account_invoice_force_number / account.invoice          / internal_number (char)        : DEL 
+megis_account_invoice_force_number / account.invoice          / invoice_line (one2many)       : DEL relation: account.invoice.line
+megis_account_invoice_force_number / account.invoice          / journal_id (many2one)         : DEL relation: account.journal, required: required, req_default: function
+megis_account_invoice_force_number / account.invoice          / message_ids (one2many)        : DEL relation: mail.message
+megis_account_invoice_force_number / account.invoice          / move_id (many2one)            : DEL relation: account.move
+megis_account_invoice_force_number / account.invoice          / move_name (char)              : DEL 
+megis_account_invoice_force_number / account.invoice          / name (char)                   : DEL 
+megis_account_invoice_force_number / account.invoice          / origin (char)                 : DEL 
+megis_account_invoice_force_number / account.invoice          / partner_bank_id (many2one)    : DEL relation: res.partner.bank
+megis_account_invoice_force_number / account.invoice          / partner_id (many2one)         : DEL relation: res.partner, required: required
+megis_account_invoice_force_number / account.invoice          / payment_term (many2one)       : DEL relation: account.payment.term
+megis_account_invoice_force_number / account.invoice          / period_id (many2one)          : DEL relation: account.period
+megis_account_invoice_force_number / account.invoice          / reference (char)              : DEL 
+megis_account_invoice_force_number / account.invoice          / reference_type (selection)    : DEL required: required, selection_keys: function, req_default: none
+megis_account_invoice_force_number / account.invoice          / sent (boolean)                : DEL 
+megis_account_invoice_force_number / account.invoice          / state (selection)             : DEL selection_keys: ['cancel', 'draft', 'open', 'paid', 'proforma', 'proforma2']
+megis_account_invoice_force_number / account.invoice          / supplier_invoice_number (char): DEL 
+megis_account_invoice_force_number / account.invoice          / tax_line (one2many)           : DEL relation: account.invoice.tax
+megis_account_invoice_force_number / account.invoice          / type (selection)              : DEL selection_keys: ['in_invoice', 'in_refund', 'out_invoice', 'out_refund']
+megis_account_invoice_force_number / account.invoice          / user_id (many2one)            : DEL relation: res.users
+---XML records in module 'megis_account_invoice_force_number'---

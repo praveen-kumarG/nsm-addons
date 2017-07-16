@@ -143,12 +143,16 @@
                     <field name="published_customer" string="Advertiser" domain="[('is_ad_agency','!=', True),('is_company','=', True),('customer','=', True)]"
                            on_change="onchange_published_customer(published_customer, context)"/>
                     <field name="ad_agency_id" string="Agency" domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"
-                           on_change="onchange_agency(ad_agency_id, context)" attrs="{'invisible': [('published_customer','=',False)]}"/>
+                           on_change="onchange_agency(ad_agency_id, context)"
+                           attrs="{'invisible': [('published_customer','=',False)]}"
+                            />
                 </xpath>
                 <xpath  expr="/form/sheet/group/group/field[@name='email_from']" position="before">
                     <field name="partner_contact_id" string="Contact Person" context="{'default_parent_id': partner_id}"
                            domain="[('is_company', '=', False), ('customer', '=', True),('parent_id', '=', partner_id),('type', '=', 'contact')]"
-                           on_change="onchange_contact(partner_contact_id, context)" attrs="{'invisible': [('published_customer','=',False)]}"/>
+                           on_change="onchange_contact(partner_contact_id, context)"
+                           attrs="{'invisible': [('published_customer','=',False)]}"
+                            />
                 </xpath>
                 <xpath  expr="/form/sheet/group/group/field[@name='user_id']" position="after">
                     <field name="partner_acc_mgr" string="Account Manager" readonly="True"/>
@@ -361,7 +365,9 @@
                     <field name="published_customer" string="Advertiser" domain="[('is_ad_agency','!=', True),('is_company','=', True),('customer','=', True)]"
                            on_change="onchange_published_customer(published_customer, context)"/>
                     <field name="ad_agency_id" string="Agency" domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"
-                           on_change="onchange_agency(ad_agency_id, context)" attrs="{'invisible': [('published_customer','=',False)]}"/>
+                           on_change="onchange_agency(ad_agency_id, context)"
+                           attrs="{'invisible': [('published_customer','=',False)]}"
+                            />
                 </xpath>
                 <xpath  expr="/form/sheet/notebook/page/group/group/label[@for='street']" position="attributes">
                     <attribute name="string">Invoice Address Payer</attribute>
@@ -369,7 +375,9 @@
                 <xpath  expr="/form/sheet/group/group/field[@name='email_from']" position="before">
                     <field name="partner_contact_id" string="Contact Person" context="{'default_parent_id': partner_id}"
                            domain="[('is_company', '=', False), ('customer', '=', True),('parent_id', '=', partner_id),('type', '=', 'contact')]"
-                           on_change="onchange_contact(partner_contact_id, context)" attrs="{'invisible': [('published_customer','=',False)]}"/>
+                           on_change="onchange_contact(partner_contact_id, context)"
+                           attrs="{'invisible': [('published_customer','=',False)]}"
+                            />
                 </xpath>
                 <xpath  expr="/form/sheet/group/group/field[@name='user_id']" position="after">
                     <field name="partner_acc_mgr" string="Account Manager" readonly="True"/>
