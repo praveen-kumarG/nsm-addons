@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2016 Magnus (<http://www.magnus.nl>). All Rights Reserved
 #    $Id$
 #
@@ -24,6 +24,8 @@ from openerp.osv import fields, osv, orm
 import openerp.addons.decimal_precision as dp
 import time
 from openerp.tools.translate import _
+
+from openerp import api, fields as fields1, models, _
 
 
 
@@ -88,7 +90,10 @@ class sale_order(orm.Model):
 
     def _amount_line_tax(self, cr, uid, line, context=None):
         val = 0.0
-        for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.actual_unit_price * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.product_id, line.order_id.partner_id)['taxes']:
+        print "line.tax_id", line.tax_id
+        # for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id, line.actual_unit_price * (1-(line.discount or 0.0)/100.0), line.product_uom_qty, line.product_id, line.order_id.partner_id)['taxes']:
+        for c in self.pool.get('account.tax').compute_all(cr, uid, line.tax_id.id, price_unit=line.actual_unit_price * (1-(line.discount or 0.0)/100.0),
+                                                          quantity=line.product_uom_qty, product_id=line.product_id)['taxes']:
             val += c.get('amount', 0.0)
         return val
 
@@ -118,23 +123,23 @@ class sale_order(orm.Model):
         'partner_acc_mgr': fields.related('published_customer', 'user_id', type='many2one', relation='res.users', string='Account Manager', store=True , readonly=True),
         'date_from': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date from"),
         'date_to': fields.function(lambda *a, **k: {}, method=True, type='date', string="Date to"),
-        'state': fields.selection([
-            ('draft', 'Draft Quotation'),
-            ('submitted', 'Submitted for Approval'),
-            ('approved1', 'Approved by Sales Mgr'),
-            ('approved2', 'Approved by Traffic'),
-            ('sent', 'Quotation Sent'),
-            ('cancel', 'Cancelled'),
-            ('waiting_date', 'Waiting Schedule'),
-            ('progress', 'Sales Order'),
-            ('manual', 'Sale to Invoice'),
-            ('invoice_except', 'Invoice Exception'),
-            ('done', 'Done'),
-        ], 'Status', readonly=True, track_visibility='onchange',
-            help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a "
-                 "cancel operation occurs in the processing of a document linked to the sales order. \nThe 'Waiting Schedule' "
-                 "status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.",
-            select=True),
+        # 'state': fields.selection([
+        #     ('draft', 'Draft Quotation'),
+        #     ('submitted', 'Submitted for Approval'),
+        #     ('approved1', 'Approved by Sales Mgr'),
+        #     ('approved2', 'Approved by Traffic'),
+        #     ('sent', 'Quotation Sent'),
+        #     ('cancel', 'Cancelled'),
+        #     ('waiting_date', 'Waiting Schedule'),
+        #     ('progress', 'Sales Order'),
+        #     ('manual', 'Sale to Invoice'),
+        #     ('invoice_except', 'Invoice Exception'),
+        #     ('done', 'Done'),
+        # ], 'Status', readonly=True, track_visibility='onchange',
+        #     help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a "
+        #          "cancel operation occurs in the processing of a document linked to the sales order. \nThe 'Waiting Schedule' "
+        #          "status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.",
+        #     select=True),
         'amount_untaxed': fields.function(_amount_all, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
                                 store={'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line'], 10),
                                        'sale.order.line':(_get_order, ['actual_unit_price', 'tax_id', 'discount', 'product_uom_qty'], 10),
@@ -162,28 +167,31 @@ class sale_order(orm.Model):
         'nett_nett': False,
     }
 
-    def onchange_published_customer(self, cr, uid, ids, published_customer, context):
-        data = {'partner_id':published_customer, 'partner_invoice_id': False,
-                'partner_shipping_id':False, 'partner_order_id':False, 'advertising_agency': False}
-        if published_customer:
-            address = self.onchange_partner_id(cr, uid, ids, published_customer, context)
-            data.update(address['value'])
-        return {'value' : data }
+    # rewritten below:
+    # def onchange_published_customer(self, cr, uid, ids, published_customer, context):
+    #     data = {'partner_id':published_customer, 'partner_invoice_id': False,
+    #             'partner_shipping_id':False, 'partner_order_id':False, 'advertising_agency': False}
+    #     if published_customer:
+    #         address = self.onchange_partner_id(cr, uid, ids, published_customer, context)
+    #         data.update(address['value'])
+    #     return {'value' : data }
 
-    def onchange_advertising_agency(self, cr, uid, ids, ad_agency, context):
-        if ad_agency:
-            data = {'partner_id': ad_agency, 'partner_invoice_id': False, 'partner_shipping_id': False,
-                    'partner_order_id': False}
-            address = self.onchange_partner_id(cr, uid, ids, ad_agency, context)
-            data.update(address['value'])
-            return {'value' : data}
-        return True
+    # rewritten below:
+    # def onchange_advertising_agency(self, cr, uid, ids, ad_agency, context):
+    #     if ad_agency:
+    #         data = {'partner_id': ad_agency, 'partner_invoice_id': False, 'partner_shipping_id': False,
+    #                 'partner_order_id': False}
+    #         address = self.onchange_partner_id(cr, uid, ids, ad_agency, context)
+    #         data.update(address['value'])
+    #         return {'value' : data}
+    #     return True
 
     def action_submit(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot submit a quotation/sales order which has no line.'))
-        return True
+        # return True
+        return self.write(cr, uid, ids, {'state':'submitted'})
 
     def action_approve2(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids):
@@ -191,33 +199,34 @@ class sale_order(orm.Model):
                        {'state': 'approved2', 'traffic_appr_date': fields.date.context_today(self, cr, uid, context=context)})
         return True
 
-    def onchange_partner_id(self, cr, uid, ids, part, lines, context=None):
-        res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
-        if not part:
-            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'customer_contact': False, 'payment_term': False, 'fiscal_position': False}}
-        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
-        if part.type == 'contact':
-            contact = self.pool['res.partner'].search(cr, uid, [('is_company','=', False),('type','=', 'contact'),('parent_id','=', part.id)], context=context)
-            if len(contact) >=1:
-                contact_id = contact[0]
-            else:
-                contact_id = False
-        elif addr['contact'] == addr['default']:
-            contact_id = False
-        else: contact_id = addr['contact']
-
-        result = {}
-        if lines:
-            result['warning'] = {'title':_('Warning'),
-                                 'message':_('Changing the Customer can have a change in Agency Discount as a result.'
-                                             'This change will only show after saving the order!'
-                                             'Before saving the order the order lines and the total amounts may therefor'
-                                             'show wrong values.')}
-            res.update(result)
-        res['value']['user_id'] = uid
-        res['value']['customer_contact'] = contact_id
-        return res
+    # rewritten below:
+    # def onchange_partner_id2(self, cr, uid, ids, part, lines, context=None):
+    #     res = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
+    #     if not part:
+    #         return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'customer_contact': False, 'payment_term': False, 'fiscal_position': False}}
+    #     part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
+    #     addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
+    #     if part.type == 'contact':
+    #         contact = self.pool['res.partner'].search(cr, uid, [('is_company','=', False),('type','=', 'contact'),('parent_id','=', part.id)], context=context)
+    #         if len(contact) >=1:
+    #             contact_id = contact[0]
+    #         else:
+    #             contact_id = False
+    #     elif addr['contact'] == addr['default']:
+    #         contact_id = False
+    #     else: contact_id = addr['contact']
+    #
+    #     result = {}
+    #     if lines:
+    #         result['warning'] = {'title':_('Warning'),
+    #                              'message':_('Changing the Customer can have a change in Agency Discount as a result.'
+    #                                          'This change will only show after saving the order!'
+    #                                          'Before saving the order the order lines and the total amounts may therefor'
+    #                                          'show wrong values.')}
+    #         res.update(result)
+    #     res['value']['user_id'] = uid
+    #     res['value']['customer_contact'] = contact_id
+    #     return res
 
     def update_line_discount(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
@@ -226,7 +235,7 @@ class sale_order(orm.Model):
         discount = order.partner_id.agency_discount or 0.0
         if order.nett_nett:
             discount = 0.0
-        fiscal_position = order.partner_id.property_account_position.id
+        fiscal_position = order.partner_id.property_account_position_id.id
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         line_ids = self.pool['sale.order.line'].search(cr, uid, [('order_id', 'in', ids)], context=context)
         if line_ids:
@@ -287,46 +296,47 @@ class sale_advertising_issue(orm.Model):
 class sale_order_line(orm.Model):
     _inherit = "sale.order.line"
 
-    def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
-        tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
-        res = {}
-
-        if context is None:
-            context = {}
-        for line in self.browse(cr, uid, ids, context=context):
-            comp_discount = 0.0
-            res[line.id] = {
-                'price_unit': 0.0,
-                'computed_discount': 0.0,
-                'price_subtotal': 0.0,
-            }
-            if not line.order_id.date_order:
-                date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
-            else: date_order = line.order_id.date_order
-            pricelist = line.order_id.pricelist_id and line.order_id.pricelist_id.id or False
-            product_id = line.product_id and line.product_id.id or False
-            order_partner_id = line.order_id.partner_id and line.order_id.partner_id.id or False
-            discount = line.discount or 0.0
-            if line.order_id.nett_nett:
-                discount = 0.0
-            product_uom = line.product_uom and line.product_uom.id or False
-            if product_id:
-                unit_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id,
-                                                        line.product_uom_qty or 1.0, order_partner_id,
-                                                    {'uom': product_uom, 'date': date_order,})[pricelist]
-            else: unit_price = 0.0
-            if unit_price > 0.0:
-                comp_discount = (unit_price - line.actual_unit_price)/unit_price * 100.0
-            price = line.actual_unit_price * (1 - discount / 100.0)
-            subtotal_bad = line.actual_unit_price * line.product_uom_qty
-            taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, order_partner_id)
-            cur = line.order_id.pricelist_id.currency_id
-            res[line.id]['price_unit'] = unit_price
-            res[line.id]['computed_discount'] = comp_discount
-            res[line.id]['subtotal_before_agency_disc'] = subtotal_bad
-            res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, taxes['total'])
-        return res
+    # rewritten below
+    # def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
+    #     tax_obj = self.pool.get('account.tax')
+    #     cur_obj = self.pool.get('res.currency')
+    #     res = {}
+    #
+    #     if context is None:
+    #         context = {}
+    #     for line in self.browse(cr, uid, ids, context=context):
+    #         comp_discount = 0.0
+    #         res[line.id] = {
+    #             'price_unit': 0.0,
+    #             'computed_discount': 0.0,
+    #             'price_subtotal': 0.0,
+    #         }
+    #         if not line.order_id.date_order:
+    #             date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
+    #         else: date_order = line.order_id.date_order
+    #         pricelist = line.order_id.pricelist_id and line.order_id.pricelist_id.id or False
+    #         product_id = line.product_id and line.product_id.id or False
+    #         order_partner_id = line.order_id.partner_id and line.order_id.partner_id.id or False
+    #         discount = line.discount or 0.0
+    #         if line.order_id.nett_nett:
+    #             discount = 0.0
+    #         product_uom = line.product_uom and line.product_uom.id or False
+    #         if product_id:
+    #             unit_price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist], product_id,
+    #                                                     line.product_uom_qty or 1.0, order_partner_id,
+    #                                                 {'uom': product_uom, 'date': date_order,})[pricelist]
+    #         else: unit_price = 0.0
+    #         if unit_price > 0.0:
+    #             comp_discount = (unit_price - line.actual_unit_price)/unit_price * 100.0
+    #         price = line.actual_unit_price * (1 - discount / 100.0)
+    #         subtotal_bad = line.actual_unit_price * line.product_uom_qty
+    #         taxes = tax_obj.compute_all(cr, uid, line.tax_id, price, line.product_uom_qty, line.product_id, order_partner_id)
+    #         cur = line.order_id.pricelist_id.currency_id
+    #         res[line.id]['price_unit'] = unit_price
+    #         res[line.id]['computed_discount'] = comp_discount
+    #         res[line.id]['subtotal_before_agency_disc'] = subtotal_bad
+    #         res[line.id]['price_subtotal'] = cur_obj.round(cr, uid, cur, taxes['total'])
+    #     return res
 
 
     _columns = {
@@ -354,10 +364,11 @@ class sale_order_line(orm.Model):
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', string='Customer'),
         'discount_dummy': fields.related('discount', type='float', string='Agency Commission (%)',readonly=True ),
         'actual_unit_price' :fields.float('Actual Unit Price', required=True, digits_compute=dp.get_precision('Actual Unit Price'), readonly=True, states={'draft': [('readonly', False)]}),
-        'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), multi=True),
-        'computed_discount' :fields.function(_amount_line, string='Discount (%)', digits_compute=dp.get_precision('Account'), type="float", multi=True),
-        'subtotal_before_agency_disc': fields.function(_amount_line, string='Subtotal before Commission', digits_compute=dp.get_precision('Account'), type="float", multi=True),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type="float", multi=True),
+
+        # 'price_unit': fields.function(_amount_line, string='Unit Price', type='float', digits_compute=dp.get_precision('Product Price'), multi=True),
+        # 'computed_discount' :fields.function(_amount_line, string='Discount (%)', digits_compute=dp.get_precision('Account'), type="float", multi=True),
+        # 'subtotal_before_agency_disc': fields.function(_amount_line, string='Subtotal before Commission', digits_compute=dp.get_precision('Account'), type="float", multi=True),
+        # 'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute=dp.get_precision('Account'), type="float", multi=True),
     }
 
     _defaults = {
@@ -409,20 +420,21 @@ class sale_order_line(orm.Model):
 
         return {'value': vals, 'domain': data}
 
-    def onchange_adv_issue_ids(self, cr, uid, ids, adv_issue_id=False, adv_issue_ids=False, context=None):
-        if context is None:
-            context = {}
-        vals = {}
-        if not adv_issue_id and adv_issue_ids:
-            if len(adv_issue_ids[0][2]) >= 1:
-                qty = len(adv_issue_ids[0][2])
-            else:
-                qty = 0
-        elif adv_issue_id:
-            qty = 1
-
-        vals['product_uom_qty'] = qty
-        return {'value': vals}
+    # rewitten below
+    # def onchange_adv_issue_ids(self, cr, uid, ids, adv_issue_id=False, adv_issue_ids=False, context=None):
+    #     if context is None:
+    #         context = {}
+    #     vals = {}
+    #     if not adv_issue_id and adv_issue_ids:
+    #         if len(adv_issue_ids[0][2]) >= 1:
+    #             qty = len(adv_issue_ids[0][2])
+    #         else:
+    #             qty = 0
+    #     elif adv_issue_id:
+    #         qty = 1
+    #
+    #     vals['product_uom_qty'] = qty
+    #     return {'value': vals}
 
 
     def onchange_ad_class(self, cr, uid, ids, ad_class=False, context=None):
@@ -454,39 +466,41 @@ class sale_order_line(orm.Model):
         if context is None:
             context = {}
         vals = {}
+
         if date_type:
             if date_type == 'date':
                 if dateperiods:
-                    vals['dateperiods'] = [(2,x[1]) for x in dateperiods]
+                    vals['dateperiods'] = [(6,0,[])] #[(2,x[1]) for x in dateperiods]
                 if adv_issue_ids:
                     vals['adv_issue_ids'] = [(6,0,[])]
             elif date_type == 'validity':
                 if dates:
-                    vals['dates'] = [(2, x[1]) for x in dates]
+                    vals['dates'] = [(6,0,[])] #[(2, x[1]) for x in dates]
                 if adv_issue_ids:
                     vals['adv_issue_ids'] = [(6,0,[])]
             elif date_type == 'issue_date':
                 if dates:
-                    vals['dates'] = [(2, x[1]) for x in dates]
+                    vals['dates'] = [(6,0,[])] #[(2, x[1]) for x in dates]
                 if dateperiods:
-                    vals['dateperiods'] = [(2, x[1]) for x in dateperiods]
+                    vals['dateperiods'] = [(6,0,[])] #[(2, x[1]) for x in dateperiods]
         return {'value': vals}
 
 
-    def onchange_dates(self, cr, uid, ids, dates=False, context=None):
-        if context is None:
-            context = {}
-        vals = {}
-        if dates:
-            if len(dates) >= 1:
-                qty = len(dates)
-            else:
-                qty = 0
-        else:
-            qty = 0
-
-        vals['product_uom_qty'] = qty
-        return {'value': vals}
+    # # rewritten below
+    # def onchange_dates(self, cr, uid, ids, dates=False, context=None):
+    #     if context is None:
+    #         context = {}
+    #     vals = {}
+    #     if dates:
+    #         if len(dates) >= 1:
+    #             qty = len(dates)
+    #         else:
+    #             qty = 0
+    #     else:
+    #         qty = 0
+    #
+    #     vals['product_uom_qty'] = qty
+    #     return {'value': vals}
 
 
     def onchange_actualup(self, cr, uid, ids, actual_unit_price=False, price_unit=False, qty=0.0, discount=False, context=None):
@@ -533,45 +547,45 @@ class sale_order_line(orm.Model):
             vals['actual_unit_price'] = price_unit
         return {'value': vals}
 
-
-    def qty_change(self, cr, uid, ids, actual_unit_price=0.0, price_unit=0.0, pricelist=False, product=False, qty=0, uom=False, qty_uos=0, uos=False, name='',
-            partner_id=False, lang=False, update_tax=True, date_order=False, adv_issue_ids=False, dates=False, date_type=False,
-            packaging=False, nett_nett=False, fiscal_position=False, flag=False, context=None):
-        res = self.product_id_change(cr, uid, ids, pricelist=pricelist, product=product, qty=qty, uom=uom,
-                                     qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id, lang=lang,
-                                     update_tax=update_tax, date_order=date_order,
-                                     packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
-        mqty = False
-        if date_type == 'issue_date' and adv_issue_ids:
-            if len(adv_issue_ids[0][2]) >= 1:
-                mqty = len(adv_issue_ids[0][2])
-            else:
-                mqty = 0
-
-        if date_type == 'date' and dates:
-            if len(dates) >= 1:
-                mqty = len(dates)
-            else:
-                mqty = 0
-        if mqty:
-            qty = mqty
-            res['value']['product_uom_qty'] = qty
-        partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
-        if partner.is_ad_agency and not nett_nett:
-            discount = partner.agency_discount
-        else:
-            discount = 0.0
-        res['value'].update({'discount': discount, 'discount_dummy': discount})
-        if 'price_unit' in res['value']:
-            pu = res['value']['price_unit']
-            if pu != price_unit:
-                actual_unit_price = pu
-        else:
-            pu = 0.0
-        res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=actual_unit_price, price_unit=pu, qty=qty,
-                                      discount=discount, context=context)
-        res['value'].update(res2['value'])
-        return res
+    # # rewritten below
+    # def qty_change(self, cr, uid, ids, actual_unit_price=0.0, price_unit=0.0, pricelist=False, product=False, qty=0, uom=False, qty_uos=0, uos=False, name='',
+    #         partner_id=False, lang=False, update_tax=True, date_order=False, adv_issue_ids=False, dates=False, date_type=False,
+    #         packaging=False, nett_nett=False, fiscal_position=False, flag=False, context=None):
+    #     res = self.product_id_change(cr, uid, ids, pricelist=pricelist, product=product, qty=qty, uom=uom,
+    #                                  qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id, lang=lang,
+    #                                  update_tax=update_tax, date_order=date_order,
+    #                                  packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+    #     mqty = False
+    #     if date_type == 'issue_date' and adv_issue_ids:
+    #         if len(adv_issue_ids[0][2]) >= 1:
+    #             mqty = len(adv_issue_ids[0][2])
+    #         else:
+    #             mqty = 0
+    #
+    #     if date_type == 'date' and dates:
+    #         if len(dates) >= 1:
+    #             mqty = len(dates)
+    #         else:
+    #             mqty = 0
+    #     if mqty:
+    #         qty = mqty
+    #         res['value']['product_uom_qty'] = qty
+    #     partner = self.pool['res.partner'].browse(cr, uid, partner_id, context=context)
+    #     if partner.is_ad_agency and not nett_nett:
+    #         discount = partner.agency_discount
+    #     else:
+    #         discount = 0.0
+    #     res['value'].update({'discount': discount, 'discount_dummy': discount})
+    #     if 'price_unit' in res['value']:
+    #         pu = res['value']['price_unit']
+    #         if pu != price_unit:
+    #             actual_unit_price = pu
+    #     else:
+    #         pu = 0.0
+    #     res2 = self.onchange_actualup(cr, uid, ids, actual_unit_price=actual_unit_price, price_unit=pu, qty=qty,
+    #                                   discount=discount, context=context)
+    #     res['value'].update(res2['value'])
+    #     return res
 
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
@@ -644,6 +658,239 @@ class sale_advertising_proof(orm.Model):
         'number': 1,
     }
 
+
+
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
+
+    state = fields1.Selection([
+        ('draft', 'Quotation'),
+        ('submitted', 'Submitted for Approval'),
+        ('approved1', 'Approved by Sales Mgr'),
+        ('approved2', 'Approved by Traffic'),
+        ('sent', 'Quotation Sent'),
+        ('sale', 'Sale Order'),
+        ('done', 'Done'),
+        ('cancel', 'Cancelled'),
+        ], string='Status', readonly=True, copy=False, index=True, track_visibility='onchange', default='draft')
+
+
+    # overridden:
+    @api.multi
+    @api.onchange('partner_id', 'published_customer', 'advertising_agency')
+    def onchange_partner_id(self):
+        """
+        Update the following fields when the partner is changed:
+        - Pricelist
+        - Payment term
+        - Invoice address
+        - Delivery address
+        """
+        if self.published_customer:
+            self.partner_id = self.published_customer.id
+
+        if self.advertising_agency:
+            self.partner_id = self.advertising_agency
+
+        if not self.partner_id:
+            self.update({
+                'partner_invoice_id': False,
+                'partner_shipping_id': False,
+                'payment_term_id': False,
+                'fiscal_position_id': False,
+                'customer_contact': False
+            })
+            return
+
+        addr = self.partner_id.address_get(['delivery', 'invoice'])
+        values = {
+            'pricelist_id': self.partner_id.property_product_pricelist and self.partner_id.property_product_pricelist.id or False,
+            'payment_term_id': self.partner_id.property_payment_term_id and self.partner_id.property_payment_term_id.id or False,
+            'partner_invoice_id': addr['invoice'],
+            'partner_shipping_id': addr['delivery'],
+        }
+        if self.env.user.company_id.sale_note:
+            values['note'] = self.with_context(lang=self.partner_id.lang).env.user.company_id.sale_note
+
+        if self.partner_id.user_id:
+            values['user_id'] = self.partner_id.user_id.id
+        if self.partner_id.team_id:
+            values['team_id'] = self.partner_id.team_id.id
+        self.update(values)
+
+        if self.partner_id.type == 'contact':
+            contact = self.env['res.partner'].search([('is_company','=', False),('type','=', 'contact'),('parent_id','=', self.partner_id.id)])
+            if len(contact) >=1:
+                contact_id = contact[0]
+            else:
+                contact_id = False
+        elif addr['contact'] == addr['default']:
+            contact_id = False
+        else: contact_id = addr['contact']
+
+        if self.order_line:
+            warning = {'title':_('Warning'),
+                                 'message':_('Changing the Customer can have a change in Agency Discount as a result.'
+                                             'This change will only show after saving the order!'
+                                             'Before saving the order the order lines and the total amounts may therefor'
+                                             'show wrong values.')}
+            return {'warning': warning}
+        values['user_id'] = self._uid
+        values['customer_contact'] = contact_id
+        self.update(values)
+
+    # --added deep
+    @api.multi
+    def action_approve1(self):
+        self.action_submit()
+        return self.write({'state':'approved1'})
+
+    # --added deep
+    @api.multi
+    def action_refuse(self):
+        self.action_submit()
+        return self.write({'state':'draft'})
+
+    # overridden: -- added deep
+    @api.multi
+    def print_quotation(self):
+        self.filtered(lambda s: s.state == 'approved2').write({'state': 'sent'})
+        return self.env['report'].get_action(self, 'sale.report_saleorder')
+
+
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    @api.depends('product_uom_qty', 'discount', 'price_unit', 'tax_id')
+    def _compute_amount(self):
+        """
+        Compute the amounts of the SO line.
+        """
+        for line in self:
+
+            if not line.order_id.date_order:
+                date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
+            else: date_order = line.order_id.date_order
+
+            pricelist = line.order_id.pricelist_id and line.order_id.pricelist_id.id or False
+            product_id = line.product_id and line.product_id.id or False
+            order_partner_id = line.order_id.partner_id and line.order_id.partner_id.id or False
+            discount = line.discount or 0.0
+            comp_discount = 0.00
+
+            if line.order_id.nett_nett:
+                discount = 0.0
+            product_uom = line.product_uom and line.product_uom.id or False
+
+            if product_id:
+                unit_price = self.pool.get('product.pricelist').price_get(self._cr, self._uid, [pricelist],
+                            product_id, line.product_uom_qty or 1.0, order_partner_id, context={'uom': product_uom, 'date': date_order,})[pricelist]
+
+
+            else: unit_price = 0.0
+            if unit_price > 0.0:
+                comp_discount = (unit_price - line.actual_unit_price)/unit_price * 100.0
+
+            price = line.actual_unit_price * (1 - discount / 100.0)
+            subtotal_bad = line.actual_unit_price * line.product_uom_qty
+            taxes = line.tax_id.compute_all(price, line.order_id.currency_id, line.product_uom_qty, product=line.product_id, partner=line.order_id.partner_id)
+
+            line.update({
+                'price_unit': unit_price,
+                'price_tax': taxes['total_included'] - taxes['total_excluded'],
+                'price_total': taxes['total_included'],
+                'price_subtotal': taxes['total_excluded'],
+                'computed_discount': comp_discount,
+                'subtotal_before_agency_disc': subtotal_bad
+
+            })
+
+
+    price_unit = fields1.Monetary(compute='_compute_amount', string='Unit Price', required=True, digits=dp.get_precision('Product Price'), default=0.0, store=True)
+    price_subtotal = fields1.Monetary(compute='_compute_amount', string='Subtotal', readonly=True, store=True)
+
+    computed_discount = fields1.Monetary(compute='_compute_amount', string='Discount (%)', digits_compute=dp.get_precision('Account'), store=True)
+    subtotal_before_agency_disc = fields1.Monetary(compute='_compute_amount', string='Subtotal before Commission', digits_compute=dp.get_precision('Account'), store=True)
+
+    @api.onchange('adv_issue', 'adv_issue_ids')
+    def onchange_adv_issue_ids(self):
+        qty = 0.00
+
+        if not self.adv_issue and self.adv_issue_ids:
+            if len(self.adv_issue_ids) >= 1:
+                qty = len(self.adv_issue_ids)
+            else:
+                qty = 0
+        elif self.adv_issue:
+            qty = 1
+
+        self.product_uom_qty = qty
+
+
+    @api.onchange('dates')
+    def onchange_dates(self):
+        vals = {}
+        if self.dates:
+            if len(self.dates) >= 1:
+                qty = len(self.dates)
+            else:
+                qty = 0
+        else:
+            qty = 0
+
+        self.product_uom_qty = qty
+
+
+    @api.onchange('product_uom_qty')
+    def qty_change(self):
+        res = self.product_id_change()
+
+        mqty = False
+        if self.date_type == 'issue_date' and self.adv_issue_ids:
+            if len(self.adv_issue_ids) >= 1:
+                mqty = len(self.adv_issue_ids)
+            else:
+                mqty = 0
+
+        if self.date_type == 'date' and self.dates:
+            if len(self.dates) >= 1:
+                mqty = len(self.dates)
+            else:
+                mqty = 0
+        if mqty:
+            qty = mqty
+            self.product_uom_qty = qty
+
+        partner = self.order_id.partner_id
+        if partner.is_ad_agency and not self.order_id.nett_nett:
+            discount = partner.agency_discount
+        else:
+            discount = 0.0
+        self.update({'discount': discount, 'discount_dummy': discount})
+
+        # TODO: FIXME
+        # if self.price_unit:
+        #     pu = self.price_unit
+        #     if pu != self.price_unit:
+        #         actual_unit_price = pu
+        # else:
+        #     pu = 0.0
+        res2 = self.onchange_actualup()
+        self.update(res2['value'])
+        return res
+
+
+class MailComposeMessage(models.TransientModel):
+    _inherit = 'mail.compose.message'
+
+    @api.multi
+    def send_mail(self, auto_commit=False):
+        if self._context.get('default_model') == 'sale.order' and self._context.get('default_res_id') and self._context.get('mark_so_as_sent'):
+            order = self.env['sale.order'].browse([self._context['default_res_id']])
+            if order.state == 'approved2':
+                order.state = 'sent'
+        return super(MailComposeMessage, self.with_context(mail_post_autofollow=True)).send_mail(auto_commit=auto_commit)
 
 
 

@@ -22,7 +22,7 @@
 
 import sale_line_create_multi
 import crm_lead_to_opportunity
-import crm_make_sale
+# import crm_make_sale
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

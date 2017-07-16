@@ -67,9 +67,9 @@ class account_invoice(osv.osv):
                     'amount_total': 0.0,
                     'verif_tresh_exceeded': None,
                 }
-                for line in invoice.invoice_line:
+                for line in invoice.invoice_line_ids:
                     res[invoice.id]['amount_untaxed'] += line.price_subtotal
-                for line in invoice.tax_line:
+                for line in invoice.tax_line_ids:
                     res[invoice.id]['amount_tax'] += line.amount
 
                 res[invoice.id]['amount_total'] = res[invoice.id]['amount_tax'] + res[invoice.id]['amount_untaxed']
@@ -94,8 +94,10 @@ class account_invoice(osv.osv):
 
 
     def _setting_change(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
+        # if context is None:
+        #     context = {}
+        context = dict(context or {})
+
         context['company_ids'] = ids
         context['verif_setting_change'] = True
         res = ids

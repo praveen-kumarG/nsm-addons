@@ -26,7 +26,7 @@ class res_company(osv.osv):
     _inherit = 'res.company'
 
     _columns = {
-        'decl_journal_id': fields.many2one('account.journal', 'Declaration Journal', domain=[('type','=','purchase')], required=False),
+        'decl_journal_id': fields.many2one('account.journal', 'Declaration Journal', domain=[('type','=','purchase')], required=True),
 
     }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

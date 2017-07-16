@@ -7,7 +7,8 @@
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="nsm_supportal_extension.view_partner_supplier_tree_portal_usermgt_ext"/>
             <field name="arch" type="xml">
-                    <field name="name" position="after">
+                    <!--<field name="name" position="after">-->
+                    <field name="display_name" position="after">
                         <field name="product_price_ids"/>
                     </field>
             </field>

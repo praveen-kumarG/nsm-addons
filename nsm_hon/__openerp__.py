@@ -44,7 +44,7 @@ representing the Issue and to the products representing the type and price of th
     'website' : 'http://www.magnus.nl',
     'depends' : ['nsm_supportal_extension',
                  'analytic_secondaxis',
-                 'l10n_nl_partner_name',
+                 # 'l10n_nl_partner_name',
     ],
     'data' : ["data/product_category_hon.xml",
               "security/security.xml",

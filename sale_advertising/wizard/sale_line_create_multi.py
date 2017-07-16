@@ -85,16 +85,22 @@ class sale_order_line_create_multi_lines(orm.TransientModel):
                     _('Error!'),
                     _('The product Quantity is different from the number of Issues in the multi line.'))
             uom_qty = ol.product_uom_qty / number_ids
-            uos_qty = ol.product_uos_qty / number_ids
+            # uos_qty = ol.product_uos_qty / number_ids
             for ad_iss in ol.adv_issue_ids:
                 res = {'adv_issue': ad_iss.id, 'adv_issue_ids': False, 'product_uom_qty': uom_qty,
-                       'product_uos_qty': uos_qty,}
+                       # 'product_uos_qty': uos_qty,
+                       'order_id': ol.order_id.id or False,
+                       }
                 vals = sales_order_line_obj.copy_data(cr, uid, ol.id, default=res, context=context)
                 mol_id = sales_order_line_obj.create(cr, uid, vals, context=context)
-                del context['__copy_data_seen']
+
+                try: del context['__copy_data_seen']
+                except: pass
                 lines.append(mol_id)
 
-            sales_order_line_obj.unlink(cr, uid, [ol.id])
+            # TODO: FIXME
+            # sales_order_line_obj.unlink(cr, uid, [ol.id])
+            cr.execute("delete from sale_order_line where id = %s"%(ol.id))
 
         return
 

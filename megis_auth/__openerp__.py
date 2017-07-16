@@ -41,7 +41,9 @@ This module adds authorization step in workflow in supplier invoices in OpenERP.
     'depends' : ['account',
 		'account_cancel',
 		'account_voucher',
-		'account_banking_payment',
+		# 'account_banking_payment', -- deep
+         "account_payment_order", # -- added: deep
+         "project",
     ],
     'data' : ["account_security.xml",
 	      "account_invoice_view.xml",

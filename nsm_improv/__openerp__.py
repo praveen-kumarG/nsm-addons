@@ -39,6 +39,7 @@ This module changes some fields in invoices, account_move and partner views in O
     'author': 'Magnus - Willem Hulshof',
     'website': 'http://www.magnus.nl',
     'depends': ['account', 'sale_crm',
+                'account_invoice_supplier_ref_unique',
                 ],
     'data': ["account_invoice_view.xml",
              "res_partner_view.xml",

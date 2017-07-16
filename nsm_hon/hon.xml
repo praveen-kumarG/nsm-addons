@@ -67,7 +67,7 @@
                                         <field name="nr_of_columns"/>
                                         <field name="employee" invisible="1"/>
                                         <field name="account_analytic_id" invisible="1"/>
-                                        <field name="parent_analytic_id" invisible="1"/>
+                                        <!--<field name="parent_analytic_id" invisible="1"/>-->
                                         <field name="account_id" invisible="1"/>
                                         <field name="price_unit" on_change="price_quantity_change(partner_id, price_unit, quantity, price_subtotal, context )"
                                                attrs="{'invisible': [('employee','=',True)]}"/>

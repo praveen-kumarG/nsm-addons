@@ -144,7 +144,7 @@
         </blockTable>
 
         <section>
-        <para style="Standard">[[ repeatIn(o.invoice_line,'l') ]]</para>
+        <para style="Standard">[[ repeatIn(o.invoice_line_ids,'l') ]]</para>
         <condPageBreak height="5cm"/>
         <blockTable colWidths="60.0,290.0,35.0,65.0" style="Tableau2" rowHeights="10">
             <tr>

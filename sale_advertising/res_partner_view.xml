@@ -14,7 +14,10 @@
                     <field name="user_id" position="attributes">
                         <attribute name="invisible">True</attribute>
                     </field>
-                    <field name="section_id" position="attributes">
+                    <!--<field name="section_id" position="attributes">-->
+                        <!--<attribute name="groups">account.group_account_user</attribute>-->
+                    <!--</field>-->
+                    <field name="team_id" position="attributes">
                         <attribute name="groups">account.group_account_user</attribute>
                     </field>
                     <field name="company_id" position="after">
@@ -57,7 +60,8 @@
                     <field name="email"/>
                     <field name="user_id" string="Account Manager"/>
                     <field name="is_company" />
-                    <field name="country" />
+                    <!--<field name="country" />-->
+                    <field name="country_id" />
                     <field name="parent_id" />
                 </tree>
             </field>

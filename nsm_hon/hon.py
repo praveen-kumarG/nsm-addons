@@ -94,9 +94,12 @@ class hon_issue(orm.Model):
 
 
     _columns = {
+        # 'account_analytic_id': fields.many2one('account.analytic.account', 'Title/Issue',
+        #                                        required=True, readonly=True, states = {'draft': [('readonly', False)]},
+        #                                         domain=[('type','!=','view'), ('portal_sub', '=', True), ('parent_id.is_hon', '=', True)]),
         'account_analytic_id': fields.many2one('account.analytic.account', 'Title/Issue',
                                                required=True, readonly=True, states = {'draft': [('readonly', False)]},
-                                                domain=[('type','!=','view'), ('portal_sub', '=', True), ('parent_id.is_hon', '=', True)]),
+                                                domain=[('portal_sub', '=', True)]),
         'date_publish': fields.related('account_analytic_id','date_publish',type='date',
                                        relation='account.analytic.account',string='Publishing Date', store=True, readonly=True),
         'name': fields.related('account_analytic_id', 'name', type='char',
@@ -333,9 +336,9 @@ class hon_issue_line(orm.Model):
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'quantity': fields.float('Quantity', digits_compute= dp.get_precision('Product Unit of Measure'), required=True),
         'account_analytic_id': fields.related('issue_id','account_analytic_id',type='many2one', relation='account.analytic.account', string='Issue',store=True, readonly=True ),
-        'parent_analytic_id': fields.related('account_analytic_id', 'parent_id', type='many2one',
-                                              relation='account.analytic.account', string='Title', store=True,
-                                              readonly=True),
+        # 'parent_analytic_id': fields.related('account_analytic_id', 'parent_id', type='many2one',
+        #                                       relation='account.analytic.account', string='Title', store=True,
+        #                                       readonly=True),
         'date_publish': fields.related('account_analytic_id', 'date_publish', type='date',
                                        relation='account.analytic.account', string='Publishing Date', store=True,
                                        readonly=True),
@@ -368,6 +371,8 @@ class hon_issue_line(orm.Model):
         if context is None:
             context = {}
         prop = self.pool.get('ir.property').get(cr, uid, 'property_account_expense_categ', 'product.category', context=context)
+        print "pop ", prop
+
         return prop and prop.id or False
 
     _defaults = {
@@ -396,20 +401,20 @@ class hon_issue_line(orm.Model):
         if not line.invoice_line_id:
             if not account_id:
                 if line.product_id:
-                    account_id = line.product_id.property_account_expense.id
+                    account_id = line.product_id.property_account_expense_id.id
                     if not account_id:
-                        account_id = line.product_id.categ_id.property_account_expense_categ.id
+                        account_id = line.product_id.categ_id.property_account_expense_categ_id.id
                     if not account_id:
                         raise osv.except_osv(_('Error!'),
                                 _('Please define expense account for this product: "%s" (id:%d).') % \
                                     (line.product_id.name, line.product_id.id,))
                 else:
                     prop = self.pool.get('ir.property').get(cr, uid,
-                            'property_account_expense_categ', 'product.category',
+                            'property_account_expense_categ_id', 'product.category',
                             context=context)
                     account_id = prop and prop.id or False
             qty = line.quantity
-            fpos = line.partner_id.property_account_position or False
+            fpos = line.partner_id.property_account_position_id or False
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
             if not account_id:
                 raise osv.except_osv(_('Error!'),
@@ -481,7 +486,9 @@ class hon_issue_line(orm.Model):
         if context is None:
             context = {}
         if not partner_id :
-            raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
+            # raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
+            return {'value':{}}
+
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         result = {}
         if part.employee :
@@ -527,15 +534,23 @@ class hon_issue_line(orm.Model):
         context = dict(context)
         context.update({'company_id': company_id, 'force_company': company_id})
         if not partner_id :
-            raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
+            # raise osv.except_osv(_('No Partner Defined!'),_("You must first select a partner!") )
+            return {'value':{}}
+
         if not product:
-            raise osv.except_osv(_('No Product Defined!'),_("You must first select a Product!") )
+            # raise osv.except_osv(_('No Product Defined!'),_("You must first select a Product!") )
+            return {'value':{}}
+
+        print "............ca,e"
+
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         if part.lang:
             context.update({'lang': part.lang})
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-        a = res.property_account_expense.id
+        a = res.property_account_expense_id.id
+        if not a:
+            a = res.categ_id.property_account_expense_categ_id.id
         if a:
             result['account_id'] = a
         pricelist = self.pool.get('partner.product.price').search(cr, uid, [('product_id','=',product),

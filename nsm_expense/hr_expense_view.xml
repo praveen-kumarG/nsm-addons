@@ -23,18 +23,37 @@
 
         <record id="view_expenses_tree_nsm" model="ir.ui.view">
             <field name="name">hr.expense.expense.tree.nsm</field>
-            <field name="model">hr.expense.expense</field>
+            <!--<field name="model">hr.expense.expense</field>-->
+            <field name="model">hr.expense</field>
             <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
             <field name="arch" type="xml">
                 <data>
                     <field name="employee_id" position="after">
+                         <field name="account_move_id" string="Boekstuknummer"/>
+                         <field name="department_id" />
+                    </field>
+                    <!--<field name="department_id" position="replace" >-->
+                        <!--<field name="department_id" invisible="0"/>-->
+                    <!--</field>-->
+                    <!--<field name="user_id" position="replace">-->
+                        <!--<field name="user_id" invisible="0"/>-->
+                    <!--</field>-->
+                </data>
+            </field>
+        </record>
+
+
+        <!-- deep: added
+        -->
+        <record id="hr_expense_my_tree_nsm" model="ir.ui.view">
+            <field name="name">my.hr.expense.tree.nsm</field>
+            <!--<field name="model">hr.expense.expense</field>-->
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_my_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="date" position="after">
                            <field name="account_move_id" string="Boekstuknummer"/>
-                    </field>
-                    <field name="department_id" position="replace" >
-                        <field name="department_id" invisible="0"/>
-                    </field>
-                    <field name="user_id" position="replace">
-                        <field name="user_id" invisible="0"/>
                     </field>
                 </data>
             </field>
@@ -59,37 +78,62 @@
 
         <record id="view_expenses_form" model="ir.ui.view">
             <field name="name">hr.expense.form.nsm</field>
-            <field name="model">hr.expense.expense</field>
-            <field name="inherit_id" ref="hr_expense.view_expenses_form"/>
+            <!--<field name="model">hr.expense.expense</field>-->
+            <!--<field name="inherit_id" ref="hr_expense.view_expenses_form"/>-->
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_form_view"/>
             <field name="arch" type="xml">
                 <data>
-                <button name="confirm" position="replace">
-                    <button name="confirm"  states="draft" string="Submit" type="workflow" class="oe_highlight"/>
-                </button>
-                <button name="validate" position="replace">
-                    <button name="validate" states="done" string="Approve" type="workflow" groups="base.group_hr_user,account.group_account_invoice" class="oe_highlight"/>
-                </button>
-                <button name="refuse" position="replace">
-                    <button name="refuse" states="done" string="Refuse" type="workflow" groups="base.group_hr_user,account.group_account_invoice" />
-                </button>
-                <button name="draft" position="replace">
-                    <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="account.group_account_invoice" />
-                </button>
-                <button name="done" position="replace">
-                    <button name="done" states="confirm" string="Generate Accounting Entries" type="workflow" groups="account.group_account_invoice" class="oe_highlight"/>
-                    <button name="re-done" states="accepted" string="Terug Boekhouding" type="workflow" groups="base.group_hr_user,account.group_account_invoice" class="oe_highlight"/>
-                </button>
-                <button name="action_expense_cancel" position="replace"/>
-                <button name="action_view_receipt" position="replace">
-                    <button name="action_view_receipt" states="done,accepted,paid" string="Open Accounting Entries" type="object" groups="account.group_account_invoice"/>
-                </button>
-                <xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="replace">
-                        <field name="product_id"  context="{'default_hr_expense_ok':1}" required="1"/>
-                </xpath>
-                <xpath expr="//field[@name='line_ids']/tree/field[@name='analytic_account']" position="replace">
-                        <field name="analytic_account" domain="[('type','in',['normal','contract'])]" groups="analytic.group_analytic_accounting" required="1"/>    
-                </xpath>
-                <xpath expr="//page[@string='Accounting']/group/group/field[@name='voucher_id']" position="after">
+                    <xpath expr="//header" position="replace">
+                        <header>
+                            <button name="submit_expenses" states="draft" string="Submit" type="object" class="oe_highlight"/>
+                            <button name="approve_expenses" states="post" string="Approve" type="object" groups="base.group_hr_user,account.group_account_invoice" class="oe_highlight"/>
+                            <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="post" string="Refuse" type="action" groups="base.group_hr_user,account.group_account_invoice" />
+                            <button name="reset_expenses" states="submit,cancel" string="Set to Draft" type="object" groups="account.group_account_invoice"/>
+                            <button name="action_move_create" states="submit" string="Generate Accounting Entries" type="object" groups="account.group_account_invoice" class="oe_highlight"/>
+                            <button name="expense_redone" states="approve" string="Terug Boekhouding" type="object" groups="base.group_hr_user,account.group_account_invoice" class="oe_highlight"/>
+                            <button name="action_open_move" states="post,approve,done" string="Open Accounting Entries" type="object" groups="account.group_account_invoice"/>
+                            <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done" statusbar_colors='{"submit":"blue","cancel":"red"}'/>
+                        </header>
+
+                    </xpath>
+
+                <!--<button name="confirm" position="replace">-->
+                    <!--<button name="confirm"  states="draft" string="Submit" type="workflow" class="oe_highlight"/>-->
+                <!--</button>-->
+                <!--<button name="validate" position="replace">-->
+                    <!--<button name="validate" states="done" string="Approve" type="workflow" groups="base.group_hr_user,account.group_account_invoice" class="oe_highlight"/>-->
+                <!--</button>-->
+                <!--<button name="refuse" position="replace">-->
+                    <!--<button name="refuse" states="done" string="Refuse" type="workflow" groups="base.group_hr_user,account.group_account_invoice" />-->
+                <!--</button>-->
+                <!--<button name="draft" position="replace">-->
+                    <!--<button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="account.group_account_invoice" />-->
+                <!--</button>-->
+                <!--<button name="done" position="replace">-->
+                    <!--<button name="done" states="confirm" string="Generate Accounting Entries" type="workflow" groups="account.group_account_invoice" class="oe_highlight"/>-->
+                    <!--<button name="re-done" states="accepted" string="Terug Boekhouding" type="workflow" groups="base.group_hr_user,account.group_account_invoice" class="oe_highlight"/>-->
+                <!--</button>-->
+
+                <!--<button name="action_expense_cancel" position="replace"/>-->
+
+                <!--<button name="action_view_receipt" position="replace">-->
+                    <!--<button name="action_view_receipt" states="done,accepted,paid" string="Open Accounting Entries" type="object" groups="account.group_account_invoice"/>-->
+                <!--</button>-->
+
+                <!--<xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="replace">-->
+                        <!--<field name="product_id"  context="{'default_hr_expense_ok':1}" required="1"/>-->
+                <!--</xpath>-->
+                <!--<xpath expr="//field[@name='line_ids']/tree/field[@name='analytic_account']" position="replace">-->
+                        <!--<field name="analytic_account" domain="[('type','in',['normal','contract'])]" groups="analytic.group_analytic_accounting" required="1"/>    -->
+                <!--</xpath>-->
+
+                <!--<xpath expr="//page[@string='Accounting']/group/group/field[@name='voucher_id']" position="after">-->
+                         <!--<field name="date_confirm" groups="account.group_account_invoice" />-->
+                <!--</xpath>-->
+
+                <!-- deep: added-->
+                <xpath expr="//page[@string='Accounting']/group/group/field[@name='account_move_id']" position="after">
                          <field name="date_confirm" groups="account.group_account_invoice" />
                 </xpath>
                 </data>
@@ -99,20 +143,21 @@
 
         <record id="view_hr_expense_filter_nsm" model="ir.ui.view">
             <field name="name">hr.expense.expense.filter.nsm</field>
-            <field name="model">hr.expense.expense</field>
+            <!--<field name="model">hr.expense.expense</field>-->
+            <field name="model">hr.expense</field>
             <field name="inherit_id" ref="hr_expense.view_hr_expense_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//search/filter[@string='New']" position="replace">
 			        <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Expense"/>
-                    <filter name="cancelled" string="Refused" domain="[('state','=','cancelled')]" help="Refused"/>
+                    <filter name="cancelled" string="Refused" domain="[('state','=','cancel')]" help="Refused"/>
                 </xpath>
 		        <xpath expr="//search/filter[@string='To Approve']" position="replace">
-			        <filter name="confirm" string="Waiting Finance" domain="[('state','=','confirm')]" help="Waiting Finance"/>
+			        <filter name="confirm" string="Waiting Finance" domain="[('state','=','submit')]" help="Waiting Finance"/>
 		        </xpath>
 		        <xpath expr="//search/filter[@string='To Pay']" position="replace">
-                    <filter name="done" string="Waiting Approval" domain="[('state','=','done')]" help="Waiting Approval"/>
-                    <filter name="accepted" string="Waiting Payment" domain="[('state','=','accepted')]" help="Waiting Payment"/>
-                    <filter name="paid" string="Paid" domain="[('state','=','paid')]" help="Paid"/>
+                    <filter name="done" string="Waiting Approval" domain="[('state','=','post')]" help="Waiting Approval"/>
+                    <filter name="accepted" string="Waiting Payment" domain="[('state','=','approve')]" help="Waiting Payment"/>
+                    <filter name="paid" string="Paid" domain="[('state','=','done')]" help="Paid"/>
                 </xpath>
                 <!--search string="Expense">
                     <field name="name" string="Expenses"/>

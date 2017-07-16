@@ -52,44 +52,45 @@ class account_move(osv.osv):
         'state': fields.selection([('draft', 'Unposted'), ('posted', 'Posted')], 'Status', required=True, readonly=True,
                                   track_visibility='onchange',
                                   help='All manually created new journal entries are usually in the status \'Unposted\', but you can set the option to skip that status on the related journal. In that case, they will behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' status.'),
-        'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted': [('readonly', True)]},
-                                     track_visibility='onchange'),
+        # 'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted': [('readonly', True)]},
+        #                              track_visibility='onchange'),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True,
                                       states={'posted': [('readonly', True)]}, track_visibility='onchange'),
     }
 
-    def post(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        invoice = context.get('invoice', False)
-        valid_moves = self.validate(cr, uid, ids, context)
-
-        if not valid_moves:
-            raise osv.except_osv(_('Error!'), _('You cannot validate a non-balanced entry.\nMake sure you have configured payment terms properly.\nThe latest payment term line should be of the "Balance" type.'))
-        obj_sequence = self.pool.get('ir.sequence')
-        for move in self.browse(cr, uid, valid_moves, context=context):
-            if move.name =='/':
-                new_name = False
-                journal = move.journal_id
-
-                if invoice and invoice.internal_number:
-                    new_name = invoice.internal_number
-                else:
-                    if journal.sequence_id:
-                        c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
-                        new_name = obj_sequence.next_by_id(cr, uid, journal.sequence_id.id, c)
-                    else:
-                        raise osv.except_osv(_('Error!'), _('Please define a sequence on the journal.'))
-
-                if new_name:
-                    self.write(cr, uid, [move.id], {'name':new_name})
-
-        #cr.execute('UPDATE account_move '\
-        #           'SET state=%s '\
-        #           'WHERE id IN %s',
-        #           ('posted', tuple(valid_moves),))
-        result = super(account_move, self).write(cr, uid, valid_moves, {'state':'posted'})
-        return result
+    # --deep: Below method is not needed: it has been revised in Odoo 9
+    # def post(self, cr, uid, ids, context=None):
+    #     if context is None:
+    #         context = {}
+    #     invoice = context.get('invoice', False)
+    #     valid_moves = self.validate(cr, uid, ids, context)
+    #
+    #     if not valid_moves:
+    #         raise osv.except_osv(_('Error!'), _('You cannot validate a non-balanced entry.\nMake sure you have configured payment terms properly.\nThe latest payment term line should be of the "Balance" type.'))
+    #     obj_sequence = self.pool.get('ir.sequence')
+    #     for move in self.browse(cr, uid, valid_moves, context=context):
+    #         if move.name =='/':
+    #             new_name = False
+    #             journal = move.journal_id
+    #
+    #             if invoice and invoice.internal_number:
+    #                 new_name = invoice.internal_number
+    #             else:
+    #                 if journal.sequence_id:
+    #                     c = {'fiscalyear_id': move.period_id.fiscalyear_id.id}
+    #                     new_name = obj_sequence.next_by_id(cr, uid, journal.sequence_id.id, c)
+    #                 else:
+    #                     raise osv.except_osv(_('Error!'), _('Please define a sequence on the journal.'))
+    #
+    #             if new_name:
+    #                 self.write(cr, uid, [move.id], {'name':new_name})
+    #
+    #     #cr.execute('UPDATE account_move '\
+    #     #           'SET state=%s '\
+    #     #           'WHERE id IN %s',
+    #     #           ('posted', tuple(valid_moves),))
+    #     result = super(account_move, self).write(cr, uid, valid_moves, {'state':'posted'})
+    #     return result
 
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):

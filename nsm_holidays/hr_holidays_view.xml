@@ -20,16 +20,17 @@
         </record>
 
         <!-- Holidays: Allocation Request -->
-        <record model="ir.ui.view" id="allocation_leave_new_hrs">
-            <field name="name">Allocation Request</field>
-            <field name="model">hr.holidays</field>
-            <field name="inherit_id" ref="hr_holidays.allocation_leave_new"/>
-            <field name="arch" type="xml">
-                <field name="number_of_days_temp" position="replace">
-                    <field name="number_of_days_temp" class="oe_inline"/> hours 
-                </field>  
-            </field>
-        </record>
+        <!--<record model="ir.ui.view" id="allocation_leave_new_hrs">-->
+            <!--<field name="name">Allocation Request</field>-->
+            <!--<field name="model">hr.holidays</field>-->
+            <!--&lt;!&ndash;<field name="inherit_id" ref="hr_holidays.allocation_leave_new"/>&ndash;&gt;-->
+            <!--<field name="inherit_id" ref="hr_holidays.edit_holiday_new"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<field name="number_of_days_temp" position="replace">-->
+                    <!--<field name="number_of_days_temp" class="oe_inline"/> hours -->
+                <!--</field>  -->
+            <!--</field>-->
+        <!--</record>-->
 
         <record model="ir.ui.view" id="view_holiday_allocation_tree_hrs">
             <field name="name">hr.holidays.allocation.tree</field>
@@ -43,16 +44,16 @@
         </record>
 
         <!-- Holidays: Leaves Management -->
-        <record model="ir.ui.view" id="allocation_company_new_hrs">
-            <field name="name">Leaves Management</field>
-            <field name="model">hr.holidays</field>
-            <field name="inherit_id" ref="hr_holidays.allocation_company_new"/>
-            <field name="arch" type="xml">
-                <field name="number_of_days_temp" position="replace">
-                    <field name="number_of_days_temp" string="Allocated Hours?"/>
-                </field>
-            </field>
-        </record>
+        <!--<record model="ir.ui.view" id="allocation_company_new_hrs">-->
+            <!--<field name="name">Leaves Management</field>-->
+            <!--<field name="model">hr.holidays</field>-->
+            <!--<field name="inherit_id" ref="hr_holidays.allocation_company_new"/>-->
+            <!--<field name="arch" type="xml">-->
+                <!--<field name="number_of_days_temp" position="replace">-->
+                    <!--<field name="number_of_days_temp" string="Allocated Hours?"/>-->
+                <!--</field>-->
+            <!--</field>-->
+        <!--</record>-->
 
         <record model="ir.ui.view" id="view_holiday_simple_hrs">
             <field name="name">hr.holidays.report_tree</field>

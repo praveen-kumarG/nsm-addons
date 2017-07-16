@@ -5,10 +5,11 @@
         <record id="group_traffic_user" model="res.groups">
             <field name="name">Traffic User</field>
             <field name="category_id" ref="base.module_category_sales_management"/>
-            <field name="implied_ids" eval="[(4, ref('base.group_sale_manager')),
-                                            (4, ref('base_partner_merge.group_partner_merge')),
-                                            (4, ref('mass_editing_auth.me_normal_user'))]"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_sale_manager')),]"/>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
+                                        <!-- No longer exists
+                                            (4, ref('mass_editing_auth.me_normal_user'))
+                                            (4, ref('base_partner_merge.group_partner_merge')),-->
         </record>
         <record id="base.group_sale_salesman" model="res.groups">
             <field name="name">See Own Leads</field>
@@ -34,11 +35,12 @@
             <field name="implied_ids" eval="[(4, ref('product.group_sale_pricelist')),
                                              (4, ref('product.group_uom')),
                                              (4, ref('product.group_uos')),
-                                             (4, ref('sale.group_invoice_so_lines')),
                                              (4, ref('product.group_mrp_properties')),
                                              (4, ref('base.group_sale_salesman_all_leads'))]"/>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
+                                        <!-- No longer exists
+                                             (4, ref('sale.group_invoice_so_lines')),-->
 
     </data>
 
