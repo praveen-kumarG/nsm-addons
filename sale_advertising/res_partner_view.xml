@@ -17,9 +17,9 @@
                     <!--<field name="section_id" position="attributes">-->
                         <!--<attribute name="groups">account.group_account_user</attribute>-->
                     <!--</field>-->
-                    <field name="team_id" position="attributes">
+                    <!--field name="team_id" position="attributes">
                         <attribute name="groups">account.group_account_user</attribute>
-                    </field>
+                    </field-->
                     <field name="company_id" position="after">
                         <field name="is_ad_agency"/>
                         <field name="agency_discount" attrs="{'invisible': [('is_ad_agency', '=', False)]}"/>

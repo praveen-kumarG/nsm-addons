@@ -160,16 +160,16 @@
                 <!--<xpath  expr="/form/sheet/group/group/label[@for='section_id']" position="attributes">-->
                     <!--<attribute name="groups">base.groups_no_one</attribute>-->
                 <!--</xpath>-->
-                <xpath  expr="/form/sheet/group/group/label[@for='team_id']" position="attributes">
+                <xpath  expr="/form/sheet/group/group/field[@name='team_id']" position="attributes">
                     <attribute name="groups">base.groups_no_one</attribute>
                 </xpath>
-                <xpath  expr="/form/sheet/group/group[3]/div" position="attributes">
+                <!--xpath  expr="/form/sheet/group/group[3]/div" position="attributes">
                     <attribute name="groups">base.groups_no_one</attribute>
-                </xpath>
+                </xpath-->
                 <xpath  expr="/form/sheet/group/group[4]/field[@name='priority']" position="attributes">
                     <attribute name="groups">base.groups_no_one</attribute>
                 </xpath>
-                <xpath  expr="/form/sheet/group/group[4]/field[@name='categ_ids']" position="attributes">
+                <xpath  expr="/form/sheet/group/group[4]/field[@name='tag_ids']" position="attributes">
                     <attribute name="string">Sales Projects</attribute>
                 </xpath>
             </data>
@@ -355,7 +355,7 @@
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
             <field name="arch" type="xml">
-                <button name="case_mark_won" position="attributes" >
+                <button name="action_set_won" position="attributes" >
                     <attribute name="invisible" >True</attribute>
                 </button>
                 <xpath  expr="/form/sheet/group/group/field[@name='partner_id']" position="attributes">
@@ -385,11 +385,12 @@
                 <xpath  expr="/form/sheet/group/group/field[@name='user_id']" position="after">
                     <field name="partner_acc_mgr" string="Account Manager" readonly="True"/>
                 </xpath>
-                <xpath expr="/form/sheet/div/h2/field[@name='probability']" position="attributes">
+                <xpath expr="/form/sheet/div/h2/div/div/field[@name='probability']" position="attributes">
                     <attribute name="readonly" >True</attribute>
                 </xpath>
-                <xpath expr="/form/sheet/group/group/field[@name='categ_ids']" position="attributes">
+                <xpath expr="/form/sheet/group/group/field[@name='tag_ids']" position="attributes">
                     <attribute name="string" >Sales Projects</attribute>
+                    <attribute name="options" >{'limit': 10, 'create': false, 'create_edit': false}</attribute>
                 </xpath>
                 <xpath expr="/form/sheet/group/group/field[@name='priority']" position="attributes">
                     <attribute name="groups" >base.groups_no_one</attribute>
@@ -397,15 +398,12 @@
                 <!--<xpath expr="/form/sheet/group/group/label[@for='section_id']" position="attributes">-->
                     <!--<attribute name="groups" >base.groups_no_one</attribute>-->
                 <!--</xpath>-->
-                <xpath expr="/form/sheet/group/group/label[@for='team_id']" position="attributes">
+                <xpath expr="/form/sheet/group/group/field[@name='team_id']" position="attributes">
                     <attribute name="groups" >base.groups_no_one</attribute>
                 </xpath>
-                <xpath expr="/form/sheet/group/group[3]/div" position="attributes">
+                <!--xpath expr="/form/sheet/group/group[3]/div" position="attributes">
                     <attribute name="groups" >base.groups_no_one</attribute>
-                </xpath>
-                <xpath expr="/form/sheet/group/group/field[@name='categ_ids']" position="attributes">
-                    <attribute name="options" >{'limit': 10, 'create': false, 'create_edit': false}</attribute>
-                </xpath>
+                </xpath-->
                 <xpath expr="/form/sheet/notebook/page/group/group//field[@name='partner_name']" position="attributes">
                     <attribute name="string" >Advertiser Name</attribute>
                 </xpath>
@@ -413,7 +411,7 @@
                 <xpath expr="/form/sheet/notebook/page/group/group/div/field[@name='title']" position="attributes">
                     <attribute name="options" >{'limit': 10, 'create': false, 'create_edit': false}</attribute>
                 </xpath>
-                <xpath expr="/form/sheet/notebook/page/group/group/div/div/field[@name='state_id']" position="attributes">
+                <xpath expr="/form/sheet/notebook/page/group/group/div/field[@name='state_id']" position="attributes">
                     <attribute name="options" >{'no_show':True,'no_create':True,'no_open':True}</attribute>
                 </xpath>
                 <xpath expr="/form/sheet/notebook/page/group/group/div/field[@name='country_id']" position="attributes">
@@ -429,10 +427,10 @@
             <field name="inherit_id" ref="sale_advertising.crm_case_form_view_oppor"/>
             <field name="groups_id" eval="[(6,0,[ref('base.group_sale_manager')])]" />
             <field name="arch" type="xml">
-                <button name="case_mark_won" position="attributes" >
+                <button name="action_set_won" position="attributes" >
                     <attribute name="invisible" >False</attribute>
                 </button>
-                <xpath expr="/form/sheet/div/h2/field[@name='probability']" position="attributes">
+                <xpath expr="/form/sheet/div/h2/div/div/field[@name='probability']" position="attributes">
                     <attribute name="readonly" >False</attribute>
                 </xpath>
             </field>

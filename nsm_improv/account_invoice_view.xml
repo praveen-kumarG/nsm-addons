@@ -13,9 +13,9 @@
 					<xpath expr="//field[@name='partner_id']" position="after">
                         <field name="klantnummer" string="aProfit-nummer" attrs="{'readonly': 'True'}"/>
                     </xpath>
-					<xpath expr="//field[@name='internal_number']" position="replace">
+					<!--xpath expr="//field[@name='internal_number']" position="replace">
                         <field name="internal_number" invisible="0" groups="account.group_account_user"/>
-                    </xpath>
+                    </xpath-->
                     <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']" position="replace">
                         <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
                             domain="[('account_type','=','normal'), ('company_id', '=', parent.company_id)]" required="1"/>
@@ -54,7 +54,7 @@
                             domain="[('account_type','=','normal'), ('company_id', '=', parent.company_id)]" required="1"/>
                         <!--domain="[('type','!=','view'), ('company_id', '=', parent.company_id), ('state','not in',('close','cancelled'))]"-->
                     </xpath>
-		            <xpath expr="//page[@string='Other Info']/group/group/field[@name='name']" position="replace">
+		            <xpath expr="//page[2]/group/group/field[@name='name']" position="replace">
                     </xpath>
                 </data>
             </field>

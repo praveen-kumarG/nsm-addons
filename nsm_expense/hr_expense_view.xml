@@ -133,7 +133,7 @@
                 <!--</xpath>-->
 
                 <!-- deep: added-->
-                <xpath expr="//page[@string='Accounting']/group/group/field[@name='account_move_id']" position="after">
+                <xpath expr="//sheet/group/group[2]/field[@name='account_move_id']" position="after">
                          <field name="date_confirm" groups="account.group_account_invoice" />
                 </xpath>
                 </data>
@@ -147,14 +147,14 @@
             <field name="model">hr.expense</field>
             <field name="inherit_id" ref="hr_expense.view_hr_expense_filter"/>
             <field name="arch" type="xml">
-                <xpath expr="//search/filter[@string='New']" position="replace">
+                <xpath expr="//search/filter[1]" position="replace">
 			        <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Expense"/>
                     <filter name="cancelled" string="Refused" domain="[('state','=','cancel')]" help="Refused"/>
                 </xpath>
-		        <xpath expr="//search/filter[@string='To Approve']" position="replace">
+		        <xpath expr="//search/filter[2]" position="replace">
 			        <filter name="confirm" string="Waiting Finance" domain="[('state','=','submit')]" help="Waiting Finance"/>
 		        </xpath>
-		        <xpath expr="//search/filter[@string='To Pay']" position="replace">
+		        <xpath expr="//search/filter[3]" position="replace">
                     <filter name="done" string="Waiting Approval" domain="[('state','=','post')]" help="Waiting Approval"/>
                     <filter name="accepted" string="Waiting Payment" domain="[('state','=','approve')]" help="Waiting Payment"/>
                     <filter name="paid" string="Paid" domain="[('state','=','done')]" help="Paid"/>

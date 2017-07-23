@@ -10,10 +10,10 @@
                 <data>
                     <!--<xpath expr="//sheet/notebook/page/field[@name='line_id']/tree[@string='Journal Items']"-->
                            <!--position="attributes">-->
-                    <xpath expr="//field[@name='line_id']/tree[@string='Journal Items']"
+                    <!--xpath expr="//field[@name='line_id']/tree[@string='Journal Items']"
                            position="attributes">
                         <attribute name="editable">bottom</attribute>
-                    </xpath>
+                    </xpath-->
                     <!--<xpath expr="//sheet[@string='Journal Entries']" position="after">-->
                     <xpath expr="//form" position="inside">
                         <div class="oe_chatter">

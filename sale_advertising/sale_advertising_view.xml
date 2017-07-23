@@ -30,7 +30,7 @@
 			<field name="inherit_id" ref="sale.view_order_form"/>
 			<field name="arch" type="xml">
 				<data>
-				  	<xpath expr="/form/sheet/notebook/page/group/group/field[@name='categ_ids']" position="replace">
+				  	<xpath expr="/form/sheet/notebook/page/group/group/field[@name='tag_ids']" position="replace">
 				  	</xpath>
 					<!--<xpath expr="/form/sheet/notebook/page/group/group/field[@name='section_id']" position="attributes">-->
 				      	<!--<attribute name="invisible">True</attribute>-->
@@ -150,7 +150,7 @@
 						<field name="traffic_employee" string="Traffic Employee" groups="sale_advertising.group_traffic_user"/>
 						<field name="traffic_comments" string="Traffic Comments"/>
 						<field name="traffic_appr_date" string="Traffic Approval Date" readonly="True"/>
-						<!--<field name="categ_ids" string="Sales Projects" widget="many2many_tags" options="{'limit': 10, 'create': false, 'create_edit': false}"/>-->
+						<field name="tag_ids" string="Sales Projects" widget="many2many_tags" options="{'limit': 10, 'create': false, 'create_edit': false}"/>
 					</xpath>
 
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="attributes">
@@ -249,13 +249,7 @@
 					<!--<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='type']" position="attributes">-->
 							<!--<attribute name="groups">base.group_no_one</attribute>-->
 					<!--</xpath>-->
-					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='th_weight']" position="attributes">
-							<attribute name="groups">base.group_no_one</attribute>
-					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='address_allotment_id']" position="attributes">
-							<attribute name="groups">base.group_no_one</attribute>
-					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/form/group/group/label[@for='delay']" position="attributes">
+					<xpath expr="/form/sheet/notebook/page/field/form/group/group/label[@for='customer_lead']" position="attributes">
 							<attribute name="groups">base.group_no_one</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/notebook/page/field/form/group/group[2]/div[3]" position="attributes">
@@ -300,17 +294,17 @@
 					</xpath>
 
 					<!--Order Line Tree /-->
-					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_id']" position="before">
+					<xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_id']" position="before">
 						<field name="title" />
 						<field name="adv_issue" />
 						<field name="ad_class" required="1"/>
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_uom_qty']" position="replace">
+					<xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_uom_qty']" position="replace">
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='tax_id']" position="attributes" >
+					<xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='tax_id']" position="attributes" >
 						<attribute name="groups">account.group_account_invoice, sale_advertising.group_traffic_user</attribute>
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='price_unit']" position="replace">
+					<xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='price_unit']" position="replace">
 						<field name="price_unit"/>
 						<field name="product_uom_qty"/>
 						<field name="actual_unit_price"/>
@@ -318,22 +312,17 @@
 						<field name="subtotal_before_agency_disc" />
 						<field name="discount_dummy" />
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='discount']" position="attributes">
+					<xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='discount']" position="attributes">
 						<attribute name="invisible">True</attribute>
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_uom']" position="replace">
+					<xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='product_uom']" position="replace">
 					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='product_uos']" position="replace">
-					</xpath>
-					<xpath expr="/form/sheet/notebook/page/field/tree[@string='Sales Order Lines']/field[@name='name']" position="after">
+					<xpath expr="//form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='name']" position="after">
 						<field name="ad_number"/>
 						<field name="page_reference"/>
 					</xpath>
 
 					<!--End Order Line Tree /-->
-					<xpath expr="//group[@name='logistics']" position="attributes">
-						<attribute name="groups">base.group_no_one</attribute>
-					</xpath>
 					<xpath expr="/form/sheet/notebook/page/group/group/field[@name='user_id']" position="after">
 						<field name="partner_acc_mgr"/>
 					</xpath>
@@ -432,7 +421,7 @@
 						<field name="date_from" string="Traffic Date From" filter_domain="[('traffic_appr_date','&gt;=',self)]"/>
 						<field name="date_to" string="Traffic Date To" filter_domain="[('traffic_appr_date','&lt;=',self)]"/>
 					</field>
-					<filter string="Salesperson" position="after" >
+					<filter name="customer" position="before" >
 						<filter string="Account Manager" icon="terp-personal" domain="[]" context="{'group_by':'partner_acc_mgr'}"/>
 					</filter>
 				</data>
@@ -625,9 +614,9 @@
 				<field name="priority">5</field>
 				<field name="inherit_id" ref="account.product_template_form_view"/>
 				<field name="arch" type="xml">
-					<page string="Accounting" position="attributes">
+					<xpath expr="//page[4]" position="attributes">
 						<attribute name="groups">account.group_account_invoice,sale_advertising.group_traffic_user</attribute>
-					</page>
+					</xpath>
 				</field>
 		 </record>
 

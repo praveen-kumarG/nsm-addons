@@ -6,11 +6,11 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
-                <page string="Configuration" position="inside">
+                <xpath expr="//page[2]" position="inside">
                     <group string="Tweede procuratiegrens">
                         <field name="verify_setting"/>
                     </group>
-                </page>
+                </xpath>
         </field>
     </record>
     </data>
