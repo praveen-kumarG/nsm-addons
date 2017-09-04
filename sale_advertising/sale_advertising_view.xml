@@ -337,6 +337,9 @@
 			<field name="inherit_id" ref="sale.view_sales_order_filter"/>
             <field name="arch" type="xml">
 				<data>
+					<field name="name" position="replace" >
+						<field name="name" string="Sales Order" filter_domain="['|','|',('name','ilike',self),('client_order_ref','ilike',self),('opportunity_subject','ilike',self)]"/>
+					</field>
 					<filter name="draft" position="after" >
 						<filter string="Submitted" name="submitted" domain="[('state','in',('submitted',))]"/>
 						<filter string="Sales Mgr Approved" name="approved1" domain="[('state','in',('approved1',))]"/>
@@ -344,6 +347,7 @@
 					</filter>
 					<filter name="my_sale_orders_filter" position="after">
 						<filter name="accmgr_sale_orders_filter" string="My Sales Orders (Account Manager)" domain="[('partner_acc_mgr','=',uid)]" help="My Sales Orders as Account manager" icon="terp-personal" />
+						<field name="published_customer" operator="child_of"/>
 						<field name="partner_acc_mgr"/>
 					</filter>
 					<field name="project_id" position="after" >
