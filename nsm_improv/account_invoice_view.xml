@@ -37,7 +37,7 @@
 					<xpath expr="//field[@name='internal_number']" position="replace">
                         <field name="internal_number" invisible="0" groups="account.group_account_manager"/>
                     </xpath>
-                    <xpath expr="//field[@name='user_id']" position="replace">
+                    <xpath expr="//notebook/page[2]/group/group/field[@name='user_id']" position="replace">
                         <field name="user_id" required="1"/>
                     </xpath>
                     <xpath expr="//field[@name='user_id']" position="after">

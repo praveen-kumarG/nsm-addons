@@ -115,7 +115,7 @@
 						<field name="traffic_employee" string="Traffic Employee" groups="sale_advertising.group_traffic_user"/>
 						<field name="traffic_comments" string="Traffic Comments"/>
 						<field name="traffic_appr_date" string="Traffic Approval Date" readonly="True"/>
-						<field name="categ_ids" string="Sales Projects" widget="many2many_tags" options="{'limit': 10, 'create': false, 'create_edit': false}"/>
+						<field name="categ_ids" string="Sales Projects" widget="many2many_tags" options="{'limit': 10, 'create': False, 'create_edit': False}"/>
 					</xpath>
 
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="attributes">
@@ -124,7 +124,7 @@
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="after">
 						<field name="customer_contact" required="True" context="{'default_parent_id': partner_id, 'show_email': 1}"
 							   domain="[('is_company', '=', False), ('customer', '=', True),('parent_id', '=', partner_id),('type', '=', 'contact')]"
-							   options='{"always_reload": True}'/>
+							   options="{'always_reload': True, 'create': True, 'create_edit': True}"/>
 						<group col="4" colspan="2">
 							<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"
 							   domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"
