@@ -3,23 +3,6 @@
 	<data>
 
 
-
-
-		<!--record id="view_advertising_issue_data_tree" model="ir.ui.view">
-            <field name="name">sale.order.line.date.tree.view</field>
-            <field name="model">sale.order.line.date</field>
-			<field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Ad Dates">
-                    <field name="name"/>
-                    <field name="from_date" />
-                    <field name="to_date"/>
-                    <field name="issue_date" />
-                    <field name="type"/>
-                </tree>
-            </field>
-        </record-->
-
 <!-- View for sale.order object inherited from sale module -->
 
 		<record id="view_order_form_inherit" model="ir.ui.view" >
@@ -115,16 +98,16 @@
 						<field name="traffic_employee" string="Traffic Employee" groups="sale_advertising.group_traffic_user"/>
 						<field name="traffic_comments" string="Traffic Comments"/>
 						<field name="traffic_appr_date" string="Traffic Approval Date" readonly="True"/>
-						<field name="categ_ids" string="Sales Projects" widget="many2many_tags" options="{'limit': 10, 'create': False, 'create_edit': False}"/>
+						<field name="categ_ids" string="Sales Projects" widget="many2many_tags" options="{'create': False, 'create_edit': False}"/>
 					</xpath>
 
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="attributes">
 						<attribute name="invisible">[('published_customer','!=', False)]</attribute>
 					</xpath>
 					<xpath expr="/form/sheet/group/group/field[@name='project_id']" position="after">
-						<field name="customer_contact" required="True" context="{'default_parent_id': partner_id, 'show_email': 1}"
+						<field name="customer_contact" required="True" context="{'default_parent_id': partner_id, 'show_email': 1 }"
 							   domain="[('is_company', '=', False), ('customer', '=', True),('parent_id', '=', partner_id),('type', '=', 'contact')]"
-							   options="{'always_reload': True, 'create': True, 'create_edit': True}"/>
+							   options="{'always_reload': True }"/>
 						<group col="4" colspan="2">
 							<field name="advertising_agency"  on_change="onchange_advertising_agency(advertising_agency, context)"
 							   domain="[('is_ad_agency','=', True),('customer','=',True), ('is_company','=', True)]"
@@ -290,6 +273,10 @@
 			</field>
 		</record>
 
+		<record id="sale.action_orders" model="ir.actions.act_window">
+			<field name="context">{'create': True, 'create_edit': True}</field>
+		</record>
+
 		<record id="view_order_tree_inherit" model="ir.ui.view">
             <field name="name">sale.order.tree</field>
             <field name="model">sale.order</field>
@@ -330,6 +317,9 @@
             </field>
         </record>
 
+		<record id="sale.action_quotations" model="ir.actions.act_window">
+			<field name="context">{'create': True, 'create_edit': True}</field>
+		</record>
 
 		<record id="view_sales_order_filter_inherit" model="ir.ui.view">
             <field name="name">sale.order.list.select</field>
@@ -362,28 +352,6 @@
 				</data>
             </field>
         </record>
-
-		<!--record model="ir.ui.view" id="view_order_form_inherit1">
-			<field name="name">sale.order.form.inherit.line</field>
-			<field name="type">form</field>
-			<field name="model">sale.order</field>
-			<field name="inherit_id" ref="sale.view_order_form"/>
-			<field name="arch" type="xml">
-				<xpath expr="/form/sheet/notebook/page/field/form/group/group/field[@name='product_id']" position="before">
-					<field name="adv_issue" on_change="onchange_adv_issue(adv_issue, context)"/>
-					<field name="ad_class" on_change="onchange_ad_class(ad_class, context)"/>
-				</xpath>
-				<xpath expr="/form/sheet/notebook/page/field/form/label[@for='name']" position="before">
-						<group>
-							<field name="page_reference"/>
-							<field name="from_date"/>
-							<field name="to_date"/>
-							<separator string="Layout Remark" colspan="2"/>
-							<field name="layout_remark" colspan="2" nolabel="1"/>
-						</group>
-				</xpath>
-			</field>
-		</record-->
 
 
 <!-- Views for sale.order.line object inherited from sale module -->

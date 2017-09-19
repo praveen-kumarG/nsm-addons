@@ -10,6 +10,9 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//field[@name='partner_id']" position="attributes">
+                        <attribute name="options">{'create': True, 'create_edit': True}</attribute>
+                    </xpath>
 					<xpath expr="//field[@name='partner_id']" position="after">
                         <field name="klantnummer" string="aProfit-nummer" attrs="{'readonly': 'True'}"/>
                     </xpath>
@@ -34,18 +37,26 @@
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
                 <data>
-					<xpath expr="//field[@name='internal_number']" position="replace">
-                        <field name="internal_number" invisible="0" groups="account.group_account_manager"/>
+					<xpath expr="//field[@name='partner_id']" position="attributes">
+                        <attribute name="options">{'create': True, 'create_edit': True}</attribute>
+                    </xpath>
+                    <xpath expr="//sheet/group/group[2]/field[@name='internal_number']" position="replace">
                     </xpath>
                     <xpath expr="//notebook/page[2]/group/group/field[@name='user_id']" position="replace">
-                        <field name="user_id" required="1"/>
                     </xpath>
-                    <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="section_id" required="1"/>
+                    <xpath expr="//sheet/group[1]" position="attributes">
+                        <attribute name="col">6</attribute>
+                    </xpath>
+                    <xpath expr="//sheet/group/group[1]" position="after">
+                        <group>
+                            <field name="name" />
+                            <field name="internal_number" invisible="0" groups="account.group_account_manager"/>
+                            <field name="user_id" required="1"/>
+                            <field name="section_id" required="1"/>
+                        </group>
                     </xpath>
 		            <xpath expr="//group/field[@name='supplier_invoice_number']" position="replace">
                         <field name="supplier_invoice_number" required="1" groups="account.group_account_invoice"/>
-			            <field name="name" />
                     </xpath>		    
 		            <xpath expr="//field[@name='invoice_line']/tree/field[@name='account_analytic_id']" position="replace">
                         <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
