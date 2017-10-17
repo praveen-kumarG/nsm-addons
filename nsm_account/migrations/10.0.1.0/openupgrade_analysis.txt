@@ -1,0 +1,48 @@
+---Fields in module 'nsm_account'---
+nsm_account  / account.analytic.account / code (False)                  : previously in module nsm_analytic_2
+nsm_account  / account.analytic.account / department_id (many2one)      : previously in module nsm_analytic_2
+nsm_account  / account.invoice          / invoice_description (text)    : previously in module nsm_invoice_layout
+nsm_account  / account.invoice          / klantnummer (char)            : previously in module nsm_improv
+nsm_account  / account.move             / message_follower_ids (one2many): previously in module nsm_improv
+nsm_account  / account.move             / message_ids (one2many)        : previously in module nsm_improv
+nsm_account  / account.move             / message_last_post (datetime)  : previously in module nsm_improv
+nsm_account  / project.project          / code (False)                  : NEW required: required, mode: modify
+nsm_account  / res.company              / report_background_image1 (binary): previously in module nsm_invoice_layout
+nsm_account  / res.company              / report_background_image2 (binary): previously in module nsm_invoice_layout
+nsm_account  / res.partner              / aprofit_nummer (char)         : previously in module nsm_improv
+nsm_account  / sale.advertising.issue   / code (False)                  : NEW required: required, mode: modify
+nsm_analytic / account.analytic.account / date_publish (date)           : module is now 'publishing_accounts' ('nsm_analytic')
+---XML records in module 'nsm_account'---
+NEW ir.actions.act_window: nsm_account.act_open_suplier_invoice_merge_pdf_view
+NEW ir.actions.act_window.view: nsm_account.act_open_suplier_invoice_merge_pdf_view_form
+NEW ir.actions.report.xml: account.account_invoices
+NEW ir.actions.report.xml: nsm_account.blank_invoice_reports
+NEW ir.actions.server: nsm_account.invoice_merge_pdf_server_action
+NEW ir.rule: nsm_account.analytic_account_user_rule
+NEW ir.rule: nsm_account.analytic_manager_rule
+NEW ir.rule: nsm_account.analytic_user_rule
+NEW ir.ui.menu: account.account_analytic_journal_entries
+NEW ir.ui.menu: account.menu_finance_entries
+NEW ir.ui.view: nsm_account.invoice_form_NSM
+NEW ir.ui.view: nsm_account.invoice_supplier_form_NSM
+NEW ir.ui.view: nsm_account.invoice_supplier_form_inherit2
+NEW ir.ui.view: nsm_account.invoice_supplier_tree_inherit
+NEW ir.ui.view: nsm_account.report_blank_invoice
+NEW ir.ui.view: nsm_account.report_blank_invoice_document
+NEW ir.ui.view: nsm_account.view_account_analytic_account_tree_nsm
+NEW ir.ui.view: nsm_account.view_account_analytic_form
+NEW ir.ui.view: nsm_account.view_account_analytic_line_tree_nsm
+NEW ir.ui.view: nsm_account.view_move_form_inherit_bottom
+NEW ir.ui.view: nsm_account.view_nsm_res_partner_form2
+NEW ir.ui.view: nsm_account.view_partner_bank_tree
+NEW ir.ui.view: nsm_account.view_res_company_form_inherits
+NEW ir.ui.view: nsm_account.view_suplier_invoice_merge_pdf_form
+DEL ir.ui.view: nsm_analytic.view_account_analytic_account_form_nsm
+DEL ir.ui.view: nsm_analytic.view_account_analytic_account_list
+DEL ir.ui.view: nsm_analytic.view_account_analytic_line_form_nsm_delete
+DEL ir.ui.view: nsm_analytic.view_account_analytic_line_form_nsm_nodelete
+DEL ir.ui.view: nsm_analytic.view_account_analytic_line_tree_nsm_delete
+DEL ir.ui.view: nsm_analytic.view_account_analytic_line_tree_nsm_nodelete
+NEW ir.values: nsm_account.run_invoice_merge_pdf_action
+NEW mail.message.subtype: nsm_account.mt_move_posted
+NEW mail.message.subtype: nsm_account.mt_move_unposted

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report auto="False"
+            id="account.account_invoices"
+            model="account.invoice"
+            name="account.invoice.customNSM"
+            rml="nsm_account/report/report_account_invoice_print.rml"
+            report_type="pdf"
+            string="Invoices"
+            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            attachment_use="True"
+            usage="default"
+            header="False"/>
+
+
+        <report
+            id="blank_invoice_reports"
+            model="account.invoice"
+            string="Blank Invoices"
+            report_type="qweb-pdf"
+            name="nsm_account.report_blank_invoice"
+            file="nsm_account.report_blank_invoice"
+        />
+
+    </data>
+</openerp>

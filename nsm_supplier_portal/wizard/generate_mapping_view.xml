@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_generate_mapping_form" model="ir.ui.view">
+            <field name="name">generate.mapping.form</field>
+            <field name="model">generate.mapping</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+            <form string="Generate Sales Team Mapping" version="7.0">
+                <field name="state" invisible="1"/>
+                <group string="Are you sure you want to generate Sales Team Mapping?"
+                    attrs="{'invisible': [('state','=', 'generated')]}"/>
+                <group string="Total Sales Team Mapping"
+                    attrs="{'invisible': [('state','=', 'draft')]}">
+                    <field name="existing_generated" readonly="1"/>
+                    <field name="new_create" readonly="1"/>
+                    <field name="total" readonly="1"/>
+                </group>
+                <footer attrs="{'invisible': [('state','=', 'generated')]}">
+                    <button string="Yes"
+                        class="oe_highlight"
+                        states="draft" type="object" name="generate_mapping"/>
+                    or
+                        <button string="No" class="oe_link" special="cancel"
+                            states="draft"/>
+                </footer>
+                <footer attrs="{'invisible': [('state','=', 'draft')]}">
+                    <button string="Ok" class="oe_link" special="cancel"
+                        states="generated"/>
+                </footer> 
+            </form>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="act_open_generate_mapping_view">
+            <field name="name">Generate Sales Team Mapping</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">generate.mapping</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        
+        <!--record model="ir.actions.act_window.view" id="act_open_generate_mapping_view_form">
+            <field name="act_window_id" ref="act_open_generate_mapping_view"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_generate_mapping_form"/>
+        </record-->
+        
+        
+        <menuitem id="menu_generate_mapping"
+            parent="sales_team.menu_sale_config"
+            sequence="15"
+            action="act_open_generate_mapping_view"
+            groups="account.group_account_user"/>
+    </data>
+</openerp>

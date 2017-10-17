@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    Copyright 2015 Magnus 
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -15,11 +14,24 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import models
+from odoo import api, fields, models, _
+
+class Partner(models.Model):
+    _inherit = 'res.partner'
+
+    aprofit_nummer = fields.Char('Klantnummer aProfit', size=64, index=True)
+
+class Company(models.Model):
+    _inherit = 'res.company'
+
+    report_background_image1 = fields.Binary('Background Image for Report Frontpage',
+            help='Set Background Image for Report Frontpage')
+
+    report_background_image2 = fields.Binary('Background Image for Report Following Pages',
+            help='Set Background Image for Report Following Pages')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

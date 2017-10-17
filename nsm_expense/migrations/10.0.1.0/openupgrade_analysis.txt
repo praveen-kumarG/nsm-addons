@@ -1,0 +1,13 @@
+---Fields in module 'nsm_expense'---
+nsm_expense  / account.move             / expense_id (one2many)         : DEL relation: hr.expense
+nsm_expense  / hr.expense               / account_id (many2one)         : module is now 'hr_expense' ('nsm_expense')
+nsm_expense  / hr.expense               / date_confirm (date)           : DEL 
+---XML records in module 'nsm_expense'---
+NEW ir.actions.act_window: hr_expense.action_hr_expense_sheet_all_to_approve
+NEW ir.actions.act_window: hr_expense.action_hr_expense_sheet_all_to_post
+NEW ir.ui.view: nsm_expense.view_hr_expense_sheet_filter_inherit
+NEW ir.ui.view: nsm_expense.view_hr_expense_sheet_form_inherit
+NEW ir.ui.view: nsm_expense.view_hr_expense_sheet_tree_inherit
+DEL ir.ui.view: nsm_expense.hr_expense_my_tree_nsm
+DEL ir.ui.view: nsm_expense.view_expenses_tree_nsm
+DEL ir.ui.view: nsm_expense.view_hr_expense_filter_nsm

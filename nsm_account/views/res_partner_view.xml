@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_nsm_res_partner_form2" model="ir.ui.view">
+        <field name="name">res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='street']" position="before">
+                <field name="aprofit_nummer" attrs="{'readonly': 'True','invisible': ['|',('aprofit_nummer', '=', False),('is_company','=', False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_bank_tree" model="ir.ui.view">
+        <field name="name">res.partner.bank.tree_improv</field>
+        <field name="model">res.partner.bank</field>
+        <field name="inherit_id" ref="base.view_partner_bank_tree"/>
+        <field name="arch" type="xml">
+            <field name="bank_name" position="after">
+                <field name="bank_bic"/>
+            </field>
+        </field>
+    </record>
+
+        
+</odoo>

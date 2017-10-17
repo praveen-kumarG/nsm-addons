@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+    <record id="view_suplier_invoice_merge_pdf_form" model="ir.ui.view">
+        <field name="name">supplier.invoice.merge.pdf.form</field>
+        <field name="model">supplier.invoice.merge.pdf</field>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+        <form string="Merge PDF" version="7.0">
+            <field name="file_name" select="1" invisible="1" readonly="1"/>
+            <field name="file_data"  filename="file_name" readonly="1" />
+            <footer>
+                <button string="Close" special="cancel" class="oe_link"/>
+            </footer>
+        </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_open_suplier_invoice_merge_pdf_view">
+        <field name="name">Merge PDF</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">supplier.invoice.merge.pdf</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="act_open_suplier_invoice_merge_pdf_view_form">
+        <field name="act_window_id" ref="act_open_suplier_invoice_merge_pdf_view"/>
+        <field name="sequence" eval="20"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_suplier_invoice_merge_pdf_form"/>
+    </record>
+
+    <!--
+        deep: commented, and below alternate Server Action is added
+    -->
+    <!--<act_window id="act_supplier_invoice_merge_pdf_invoice"-->
+        <!--name="Merge Attachments"-->
+        <!--multi="True"-->
+        <!--key2="client_action_multi"-->
+        <!--view_mode="form" target="new" view_type="form"-->
+        <!--res_model="supplier.invoice.merge.pdf"-->
+        <!--src_model="account.invoice"/>-->
+
+
+    <!--
+        added by deep
+    -->
+    <record id="invoice_merge_pdf_server_action" model="ir.actions.server">
+        <field name="name">Merge Attachments</field>
+        <field name="model_id" ref="model_account_invoice"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.button_merge_attachments()</field>
+    </record>
+
+    <record id="run_invoice_merge_pdf_action" model="ir.values">
+        <field name="model_id" ref="account.model_account_invoice" />
+        <field name="name">Merge Attachments</field>
+        <field name="key2">client_action_multi</field>
+        <field name="key">action</field>
+        <field name="model">account.invoice</field>
+        <field name="value" eval="'ir.actions.server,' + str(ref('invoice_merge_pdf_server_action'))" />
+    </record>
+
+
+
+    </data>
+</openerp>

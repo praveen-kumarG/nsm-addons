@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <record id="view_sales_team_tree" model="ir.ui.view">
+            <field name="name">sales.team.tree</field>
+            <field name="model">sales.team</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+            <tree string="Sales Team Mapping">
+                <field name="name"/>
+                <field name="analytic_account_id"/>
+                <field name="product_cat_id"/>
+                <field name="sales_team_id"/>
+            </tree>
+            </field>
+        </record>
+        
+        <record id="view_sales_team_form" model="ir.ui.view">
+            <field name="name">sales.team.form</field>
+            <field name="model">sales.team</field>
+            <field name="type">form</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+            <form string="Sales Team Mapping" version="7.0">
+                <sheet>
+                    <group col="4">
+                        <field name="name" readonly="1"/>
+                        <field name="analytic_account_id" required="1" domain="[('portal_main', '=', True)]"/>
+                        <field name="product_cat_id" required="1"/>
+                        <field name="sales_team_id" required="1"/>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+        
+        <record id="view_sales_team_search" model="ir.ui.view">
+            <field name="name">sales.team.search</field>
+            <field name="model">sales.team</field>
+            <field name="type">search</field>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+            <search string="Sales Team Mapping">
+                <field name="name"/>
+                <field name="analytic_account_id"/>
+                <field name="product_cat_id"/>
+                <field name="sales_team_id"/>
+            </search>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="act_open_sales_team_view">
+            <field name="name">Sales Team Mapping</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sales.team</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_sales_team_search"/>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="act_open_sales_team_view_form">
+            <field name="act_window_id" ref="act_open_sales_team_view"/>
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_sales_team_form"/>
+        </record>
+        
+        <record model="ir.actions.act_window.view" id="act_open_sales_team_view_tree">
+            <field name="act_window_id" ref="act_open_sales_team_view"/>
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_sales_team_tree"/>
+        </record>
+        
+        <menuitem id="menu_sales_team"
+            parent="sales_team.menu_sale_config"
+            sequence="15"
+            action="act_open_sales_team_view"
+            groups="account.group_account_user"/>
+
+
+    </data>
+</openerp>

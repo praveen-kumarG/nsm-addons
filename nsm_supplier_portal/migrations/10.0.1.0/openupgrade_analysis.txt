@@ -1,0 +1,25 @@
+---Fields in module 'nsm_supplier_portal'---
+nsm_supplier_portal / account.analytic.account / supp_analytic_accids (integer): previously in module nsm_supportal_extension
+nsm_supplier_portal / account.invoice          / check_total (float)           : previously in module nsm_supportal_extension
+nsm_supplier_portal / account.invoice          / data_file (char)              : now a function
+nsm_supplier_portal / account.invoice          / is_portal (boolean)           : module is now 'freelancer_self_billing' ('nsm_supplier_portal')
+nsm_supplier_portal / account.invoice          / state (False)                 : previously in module nsm_improv02
+nsm_supplier_portal / account.invoice          / supplier_ref_related (char)   : now a function
+nsm_supplier_portal / account.invoice          / topf (boolean)                : previously in module nsm_supportal_extension
+nsm_supplier_portal / product.category         / supp_category_ids (integer)   : previously in module nsm_supportal_extension
+nsm_supplier_portal / product.category         / supportal (boolean)           : previously in module nsm_supportal_extension
+nsm_supplier_portal / res.partner              / analytic_account_ids (many2many): previously in module nsm_supportal_extension
+nsm_supplier_portal / res.partner              / product_category_ids (many2many): previously in module nsm_supportal_extension
+nsm_supplier_portal / sales.team               / company_id (many2one)         : previously in module nsm_supportal_extension
+---XML records in module 'nsm_supplier_portal'---
+NEW ir.actions.act_window: nsm_supplier_portal.act_res_partner_2_account_invoice_opened
+NEW ir.actions.act_window: nsm_supplier_portal.action_invoice_tree2_standard
+NEW ir.rule: account_invoice_2step_validation.domain_open_auth_paid_rule
+NEW ir.rule: nsm_supplier_portal.analytic_account_user_rule
+NEW ir.rule: nsm_supplier_portal.product_category_user_rule
+NEW ir.rule: nsm_supplier_portal.sales_team_rule
+DEL ir.rule: megis_auth.domain_open_auth_paid_rule
+NEW ir.ui.view: nsm_supplier_portal.invoice_supplier_form_NSM_ext
+NEW ir.ui.view: nsm_supplier_portal.product_category_form_view_ext
+NEW ir.ui.view: nsm_supplier_portal.product_category_list_view_inherit
+NEW product.category: nsm_supplier_portal.supplier_portal_category

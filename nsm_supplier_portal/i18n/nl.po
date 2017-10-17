@@ -1,0 +1,809 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* nsm_supplier_portal
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-02-02 21:55+0000\n"
+"PO-Revision-Date: 2015-02-02 23:21+0100\n"
+"Last-Translator: W. Hulshof <w.hulshof@magnus.nl>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: nl\n"
+"X-Generator: Poedit 1.6.3\n"
+
+#. module: nsm_supplier_portal
+#: model:email.template,body_html:nsm_supplier_portal.send_invitation_email
+msgid ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        You have been invited to connect to \"${object."
+"company_id.name}\" in order to get access to your documents in ERP system.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        To accept the invitation, click on the following "
+"link:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accept "
+"invitation to \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Thanks,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
+msgstr ""
+"\n"
+"                \n"
+"                    <p>\n"
+"                        ${object.name},\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        U bent uitgenodigd om in te loggen bij \"${object."
+"company_id.name}\" waar u uw facturen kunt invoeren.\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Om de uitnodiging te accepteren klik op de link:\n"
+"                    </p>\n"
+"                    <ul>\n"
+"                        <li><a href=\"${object.signup_url}\">Accepteer "
+"uitnodiging van \"${object.company_id.name}\"</a></li>\n"
+"                    </ul>\n"
+"                    <p>\n"
+"                        Met vriendelijke groet,\n"
+"                    </p>\n"
+"                    <pre>\n"
+"--\n"
+"${object.company_id.name or ''}\n"
+"${object.company_id.email or ''}\n"
+"${object.company_id.phone or ''}\n"
+"                    </pre>\n"
+"                \n"
+"            "
+
+#. module: nsm_supplier_portal
+#: model:email.template,subject:nsm_supplier_portal.send_invitation_email
+msgid "${object.company_id.name} invitation to connect on ERP System"
+msgstr ""
+"${object.company_id.name} Uitnodiging om te verbinden aan het New Skool "
+"Media leveranciers-portal"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "(update)"
+msgstr "(bijwerken)"
+
+#. module: nsm_supplier_portal
+#: model:ir.actions.act_window,help:nsm_supplier_portal.action_supplier_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a contact in your address book.\n"
+"              </p><p>\n"
+"                OpenERP helps you easily track all activities related to\n"
+"                a supplier: discussions, history of purchases,\n"
+"                documents, etc.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">                Klik voor het "
+"toevoegen van een contactpersoon in uw adresboek.              </"
+"p><p>                OpenERP helpt u bij het beheren van al uw activiteiten "
+"met uw leveranciers.                Discussies, historische inkopen, "
+"documenten, etc.              </p>            "
+
+#. module: nsm_supplier_portal
+#: model:ir.actions.client,help:nsm_supplier_portal.action_mail_inbox_feeds_supplier_portal
+msgid ""
+"<p>\n"
+"                            <b>Good Job!</b> Your inbox is empty.\n"
+"                        </p><p>\n"
+"                            Your inbox contains private messages or emails "
+"sent to you\n"
+"                            as well as information related to documents or "
+"people you\n"
+"                            follow.\n"
+"                        </p>\n"
+"                    "
+msgstr ""
+"<p>                    <b>Goed gedaan!</b> Uw postvak in is "
+"leeg.                </p><p>                    Uw postvak in bevat privé "
+"berichten of e-mails naar u toegestuurd                    alsmede "
+"informatie over documenten of mensen die u                    "
+"volgt.                </p>            "
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "Accounting"
+msgstr "Financieel"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "Address"
+msgstr "Adres"
+
+#. module: nsm_supplier_portal
+#: code:_description:0
+#: model:ir.model,name:nsm_supplier_portal.model_account_analytic_account
+#: field:sales.team,analytic_account_id:0
+#, python-format
+msgid "Analytic Account"
+msgstr "Kostenplaats"
+
+#. module: nsm_supplier_portal
+#: model:ir.ui.menu,name:nsm_supplier_portal.mail_archivesfeeds_new
+msgid "Archives"
+msgstr "Archieven"
+
+#. module: nsm_supplier_portal
+#: view:generate.mapping:0
+msgid "Are you sure you want to generate Sales Team Mapping?"
+msgstr "Weet u zeker dat u de  verkoopteam koppeling wilt genereren?"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Ask Refund"
+msgstr "Vraag een credit aan"
+
+#. module: nsm_supplier_portal
+#: field:account.invoice,avail_supplier_portal:0
+#: field:product.product,avail_supplier_portal:0
+msgid "Available Supplier Portal"
+msgstr "Redactie/Marketing"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "Bank Details"
+msgstr "Bankrekeningen"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Cancel Invoice"
+msgstr "Annuleer factuur"
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/wizard/account_invoice_refund.py:57
+#, python-format
+msgid "Cannot %s draft/proforma/cancel invoice."
+msgstr "Cannot %s draft/proforma/cancel invoice."
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/wizard/account_invoice_refund.py:59
+#, python-format
+msgid ""
+"Cannot %s invoice which is already reconciled, invoice should be "
+"unreconciled first. You can only refund this invoice."
+msgstr ""
+"Cannot %s invoice which is already reconciled, invoice should be "
+"unreconciled first. You can only refund this invoice."
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "City"
+msgstr "Plaats"
+
+#. module: nsm_supplier_portal
+#: code:_description:0
+#: model:ir.model,name:nsm_supplier_portal.model_res_company
+#, python-format
+msgid "Companies"
+msgstr "Bedrijven"
+
+#. module: nsm_supplier_portal
+#. openerp-web
+#: code:addons/nsm_supplier_portal/static/src/xml/mail.xml:45
+#, python-format
+msgid "Compose a new message"
+msgstr "Schrijf een nieuw bericht"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "Contacts"
+msgstr "Contactpersonen"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "Country"
+msgstr "Land"
+
+#. module: nsm_supplier_portal
+#: selection:generate.mapping,state:0
+msgid "Draft"
+msgstr "Concept"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Draft Invoice"
+msgstr "Concept factuur"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Draft Refund"
+msgstr "Concept credit factuur"
+
+#. module: nsm_supplier_portal
+#: selection:account.invoice,avail_supplier_portal:0
+#: selection:product.product,avail_supplier_portal:0
+msgid "Editorial"
+msgstr "Redactie"
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/wizard/portal_wizard.py:37
+#, python-format
+msgid "Email Required"
+msgstr "Email Required"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+#: model:ir.actions.act_window,name:nsm_supplier_portal.act_open_custom_supplier_invoice_view
+#: model:ir.ui.menu,name:nsm_supplier_portal.menu_custom_supplier_invoice
+msgid "Enter Your Invoice"
+msgstr "Voer uw factuur in"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Enter Your Invoice Number"
+msgstr "Voer uw factuurnummer in"
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/account_invoice.py:174
+#: code:addons/nsm_supplier_portal/account_invoice.py:176
+#: code:addons/nsm_supplier_portal/wizard/account_invoice_refund.py:57
+#: code:addons/nsm_supplier_portal/wizard/account_invoice_refund.py:59
+#, python-format
+msgid "Error!"
+msgstr "Error!"
+
+#. module: nsm_supplier_portal
+#: field:generate.mapping,existing_generated:0
+msgid "Existing"
+msgstr "Bestaand"
+
+#. module: nsm_supplier_portal
+#: field:account.invoice,data_file:0
+#: field:account.invoice,data_supplier_terms_file_name:0
+#: field:base.config.settings,data_fname:0 field:res.company,data_fname:0
+msgid "File Name"
+msgstr "Bestandsnaam"
+
+#. module: nsm_supplier_portal
+#: code:_description:0
+#: code:addons/nsm_supplier_portal/wizard/generate_mapping.py:85
+#: view:generate.mapping:0
+#: model:ir.actions.act_window,name:nsm_supplier_portal.act_open_generate_mapping_view
+#: model:ir.model,name:nsm_supplier_portal.model_generate_mapping
+#: model:ir.ui.menu,name:nsm_supplier_portal.menu_generate_mapping
+#, python-format
+msgid "Generate Sales Team Mapping"
+msgstr "Genereer verkoopteam koppeling"
+
+#. module: nsm_supplier_portal
+#: selection:generate.mapping,state:0
+msgid "Generated"
+msgstr "Gegenereerd"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Hergebruik"
+msgstr "Hergebruik"
+
+#. module: nsm_supplier_portal
+#: field:account.invoice,terms:0
+msgid "I accept the re-use terms"
+msgstr "Ik accepteer de hergebruik voorwaarden"
+#: code:_description:0
+#: model:ir.model,name:nsm_supplier_portal.model_account_analytic_account
+#: field:sales.team,analytic_account_id:0
+#, python-format
+msgid "Analytic Account"
+msgstr "Editie"
+>>>>>>> c369ce3dab4bb3cef2fa4c1120a7cd8531e79424
+
+#. module: nsm_supplier_portal
+#: model:ir.actions.client,name:nsm_supplier_portal.action_mail_inbox_feeds_supplier_portal
+#: model:ir.ui.menu,name:nsm_supplier_portal.supplier_portal_inbox
+msgid "Inbox"
+msgstr "Postvak in"
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/wizard/account_invoice_refund.py:94
+#, python-format
+msgid "Insufficient Data!"
+msgstr "Onvoldoende gegevens!"
+
+#. module: nsm_supplier_portal
+#: code:_description:0 view:account.invoice:0
+#: model:ir.model,name:nsm_supplier_portal.model_account_invoice
+#: model:ir.ui.menu,name:nsm_supplier_portal.menu_supplier_invoice_main
+#, python-format
+msgid "Invoice"
+msgstr "Factuur"
+
+#. module: nsm_supplier_portal
+#: code:_description:0
+#: model:ir.model,name:nsm_supplier_portal.model_account_invoice_line
+#, python-format
+msgid "Invoice Line"
+msgstr "Factuurregel"
+
+#. module: nsm_supplier_portal
+#: code:_description:0
+#: model:ir.model,name:nsm_supplier_portal.model_account_invoice_refund
+#, python-format
+msgid "Invoice Refund"
+msgstr "Credit Factuur"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Invoice lines"
+msgstr "Factuurregels"
+
+#. module: nsm_supplier_portal
+#: field:account.invoice,main_account_analytic_id:0
+msgid "Main Analytic account"
+msgstr "Titel"
+
+#. module: nsm_supplier_portal
+#: selection:account.invoice,avail_supplier_portal:0
+#: selection:product.product,avail_supplier_portal:0
+msgid "Marketing"
+msgstr "Marketing"
+
+#. module: nsm_supplier_portal
+#: model:ir.ui.menu,name:nsm_supplier_portal.menu_supplier_portal_main
+msgid "Messaging"
+msgstr "Berichtgeving"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0 field:sales.team,name:0
+msgid "Name"
+msgstr "Naam"
+
+#. module: nsm_supplier_portal
+#: field:generate.mapping,new_create:0
+msgid "New Created"
+msgstr "Nieuw aangemaakt"
+
+#. module: nsm_supplier_portal
+#: view:generate.mapping:0
+msgid "No"
+msgstr "Nee"
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/controllers/main.py:71
+#, python-format
+msgid "No content found for field '%s' on '%s:%s'"
+msgstr "No content found for field '%s' on '%s:%s'"
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/wizard/account_invoice_refund.py:95
+#, python-format
+msgid "No period found on the invoice."
+msgstr "Geen periode gedefinieerd in de factuur."
+
+#. module: nsm_supplier_portal
+#: view:generate.mapping:0
+msgid "Ok"
+msgstr "Ok"
+
+#. module: nsm_supplier_portal
+#: model:crm.case.section,name:nsm_supplier_portal.section_sales_department1
+msgid "Onbekend"
+msgstr "Onbekend"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Opdrachtgever"
+msgstr "Opdrachtgever"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Other Info"
+msgstr "Overige gegevens"
+
+#. module: nsm_supplier_portal
+#: code:_description:0
+#: model:ir.model,name:nsm_supplier_portal.model_res_partner
+#, python-format
+msgid "Partner"
+msgstr "Relatie"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "Partners"
+msgstr "Relaties"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Payment Date"
+msgstr "Betaaldatum"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Payments"
+msgstr "Betalingen"
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/account_invoice.py:176
+#, python-format
+msgid "Please Accept re-use terms"
+msgstr "Geef akkoord voor de Hergebruik voorwaarden"
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/account_invoice.py:174
+#, python-format
+msgid "Please Upload your invoice File before submit."
+msgstr "U dient u factuur te uploaden voordat u uw factuur kunt indienen."
+
+#. module: nsm_supplier_portal
+#: view:account.analytic.account:0 field:account.invoice,is_portal:0
+msgid "Portal"
+msgstr "Portaal"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Portal Invoices"
+msgstr "Portaal Facturen"
+
+#. module: nsm_supplier_portal
+#: field:account.analytic.account,portal_main:0
+msgid "Portal Main"
+msgstr "Portaal hoofd-kostenplaatst"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "Portal Partners"
+msgstr "Portal Partners"
+
+#. module: nsm_supplier_portal
+#: field:account.analytic.account,portal_sub:0
+msgid "Portal Sub"
+msgstr "Portaal sub-kostenplaatst"
+
+#. module: nsm_supplier_portal
+#: code:_description:0
+#: model:ir.model,name:nsm_supplier_portal.model_portal_wizard_user
+#, python-format
+msgid "Portal User Config"
+msgstr "Portaal gebruikers instellingen"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "Portal Users"
+msgstr "Portal Users"
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/account_analytic.py:47
+#, python-format
+msgid "Portal Warning!"
+msgstr "Portaal Waarschuwing!"
+
+#. module: nsm_supplier_portal
+#: code:_description:0
+#: model:ir.model,name:nsm_supplier_portal.model_product_product
+#, python-format
+msgid "Product"
+msgstr "Product"
+
+#. module: nsm_supplier_portal
+#: field:sales.team,product_cat_id:0
+msgid "Product Category"
+msgstr "Product categorie"
+
+#. module: nsm_supplier_portal
+#: code:_description:0
+#: model:ir.model,name:nsm_supplier_portal.model_product_template
+#, python-format
+msgid "Product Template"
+msgstr "Productsjabloon"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Re-Open"
+msgstr "Open opnieuw"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Recompute taxes and total"
+msgstr "Belastingen en totalen opnieuw berekenen"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Redactie"
+msgstr "Redactie"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Refund"
+msgstr "Credit factuur"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Residual Amount"
+msgstr "Restbedrag"
+
+#. module: nsm_supplier_portal
+#: field:account.invoice,reuse:0
+msgid "Reuse"
+msgstr "Hergebruik"
+
+#. module: nsm_supplier_portal
+#: view:res.company:0 field:res.partner,reuse:0
+msgid "Reuse-authorization"
+msgstr "Hergebruik voorwaarden"
+
+#. module: nsm_supplier_portal
+#: field:sales.team,sales_team_id:0
+msgid "Sales Team"
+msgstr "Verkoopteam"
+
+#. module: nsm_supplier_portal
+#: code:_description:0
+#: model:ir.actions.act_window,name:nsm_supplier_portal.act_open_sales_team_view
+#: model:ir.model,name:nsm_supplier_portal.model_sales_team
+#: model:ir.ui.menu,name:nsm_supplier_portal.menu_sales_team view:sales.team:0
+#, python-format
+msgid "Sales Team Mapping"
+msgstr "Verkoopteam koppeling"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Set to Draft"
+msgstr "Zet op concept"
+
+#. module: nsm_supplier_portal
+#: field:generate.mapping,state:0 view:res.partner:0
+msgid "State"
+msgstr "Status"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "Street..."
+msgstr "Straat..."
+
+#. module: nsm_supplier_portal
+#: field:account.invoice,sub_account_analytic_id:0
+msgid "Sub Analytic account"
+msgstr "Editie"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Submit"
+msgstr "Indienen"
+
+#. module: nsm_supplier_portal
+#: field:account.invoice,is_submitted:0
+msgid "Submitted"
+msgstr "Ingediend"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Submitted Invoice"
+msgstr "Ingediende factuur"
+
+#. module: nsm_supplier_portal
+#: model:ir.actions.act_window,name:nsm_supplier_portal.act_open_supplier_invoice_submited_view
+#: model:ir.ui.menu,name:nsm_supplier_portal.menu_supplier_invoice_submited
+msgid "Submitted Supplier Invoices"
+msgstr "Ingediende Inkoopfacturen"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0 field:account.invoice,supplier_id:0
+#: model:ir.ui.menu,name:nsm_supplier_portal.menu_supplier_details_main
+msgid "Supplier"
+msgstr "Leverancier"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Supplier Invoice"
+msgstr "Inkoopfactuur"
+
+#. module: nsm_supplier_portal
+#: field:account.invoice,supplier_terms:0 field:res.company,supplier_terms:0
+msgid "Supplier Invoice Reuse-authorization File"
+msgstr "Hergebruik voorwaarden bestand"
+
+#. module: nsm_supplier_portal
+#: model:ir.actions.act_window,name:nsm_supplier_portal.act_open_supplier_invoice_view
+#: model:ir.ui.menu,name:nsm_supplier_portal.menu_supplier_invoice
+msgid "Supplier Invoices"
+msgstr "Inkoopfacturen"
+
+#. module: nsm_supplier_portal
+#: model:ir.ui.menu,name:nsm_supplier_portal.menu_supplier_main
+msgid "Supplier Portal"
+msgstr "Leveranciers portaal"
+
+#. module: nsm_supplier_portal
+#: model:res.groups,name:nsm_supplier_portal.group_module_supplier_portal
+msgid "Supplier Portal Basis"
+msgstr "Leverancier portaal basis"
+
+#. module: nsm_supplier_portal
+#: model:res.groups,name:nsm_supplier_portal.group_module_supplier_portal_controller
+msgid "Supplier Portal Controller"
+msgstr "Leverancier portaal controller"
+
+#. module: nsm_supplier_portal
+#: model:res.groups,name:nsm_supplier_portal.group_module_supplier_portal_user
+msgid "Supplier Portal User"
+msgstr "Leverancier portaal gebruiker"
+
+#. module: nsm_supplier_portal
+#: model:ir.actions.act_window,name:nsm_supplier_portal.action_invoice_tree4
+#: model:ir.ui.menu,name:nsm_supplier_portal.menu_action_invoice_tree4_custom
+msgid "Supplier Refunds"
+msgstr "Credit inkoopfacturen"
+
+#. module: nsm_supplier_portal
+#: model:ir.module.category,name:nsm_supplier_portal.module_supplier_portal
+msgid "Supplier portal"
+msgstr "Leveranciers portaal"
+
+#. module: nsm_supplier_portal
+#: model:ir.actions.act_window,name:nsm_supplier_portal.action_supplier_form
+msgid "Suppliers"
+msgstr "Leveranciers"
+
+#. module: nsm_supplier_portal
+#: field:account.invoice.line,new_tax_id:0
+msgid "Tax"
+msgstr "BTW"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Taxes"
+msgstr "Belastingen"
+
+#. module: nsm_supplier_portal
+#: sql_constraint:sales.team:0
+msgid ""
+"The combination of Analytic account and Product Category must be unique!"
+msgstr ""
+"De combinatie van de kostenplaats en de productcategorie moet uniek zijn!"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid ""
+"This button only appears when the state of the invoice is 'paid' (showing "
+"that it has been fully reconciled) and auto-computed boolean 'reconciled' is "
+"False (depicting that it's not the case anymore). In other words, the "
+"invoice has been dereconciled and it does not fit anymore the 'paid' state. "
+"You should press this button to re-open it and let it continue its normal "
+"process after having resolved the eventual exceptions it may have created."
+msgstr ""
+"Deze knop verschijnt alleen als de status van de factuur op 'betaald'  staat "
+"(en dus volledig afgeletterd zou moeten zijn) terwijl het systeem intern een "
+"instelling heeft die aangeeft dat de factuur niet afgeletterd is. Door te "
+"klikken op deze knop wordt de factuur heropend en kunt u de problemen "
+"oplossen."
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Titel"
+msgstr "Titel"
+
+#. module: nsm_supplier_portal
+#: field:generate.mapping,total:0
+msgid "Total"
+msgstr "Totaal"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Total Amount"
+msgstr "Totaalbedrag"
+
+#. module: nsm_supplier_portal
+#: view:generate.mapping:0
+msgid "Total Sales Team Mapping"
+msgstr "Totaal aantal verkoopteam koppelingen"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Untaxed Amount"
+msgstr "Netto bedrag"
+
+#. module: nsm_supplier_portal
+#: field:base.config.settings,supplier_terms:0
+msgid "Upload Supplier Invoice Reuse-authorization File"
+msgstr "Upload de PDF met hergebruik voorwaarden "
+
+#. module: nsm_supplier_portal
+#: field:account.invoice,file:0
+msgid "Upload Your Invoice"
+msgstr "Upload uw factuur"
+
+#. module: nsm_supplier_portal
+#: view:account.invoice:0
+msgid "Validate"
+msgstr "Bevestig"
+
+#. module: nsm_supplier_portal
+#. openerp-web
+#: code:addons/nsm_supplier_portal/static/src/xml/mail.xml:39
+#: code:addons/nsm_supplier_portal/static/src/xml/mail.xml:50
+#, python-format
+msgid "Write to my followers"
+msgstr "Schrijf aan mijn volgers"
+
+#. module: nsm_supplier_portal
+#: view:generate.mapping:0
+msgid "Yes"
+msgstr "Ja"
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/account_analytic.py:48
+#, python-format
+msgid ""
+"You can not use same analytic account for Main portal as well as Sub portal"
+msgstr ""
+"Het is niet toegestaan om dezelfde hoofd-kostenplaats en sub-kostenplaats te "
+"gebruiken"
+
+#. module: nsm_supplier_portal
+#: code:addons/nsm_supplier_portal/wizard/portal_wizard.py:38
+#, python-format
+msgid "You must have an email address in your User Preferences to send emails."
+msgstr ""
+"U dient een e-mail adres in uw voorkeuren te hebben om e-mails te kunnen "
+"versturen."
+
+#. module: nsm_supplier_portal
+#: model:ir.ui.menu,name:nsm_supplier_portal.menu_custom_supplier_details
+msgid "Your Details"
+msgstr "Uw gegevens"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "ZIP"
+msgstr "Postcode"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "at"
+msgstr "bij"
+
+#. module: nsm_supplier_portal
+#: code:_description:0
+#: model:ir.model,name:nsm_supplier_portal.model_base_config_settings
+#, python-format
+msgid "base.config.settings"
+msgstr "base.config.settings"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "e.g. +32.81.81.37.00"
+msgstr "Bijv. +31 (0)20 -12 34 567"
+
+#. module: nsm_supplier_portal
+#: view:res.partner:0
+msgid "e.g. www.openerp.com"
+msgstr "Bijv. www.openerp.com"
+
+#. module: nsm_supplier_portal
+#. openerp-web
+#: code:addons/nsm_supplier_portal/static/src/xml/mail.xml:48
+#: view:generate.mapping:0
+#, python-format
+msgid "or"
+msgstr "of"
+
+#. module: nsm_supplier_portal
+#: field:account.invoice,supplier_ref_related:0
+msgid "unknown"
+msgstr "onbekend"

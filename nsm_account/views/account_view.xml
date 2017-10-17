@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_move_form_inherit_bottom" model="ir.ui.view">
+            <field name="name">view.move.form.inherit_bottom</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="priority">90</field>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//sheet" position="after">
+                        <div class="oe_chatter">
+                            <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" widget="mail_thread"/>
+                        </div>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+        <record id="view_account_analytic_form" model="ir.ui.view">
+            <field name="name">account.analytic.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <field name="currency_id" position="after">
+                    <!--<field name="section_ids" string="Section"/>-->
+                    <field name="department_id" string="Department"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_account_tree_nsm" model="ir.ui.view">
+            <field name="name">account.analytic.account.tree.nsm</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_list"/>
+            <field name="arch" type="xml">
+                    <field name="display_name" position="after">
+                        <field name="department_id" string="Department"/>
+                    </field>
+            </field>
+        </record>
+        <record id="view_account_analytic_line_tree_nsm" model="ir.ui.view">
+            <field name="name">account.analytic.line.tree.nsm</field>
+            <field name="model">account.analytic.line</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_line_tree"/>
+            <field name="arch" type="xml">
+                    <field name="name" position="after">
+                        <field name="partner_id"/>
+                    </field>
+            </field>
+        </record>
+
+
+
+
+
+</odoo>

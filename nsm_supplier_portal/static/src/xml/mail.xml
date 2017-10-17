@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+ <t t-extend="Login">
+        <t t-jquery="div.oe_login_footer" t-operation="replace">
+        </t>
+    </t>
+    <!-- 
+        wall main template
+        Template used to display the communication history in the wall.
+        -->
+    
+    <div t-name="mail.wall" class="oe_view_manager oe_mail_wall oe_view_manager_current">
+        <table class="oe_view_manager_header">
+          <colgroup>
+            <col width="33%"/>
+            <col width="33%"/>
+            <col width="34%"/>
+          </colgroup>
+          <tbody>
+            <tr class="oe_header_row oe_header_row_top">
+                <td colspan="2">
+                    <h2 class="oe_view_title">
+                        <span class="oe_view_title_text">
+                            <t t-esc="widget.action.name"/>
+                        </span>
+                    </h2>
+                    <t t-if="widget.action.params.header_description">
+                        <br/>
+                        <span class="oe_view_subtitle_text">
+                            <t t-raw="widget.action.params.header_description"/>
+                        </span>
+                    </t>
+                </td>
+                <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
+            </tr>
+            <tr class="oe_header_row" t-if="widget.action.params.supplier_portal">
+                <td colspan="2">
+                    <span class='oe_alternative'>
+                        <a href='#'  class='oe_write_onwall oe_bold' help='Your followers can read this message'>Write to my followers</a>
+                    </span>
+                </td>
+            </tr>
+            <tr class="oe_header_row" t-if="widget.action.params.view_inbox and widget.action.params.show_compose_message" >
+                <td colspan="2">
+                    <button type="button" class="oe_write_full oe_highlight">
+                        Compose a new message
+                    </button>
+                    <span class='oe_alternative'>
+                        or
+                        <a href='#'  class='oe_write_onwall oe_bold' help='Your followers can read this message'>Write to my followers</a>
+                    </span>
+                </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="oe_mail-placeholder"></div>
+    </div>
+</template>

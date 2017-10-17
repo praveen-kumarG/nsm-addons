@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <!-- Header Menu Item -->
+
+        <menuitem id="menu_supplier_main"
+            sequence="10"
+            name="Supplier Portal"
+            groups="group_module_supplier_portal,group_module_supplier_portal_user,group_module_supplier_portal_controller"/>
+
+    <!-- Messaging Menu Item -->
+
+        <menuitem id = "menu_supplier_portal_main"
+            parent = "menu_supplier_main"
+            sequence="1"
+            groups="group_module_supplier_portal,group_module_supplier_portal_user"
+            name = "Messaging"/>
+
+
+    <!-- Supplier Menu Item -->
+
+        <menuitem id = "menu_supplier_details_main"
+            parent = "menu_supplier_main"
+            sequence="2"
+            groups="group_module_supplier_portal,group_module_supplier_portal_user"
+            name = "Supplier"/>
+
+        <menuitem id="menu_custom_supplier_details"
+            parent="menu_supplier_details_main"
+            sequence="1"
+            name = "Your Details"
+            groups="group_module_supplier_portal,group_module_supplier_portal_user"
+            action="action_supplier_form"/>
+
+    <!-- Invoice Menu Item -->
+
+        <menuitem id = "menu_supplier_invoice_main"
+            parent = "menu_supplier_main"
+            groups="group_module_supplier_portal,group_module_supplier_portal_user,group_module_supplier_portal_controller"
+            sequence="3"
+            name = "Invoice"/>
+
+        <menuitem id="menu_custom_supplier_invoice"
+            parent="menu_supplier_invoice_main"
+            sequence="1"
+            groups="group_module_supplier_portal,group_module_supplier_portal_user"
+            action="act_open_custom_supplier_invoice_view"/>
+
+        <menuitem id="menu_supplier_invoice"
+            parent="menu_supplier_invoice_main"
+            sequence="2"
+            groups="group_module_supplier_portal,group_module_supplier_portal_user"
+            action="act_open_supplier_invoice_view"/>
+
+        
+        <menuitem name="Finance" id="account.menu_finance"
+            groups="account.group_account_user,account.group_account_manager,account.group_account_invoice,account_invoice_2step_validation.goedk_facturen"
+            sequence="50"/>
+
+	<menuitem id="account.menu_finance_payables"
+	    name="Suppliers" parent="account.menu_finance"
+	    groups="account.group_account_invoice,account_invoice_2step_validation.goedk_facturen"
+            sequence="3"/>
+            
+        <menuitem id="menu_action_invoice_tree_supportal"
+            action="action_invoice_tree_supportal"
+	        name="Vendor Bills"
+            parent="account.menu_finance_payables"
+            groups="account_invoice_2step_validation.goedk_facturen"
+            sequence="3"/>
+
+    <!-- Submited Invoice Menu Item -->
+        <menuitem id="menu_supplier_invoice_submited"
+            parent="menu_supplier_invoice_main"
+            sequence="2"
+            groups="group_module_supplier_portal_controller"
+            action="act_open_supplier_invoice_submited_view"/>
+
+    
+    </data>
+</openerp>

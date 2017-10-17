@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_account_analytic_form" model="ir.ui.view">
+            <field name="name">account.analytic.form</field>
+            <field name="model">account.analytic.account</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//div[@name="project"]' position='inside'>
+                    <field name="portal_main"
+                        on_change="onchange_portal(portal_main, portal_sub,'portal_main')"/>
+                    <label for="portal_main"/>
+                    <field name="portal_sub"
+                        on_change="onchange_portal(portal_main, portal_sub,'portal_sub')"/>
+                    <label for="portal_sub"/>
+                </xpath>
+            </field>
+        </record>
+
+        <!--
+            Analytic Tree
+             deep
+        -->
+        <record id="view_account_analytic_account_list_inherit" model="ir.ui.view">
+            <field name="name">view_account_analytic_account_list_inherit</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_list"/>
+            <field name="arch" type="xml">
+                    <xpath expr="//field[@name='code']" position="before">
+                        <field name="portal_main" string="Portal"/>
+                        <field name="portal_sub" string="Portal"/>
+                    </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

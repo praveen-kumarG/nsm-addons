@@ -19,7 +19,9 @@
 #
 ##############################################################################
 
-import models
+import hr_expense
+import payment_order_create
+import res_company
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
