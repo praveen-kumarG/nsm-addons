@@ -52,7 +52,7 @@ This module adds authorization step in workflow in supplier invoices in OpenERP.
               "ir.model.access.csv",
     ],
     'demo' : [],
-    'installable': True
+    'installable': False
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

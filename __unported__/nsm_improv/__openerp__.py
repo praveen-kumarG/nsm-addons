@@ -47,6 +47,6 @@ This module changes some fields in invoices, account_move and partner views in O
              "account_data.xml",
              ],
     'demo': [],
-    'installable': True
+    'installable': False
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

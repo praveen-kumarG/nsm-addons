@@ -39,5 +39,5 @@ invoice numbering for a specific invoice.
     ],
     "data": [],
     "active": False,
-    "installable": True
+    "installable": False
 }

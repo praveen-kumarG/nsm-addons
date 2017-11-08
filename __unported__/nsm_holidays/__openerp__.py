@@ -46,7 +46,7 @@ This module adds validation of selected request lines in hr_holiday trees.
 	      "ir_rule.xml",
     ],
     'demo' : [],
-    'installable': True
+    'installable': False
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

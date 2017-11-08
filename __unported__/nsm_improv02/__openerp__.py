@@ -49,6 +49,6 @@ This module adds a verification step in the invoice authorization flow in Odoo.
              "ir.model.access.csv",
              ],
     'demo': [],
-    'installable': True
+    'installable': False
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

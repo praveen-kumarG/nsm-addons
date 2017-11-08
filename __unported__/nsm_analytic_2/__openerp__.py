@@ -48,7 +48,7 @@ This module adds "section_id" and "department_id" to analytic account and limits
 	      "analytic_security_view.xml",
     ],
     'demo' : [],
-    'installable': True
+    'installable': False
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

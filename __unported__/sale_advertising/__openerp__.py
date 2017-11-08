@@ -50,7 +50,7 @@ This module allows you to use both CRM and Sales Management to run your advertis
              "crm_menu_view.xml",
              ],
     'demo': ['sale_advertising_demo.xml'],
-    'installable': True
+    'installable': False
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
