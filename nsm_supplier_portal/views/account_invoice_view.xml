@@ -105,7 +105,7 @@
                     <field name="type" invisible="1"/>
                     <group>
                         <group>
-                            <field name="payment_term" widget="selection" invisible="1"/>
+                            <field name="payment_term_id" widget="selection" invisible="1"/>
                             <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" invisible="1"/>
                             <field name="company_id" widget="selection" invisible="1"/>
                             <field name="supplier_id" select="1" readonly="1"
@@ -303,13 +303,13 @@
                     <field name="type" invisible="1"/>
                     <group>
                         <group>
-                            <field name="payment_term" widget="selection" invisible="1"/>
+                            <field name="payment_term_id" widget="selection" invisible="1"/>
                             <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)" invisible="1"/>
                             <!--<field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line,currency_id)" widget="selection" invisible="1"/>-->
                             <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line_ids,currency_id)" widget="selection" invisible="1"/>
                             <field name="supplier_id" select="1" readonly="1" on_change="supplier_id_change(supplier_id,context)" context="{'form_view_ref':'nsm_supplier_portal.view_partner_supplier_form', 'is_portal': True}" attrs="{'invisible':[('type', '=', 'in_refund')]}"/>
                             <field string="Supplier" name="partner_id"
-                              on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
+                              on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term_id, partner_bank_id,company_id)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]" attrs="{'invisible':[('type', '!=', 'in_refund')]}"/>
 
@@ -472,12 +472,12 @@
                     <field name="topf" invisible="1"/>
                     <group>
                         <group>
-                            <field name="payment_term" widget="selection" invisible="1"/>
+                            <field name="payment_term_id" widget="selection" invisible="1"/>
                             <field domain="[('partner_id', '=', partner_id)]" name="partner_bank_id" on_change="onchange_partner_bank(partner_bank_id)" invisible="1"/>
                             <field name="company_id" on_change="onchange_company_id(company_id,partner_id,type,invoice_line_ids,currency_id)" widget="selection" invisible="1"/>
                             <field name="supplier_id" select="1" readonly="1" on_change="supplier_id_change(supplier_id,context)" context="{'form_view_ref':'nsm_supplier_portal.view_partner_supplier_form', 'is_portal': True}" attrs="{'invisible':[('type', '=', 'in_refund')]}"/>
                             <field string="Supplier" name="partner_id"
-                              on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
+                              on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term_id, partner_bank_id,company_id)"
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]" attrs="{'invisible':[('type', '!=', 'in_refund')]}"/>
                             <field name="supplier_invoice_number" invisible="0" required="1" attrs="{'readonly': [('state','!=','draft')]}"/>
