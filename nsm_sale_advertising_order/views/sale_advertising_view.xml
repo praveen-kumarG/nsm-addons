@@ -19,6 +19,9 @@
                 <xpath expr="//field[@name='proof_number_payer']" position="after">
                      <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer','=', False)],'required':[('proof_number_payer','!=', False)]}"/>
                 </xpath>
+                <xpath expr="//field[@name='proof_number_adv_customer']" position="after">
+                     <field name="proof_number_amt_adv_customer" attrs="{'invisible':[('proof_number_adv_customer','=', False)],'required':[('proof_number_adv_customer','!=', False)]}"/>
+                </xpath>
             </field>
         </record>
 
@@ -35,6 +38,9 @@
                 </xpath>
                 <xpath expr="//field[@name='proof_number_payer']" position="after">
                      <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer','=', False)],'required':[('proof_number_payer','!=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='proof_number_adv_customer']" position="after">
+                     <field name="proof_number_amt_adv_customer" attrs="{'invisible':[('proof_number_adv_customer','=', False)],'required':[('proof_number_adv_customer','!=', False)]}"/>
                 </xpath>
             </field>
         </record>
