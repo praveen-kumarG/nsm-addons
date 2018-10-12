@@ -31,3 +31,4 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     proof_number_payer = fields.Many2one('res.partner', 'Proof Number Payer', domain=[('customer','=',True)])
+    proof_number_adv_customer = fields.Many2one('res.partner', 'Proof Number Advertising Customer', domain=[('customer','=',True)])
