@@ -36,6 +36,7 @@ This module allows you to use both CRM and Sales Management to run your advertis
                 ],
     'data': [
              "views/sale_advertising_view.xml",
+             "views/advertising_issue_view.xml",
              ],
     'qweb': [
     ],
