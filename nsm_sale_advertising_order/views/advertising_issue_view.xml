@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+        <record model="ir.ui.view" id="sale_advertising_issue_form_nsm">
+			<field name="name">sale.advertising.issue.form.nsm</field>
+			<field name="type">form</field>
+			<field name="model">sale.advertising.issue</field>
+            <field name="inherit_id" ref="sale_advertising_order.sale_advertising_issue_form"/>
+			<field name="arch" type="xml">
+                <xpath expr="//field[@name='medium']" position="replace">
+                    <field name="medium" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
