@@ -25,5 +25,4 @@ from odoo import api, fields, models, _
 class SaleOrder(models.Model):
     _inherit = ["sale.order"]
 
-
     material_contact_person = fields.Many2one('res.partner', 'Material Contact Person', domain=[('customer','=',True)])
