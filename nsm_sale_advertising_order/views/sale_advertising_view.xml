@@ -16,6 +16,9 @@
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="replace">
                     <field name="proof_number_adv_customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'partner_id', 'show_email': 1}" options="{'no_create_edit': True}"/>
                 </xpath>
+                <xpath expr="//field[@name='proof_number_payer']" position="after">
+                     <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer','=', False)],'required':[('proof_number_payer','!=', False)]}"/>
+                </xpath>
             </field>
         </record>
 
@@ -29,6 +32,9 @@
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="replace">
                     <field name="proof_number_adv_customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'partner_id', 'show_email': 1}" options="{'no_create_edit': True}"/>
+                </xpath>
+                <xpath expr="//field[@name='proof_number_payer']" position="after">
+                     <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer','=', False)],'required':[('proof_number_payer','!=', False)]}"/>
                 </xpath>
             </field>
         </record>
