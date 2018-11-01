@@ -113,6 +113,7 @@ class Invoice(models.Model):
     state = fields.Selection([
         ('portalcreate','Portal Create'),
         ('draft','Draft'),
+        ('start_wf', 'Start Workflow'),
         ('proforma','Pro-forma'),
         ('proforma2','Pro-forma'),
         ('open','Open'),
@@ -133,31 +134,31 @@ class Invoice(models.Model):
         \n* The \'Cancelled\' status is used when user cancel invoice.')
 
     name = fields.Char(string='Reference/Description', index=True,
-        readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]},
+        readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]},
         copy=False, help='The name that will be used on account move lines')
 
     origin = fields.Char(string='Source Document',
         help="Reference of the document that produced this invoice.",
-        readonly=True, states={'draft': [('readonly', False)]})
+        readonly=True, states={'draft': [('readonly', False)],'start_wf':[('readonly',False)]})
 
     move_name = fields.Char(string='Journal Entry Name', readonly=True,
-        default=False, copy=False, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]},
+        default=False, copy=False, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]},
         help="Technical field holding the number given to the invoice, automatically set when the invoice is validated then stored to set the same number again if the invoice is cancelled, set to draft and re-validated.")
 
     supplier_invoice_number = fields.Char(
             string='Vendor invoice number',
             readonly=True, help="The reference of this invoice as provided by the supplier.",
-            states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]},
+            states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]},
             copy=False)
 
     reference_type = fields.Selection('_get_reference_type', string='Payment Reference',
-        required=True, readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]},
+        required=True, readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]},
         default='none')
     date_invoice = fields.Date(string='Invoice Date',
-        readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]}, index=True,
+        readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]}, index=True,
         help="Keep empty to use the current date", copy=False)
     date_due = fields.Date(string='Due Date',
-        readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]}, index=True, copy=False,
+        readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]}, index=True, copy=False,
         help="If you use payment terms, the due date will be computed automatically at the generation "
              "of accounting entries. The payment term may compute several due dates, for example 50% "
              "now and 50% in one month, but if you want to force a due date, make sure that the payment "
@@ -165,51 +166,51 @@ class Invoice(models.Model):
              "means direct payment.")
 
     partner_id = fields.Many2one('res.partner', string='Partner', change_default=True,
-        required=True, readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]},
+        required=True, readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]},
         track_visibility='always')
 
     payment_term_id = fields.Many2one('account.payment.term', string='Payment Terms', oldname='payment_term',
-        readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]},
+        readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]},
         help="If you use payment terms, the due date will be computed automatically at the generation "
              "of accounting entries. If you keep the payment term and the due date empty, it means direct payment. "
              "The payment term may compute several due dates, for example 50% now, 50% in one month.")
 
     account_id = fields.Many2one('account.account', string='Account',
-        required=True, readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]},
+        required=True, readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]},
         domain=[('deprecated', '=', False)], help="The partner account used for this invoice.")
 
     invoice_line_ids = fields.One2many('account.invoice.line', 'invoice_id', string='Invoice Lines', oldname='invoice_line',
-        readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]}, copy=True)
+        readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]}, copy=True)
     tax_line_ids = fields.One2many('account.invoice.tax', 'invoice_id', string='Tax Lines', oldname='tax_line',
-        readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]}, copy=True)
+        readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]}, copy=True)
 
     currency_id = fields.Many2one('res.currency', string='Currency',
-        required=True, readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]},
+        required=True, readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]},
         default=_default_currency, track_visibility='always')
 
     journal_id = fields.Many2one('account.journal', string='Journal',
-        required=True, readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]},
+        required=True, readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]},
         default=_default_journal,
         domain="[('type', 'in', {'out_invoice': ['sale'], 'out_refund': ['sale'], 'in_refund': ['purchase'], 'in_invoice': ['purchase']}.get(type, [])), ('company_id', '=', company_id)]")
 
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
-        required=True, readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]},
+        required=True, readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]},
         default=lambda self: self.env['res.company']._company_default_get('account.invoice'))
 
     check_total = fields.Float('Verification Total', digits=dp.get_precision('Account'), readonly=True,
-                               states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]})
+                               states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]})
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account',
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Refund, otherwise a Partner bank account number.',
-        readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]})
+        readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]})
 
     user_id = fields.Many2one('res.users', string='Salesperson', track_visibility='onchange',
-        readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)],'open':[('readonly',False)]},
+        readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)],'open':[('readonly',False)]},
         default=lambda self: self.env.user)
 
     fiscal_position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position', oldname='fiscal_position',
-        readonly=True, states={'draft':[('readonly',False)],'portalcreate':[('readonly',False)]})
+        readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)],'portalcreate':[('readonly',False)]})
 
-    topf = fields.Boolean('To Portal Flow', readonly=True, states={'draft':[('readonly',False)]}, help="Checking makes routing to Portal Flow possible")
+    topf = fields.Boolean('To Portal Flow', readonly=True, states={'draft':[('readonly',False)],'start_wf':[('readonly',False)]}, help="Checking makes routing to Portal Flow possible")
 
 
     @api.onchange('supplier_id', 'company_id')
