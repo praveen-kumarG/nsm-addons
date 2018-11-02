@@ -115,13 +115,14 @@ class SaleOrder(models.Model):
     @job
     @api.multi
     def action_ad4all(self, arg, xml=False):
-        for order in self.filtered(lambda s: s.state == 'sale' and s.advertising):
+        for order in self.filtered(
+                lambda s: s.state == 'sale' and s.advertising):
             res = order.transfer_order_to_ad4all(arg)
             if order.order_ad4all_allow:
                 order.with_context(no_checks=True).write({'ad4all_tbu': True})
-                for line in res.ad4all_so_line:
-                    line.with_delay(
-                    description=res.reference).call_wsdl(xml=xml)
+                res.with_delay(
+                    description=res.salesorder_reference
+                ).wsdl_content(xml=xml)
         return True
 
     @api.multi
@@ -293,6 +294,31 @@ class SofromOdootoAd4all(models.Model):
     reference = fields.Char(
         'Order Reference'
     )
+
+    @job
+    def wsdl_content(self, xml=False):
+        self.ensure_one()
+        if self.ad4all_response and self.ad4all_response == 200:
+            raise UserError(_(
+                'This Sale Order already has been succesfully sent to Ad4all.'))
+        for line in self.ad4all_so_line:
+            response = line.call_wsdl(xml)
+            if response['code'] == 200:
+                self.env['sale.order.line'].search(
+                    [('id', '=', line.advert_id)]).write(
+                    {'ad4all_sent': True})
+            else:
+                return
+        so = self.env['sale.order'].search(
+            [('id', '=', self.sale_order_id.id)])
+        sovals = {'date_sent_ad4all': datetime.datetime.now(),
+                  'publog_id': self.id,
+                  'ad4all_tbu': False
+                  }
+        so.with_context(no_checks=True).write(sovals)
+        return True
+
+
 
 
 class SoLinefromOdootoAd4all(models.Model):
@@ -558,12 +584,9 @@ class SoLinefromOdootoAd4all(models.Model):
         default='nl'
     )
 
-    @job
+
     def call_wsdl(self, xml=False):
         self.ensure_one()
-        if self.ad4all_response and self.ad4all_response == 200:
-            raise UserError(_(
-                'This Sale Order already has been succesfully sent to Ad4all.'))
         session = Session()
         user = 'nsm'
         password = 'd9yqFUDp44wzCTnt'
@@ -607,9 +630,9 @@ class SoLinefromOdootoAd4all(models.Model):
                 },
                 'paper': {
                     'pub_date': datetime.datetime.strptime(
-                        self.paper_pub_date,'%Y-%m-%d').strftime('%Y%m%d'),
+                        self.paper_pub_date, '%Y-%m-%d').strftime('%Y%m%d'),
                     'deadline': datetime.datetime.strptime(
-                        self.paper_deadline,'%Y-%m-%d').strftime('%Y%m%d'),
+                        self.paper_deadline, '%Y-%m-%d').strftime('%Y%m%d'),
                     'id': self.paper_id,
                     'name': self.paper_name,
                     'issuenumber': self.paper_issuenumber,
@@ -654,7 +677,7 @@ class SoLinefromOdootoAd4all(models.Model):
                             'phone': self.media_agency_contacts_contact_phone,
                             'type': self.media_agency_contacts_contact_type,
                             'language': self.
-                                        media_agency_contacts_contact_language,
+                                media_agency_contacts_contact_language,
                         },
                     },
                 },
@@ -698,21 +721,5 @@ class SoLinefromOdootoAd4all(models.Model):
             xml_msg = history.last_sent
             reply = history.last_received if history.last_received else False
             self.write({'json_message': xml_msg, 'reply_message': reply})
-        if response['code'] == 200:
-            so = self.env['sale.order'].search(
-                [('id', '=', self.sale_order_id.id)])
-            sovals = {'date_sent_ad4all': datetime.datetime.now(),
-                      'publog_id': self.id
-                      }
-#            if self.transmission_id >= so.ad4all_trans_id:
-#                sovals['ad4all_tbu'] = False
-#            else:
-#                sovals['ad4all_tbu'] = True
-            so.with_context(no_checks=True).write(sovals)
-            for line in self.ad4all_so_line:
-                self.env['sale.order.line'].search(
-                    [('id', '=', line.advert_id)]).write(
-                    {'ad4all_sent': True})
-
-        return True
+        return response
 

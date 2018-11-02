@@ -2,68 +2,66 @@
 <odoo>
     <data>
 
-        <menuitem id="menu_pubble" parent="sales_team.menu_base_partner" name="Pubble Interface"
+        <menuitem id="menu_ad4all" parent="sales_team.menu_base_partner" name="Ad4all Interface"
                   groups="sale_advertising_order.group_advertising_sales_user"/>
 
-        <record id="view_sofrom_odooto_pubble_form" model="ir.ui.view">
-            <field name="name">view_sofrom_odooto_pubble_form</field>
-            <field name="model">sofrom.odooto.pubble</field>
+        <record id="view_sofrom_odooto_ad4all_form" model="ir.ui.view">
+            <field name="name">view_sofrom_odooto_ad4all_form</field>
+            <field name="model">sofrom.odooto.ad4all</field>
             <field name="arch" type="xml">
-                <form string="SO to Pubble" create="false" edit="false" delete="false" copy="false">
-                    <sheet string="SO to Pubble">
+                <form string="SO to Ad4all" create="false" edit="false" delete="false" copy="false">
+                    <sheet string="SO to Ad4all">
                         <h1 class="mt0">
                             <label string="Sale Order :"/>
                             <field name="sale_order_id" context="{'form_view_ref': 'sale_advertising_order.view_order_form_advertising'}"/>
                         </h1>
                         <group>
                             <group>
-                                <field name="pubble_response"/>
-                                <field name="pubble_environment"/>
-                                <field name="transmission_id"/>
+                                <field name="order_name"/>
                                 <field name="salesorder_extorderid"/>
-                                <field name="salesorder_reference"/>
-                                <field name="salesorder_createdby"/>
-                                <field name="salesorder_debtor_extdebtorid"/>
-                            </group>
-                            <group>
-                                <field name="salesorder_debtor_addedby"/>
-                                <field name="salesorder_debtor_addeddate"/>
-                                <field name="salesorder_debtor_city"/>
-                                <field name="salesorder_debtor_emailadres"/>
-                                <field name="salesorder_debtor_lastmodified"/>
-                                <field name="salesorder_debtor_name"/>
-                                <field name="salesorder_debtor_postalcode"/>
-                                <field name="salesorder_agency" invisible="True"/>
-                            </group>
-                            <group>
-                                <field name="salesorder_agency_extdebtorid"/>
-                                <field name="salesorder_agency_addeddate"/>
-                                <field name="salesorder_agency_city"/>
-                                <field name="salesorder_agency_emailadres"/>
-                                <field name="salesorder_agency_lastmodified" />
-                                <field name="salesorder_agency_name"/>
-                                <field name="salesorder_agency_postalcode" />
+                                <field name="reference"/>
                             </group>
                         </group>
                         <notebook>
                             <page name="order_lines" string="SO lines">
-                                <field name="pubble_so_line" nolabel="1" widget="one2many_list" mode="tree">
+                                <field name="ad4all_so_line" nolabel="1" widget="one2many_list" mode="tree">
                                     <tree string="Order Lines" >
-                                        <field name="ad_adsize_adtypename"/>
-                                        <field name="ad_adsize_extadsizeid"/>
-                                        <field name="ad_adsize_name"/>
-                                        <field name="ad_adsize_height"/>
-                                        <field name="ad_adsize_width"/>
-                                        <field name="ad_edition_editiondate"/>
-                                        <field name="ad_edition_extpublicationid"/>
-                                        <field name="ad_extplacementid"/>
-                                        <field name="ad_productiondetail_pageType"/>
-                                        <field name="ad_productiondetail_isclassified"/>
-                                        <field name="ad_productiondetail_classifiedCategory"/>
-                                        <field name="ad_productiondetail_dtpcomments"/>
-                                        <field name="ad_productiondetail_placementcomments"/>
-                                        <field name="ad_materialUrl"/>
-                                        <field name="ad_status"/>
+                                        <field name="odoo_order_line"/>
+                                        <field name="id"/>
+                                        <field name="adgr_orde_id"/>
+                                        <field name="cancelled"/>
+                                        <field name="herplaats"/>
+                                        <field name="sales"/>
+                                        <field name="sales_mail"/>
+                                        <field name="format_id"/>
+                                        <field name="format_height"/>
+                                        <field name="format_width"/>
+                                        <field name="format_spread"/>
+                                        <field name="paper_pub_date"/>
+                                        <field name="paper_id"/>
+                                        <field name="paper_name"/>
+                                        <field name="paper_issuenumber"/>
+                                        <field name="placement_adclass"/>
+                                        <field name="placement_notice"/>
+                                        <field name="placement_description"/>
+                                        <field name="placement_position"/>
+                                        <field name="customer_id"/>
+                                        <field name="customer_name"/>
+                                        <field name="customer_contacts_contact_email"/>
+                                        <field name="customer_contacts_contact_id"/>
+                                        <field name="salesorder_debtor_postalcode"/>
+                                        <field name="salesorder_agency" invisible="True"/>
+                                        <field name="customer_contacts_contact_name"/>
+                                        <field name="customer_address_street"/>
+                                        <field name="customer_address_zip"/>
+                                        <field name="customer_address_city"/>
+                                        <field name="media_agency_code" />
+                                        <field name="media_agency_email"/>
+                                        <field name="media_agency_name" />
+                                        <field name="media_agency_phone"/>
+                                        <field name="media_agency_language" />
+                                        <field name="ad4all_environment"/>
+                                        <field name="ad4all_response"/>
                                     </tree>
                                 </field>
                             </page>
@@ -83,32 +81,32 @@
             </field>
         </record>
 
-        <record id="view_sofrom_odooto_pubble_tree" model="ir.ui.view">
-            <field name="name">view_sofrom_odooto_pubble_tree</field>
-            <field name="model">sofrom.odooto.pubble</field>
+        <record id="view_sofrom_odooto_ad4all_tree" model="ir.ui.view">
+            <field name="name">view_sofrom_odooto_ad4all_tree</field>
+            <field name="model">sofrom.odooto.ad4all</field>
             <field name="arch" type="xml">
-                <tree string="SO to Pubble" create="false" edit="false" delete="true" copy="false"
-                        decoration-danger="pubble_response == ''" decoration-info="pubble_response == 'true'">
+                <tree string="SO to Ad4all" create="false" edit="false" delete="true" copy="false"
+                        decoration-danger="ad4all_response == ''" decoration-info="ad4all_response == 'true'">
                     <field name="salesorder_extorderid"/>
                     <field name="salesorder_reference"/>
                     <field name="salesorder_debtor_name"/>
                     <field name="salesorder_agency_name"/>
                     <field name="create_date" string="Creation Date"/>
-                    <field name="pubble_environment"/>
-                    <field name="pubble_response"/>
+                    <field name="ad4all_environment"/>
+                    <field name="ad4all_response"/>
                 </tree>
             </field>
         </record>
 
-        <record id="view_sofrom_odooto_pubble_filter" model="ir.ui.view">
-            <field name="name">view_sofrom_odooto_pubble_filter</field>
-            <field name="model">sofrom.odooto.pubble</field>
+        <record id="view_sofrom_odooto_ad4all_filter" model="ir.ui.view">
+            <field name="name">view_sofrom_odooto_ad4all_filter</field>
+            <field name="model">sofrom.odooto.ad4all</field>
             <field name="arch" type="xml">
-                <search string="Search Pubble Updates">
+                <search string="Search Ad4all Updates">
                     <field name="salesorder_extorderid" />
                     <field name="salesorder_debtor_name" />
                     <field name="salesorder_reference"/>
-                    <filter name="success" string="Success" domain="[('pubble_response','=',True)]"/>
+                    <filter name="success" string="Success" domain="[('ad4all_response','=',True)]"/>
                     <separator/>
                     <group expand="0" string="Group By">
                         <filter name="create_date" string="Date" context="{'group_by':'create_date'}"/>
@@ -117,84 +115,85 @@
             </field>
         </record>
 
-        <record id="action_staged_pubble" model="ir.actions.act_window">
-            <field name="name">Staged Pubble</field>
-            <field name="res_model">sofrom.odooto.pubble</field>
+        <record id="action_staged_ad4all" model="ir.actions.act_window">
+            <field name="name">Staged Ad4all</field>
+            <field name="res_model">sofrom.odooto.ad4all</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="view_sofrom_odooto_pubble_filter"/>
+            <field name="search_view_id" ref="view_sofrom_odooto_ad4all_filter"/>
             <field name="context">{'search_default_exceptions':1}</field>
         </record>
 
-        <menuitem id="menu_action_staged_pubble" name="Staged Pubble" parent="menu_pubble" action="action_staged_pubble"
+        <menuitem id="menu_action_staged_ad4all" name="Staged Ad4all" parent="menu_ad4all" action="action_staged_ad4all"
                   sequence="2"/>
 
-        <record id="view_order_form_advertising_pubble" model="ir.ui.view">
-            <field name="name">sale.order.form.advertising.pubble</field>
+        <record id="view_order_form_advertising_ad4all" model="ir.ui.view">
+            <field name="name">sale.order.form.advertising.ad4all</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale_advertising_order.view_order_form_advertising"/>
             <field name="arch" type="xml">
                 <group name="ad_refs" position="after">
-                    <group string="Pubble" name="pubble" >
-                        <field name="line_pubble_allow" readonly="1" />
-                        <field name="pubble_sent" readonly="1"/>
+                    <group string="Ad4all" name="ad4all" >
+                        <field name="line_ad4all_allow" readonly="1" />
+                        <field name="ad4all_sent" readonly="1"/>
                     </group>
                 </group>
                 <group name="sale_pay" position="after">
-                    <group string="Pubble" name="pubble" >
-                        <field name="order_pubble_allow" readonly="1" />
-                        <field name="date_sent_pubble" readonly="1"/>
-                        <field name="pubble_sent" readonly="1"/>
+                    <group string="Ad4all" name="ad4all" >
+                        <field name="order_ad4all_allow" readonly="1" />
+                        <field name="date_sent_ad4all" readonly="1"/>
+                        <field name="ad4all_sent" readonly="1"/>
                         <field name="publog_id" readonly="1"/>
                     </group>
                 </group>
                 <button name="action_cancel" position="before">
-                    <button name="action_pubble_no_xml" type="object" string="Update Pubble"
-                            attrs="{'invisible': ['|',('order_pubble_allow','!=', True),('state','!=','sale')]}"/>
+                    <button name="action_ad4all_no_xml" type="object" string="Update Ad4all"
+                            attrs="{'invisible': ['|',('order_ad4all_allow','!=', True),('state','!=','sale')]}"/>
                 </button>
             </field>
         </record>
 
-        <record id="view_order_form_advertising_pubble_xml" model="ir.ui.view">
-            <field name="name">sale.order.form.advertising.pubble.xml</field>
+        <record id="view_order_form_advertising_ad4all_xml" model="ir.ui.view">
+            <field name="name">sale.order.form.advertising.ad4all.xml</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="bdu_pubble_soap.view_order_form_advertising_pubble"/>
+            <field name="inherit_id"
+                   ref="nsm_ad4all_soap.view_order_form_advertising_ad4all"/>
             <field name="groups_id" eval="[(4, ref('sale_advertising_order.group_traffic_user'))]"/>
             <field name="arch" type="xml">
-                <button name="action_pubble_no_xml" position="after">
-                    <button name="action_pubble_xml" type="object" string="Update Pubble with XML"
-                            attrs="{'invisible': ['|',('order_pubble_allow','!=', True),('state','!=','sale')]}"/>
+                <button name="action_ad4all_no_xml" position="after">
+                    <button name="action_ad4all_xml" type="object" string="Update Ad4all with XML"
+                            attrs="{'invisible': ['|',('order_ad4all_allow','!=', True),('state','!=','sale')]}"/>
                 </button>
             </field>
         </record>
 
-        <record id="view_order_advertising_tree_pubble" model="ir.ui.view">
-            <field name="name">sale.order.advertising.tree.pubble</field>
+        <record id="view_order_advertising_tree_ad4all" model="ir.ui.view">
+            <field name="name">sale.order.advertising.tree.ad4all</field>
             <field name="model">sale.order</field>
             <field name="priority">20</field>
             <field name="inherit_id" ref="sale_advertising_order.view_order_advertising_tree"/>
             <field name="arch" type="xml">
                 <tree position="attributes" >
-                    <attribute name="decoration-danger" >pubble_tbu==True</attribute>
+                    <attribute name="decoration-danger" >ad4all_tbu==True</attribute>
                 </tree>
                 <field name="message_needaction" position="after">
-                    <field name="pubble_tbu" invisible="1"/>
+                    <field name="ad4all_tbu" invisible="1"/>
                 </field>
             </field>
         </record>
 
-        <record id="advertising_order_view_search_pubble" model="ir.ui.view">
-            <field name="name">advertising.sale.order.search.pubble</field>
+        <record id="advertising_order_view_search_ad4all" model="ir.ui.view">
+            <field name="name">advertising.sale.order.search.ad4all</field>
             <field name="model">sale.order</field>
             <!--field name="mode">primary</field-->
             <field name="inherit_id" ref="sale_advertising_order.advertising_order_view_search_inherit_sale"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='approved1']" position="after">
                     <separator/>
-                    <filter string="Pubble to be updated" name="pubble_tbu" domain="[('pubble_tbu','=',True)]"/>
-                    <filter string="Allow to Pubble" name="pubble_allow" domain="[('order_pubble_allow','=',True)]"/>
-                    <filter string="Not to Pubble" name="pubble_not" domain="[('order_pubble_allow','=',False)]"/>
-                    <filter string="Sent to Pubble" name="pubble_sent" domain="[('pubble_sent','=',True)]"/>
+                    <filter string="Ad4all to be updated" name="ad4all_tbu" domain="[('ad4all_tbu','=',True)]"/>
+                    <filter string="Allow to Ad4all" name="ad4all_allow" domain="[('order_ad4all_allow','=',True)]"/>
+                    <filter string="Not to Ad4all" name="ad4all_not" domain="[('order_ad4all_allow','=',False)]"/>
+                    <filter string="Sent to Ad4all" name="ad4all_sent" domain="[('ad4all_sent','=',True)]"/>
                     <separator/>
                 </xpath>
             </field>

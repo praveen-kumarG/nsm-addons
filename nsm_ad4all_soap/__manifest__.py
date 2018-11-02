@@ -115,7 +115,7 @@ To contribute to this module, please visit https://odoo-community.org.
 """,
 
     # any module necessary for this one to work correctly
-    'depends': ['sale_advertising_order',
+    'depends': [
                 'sale_advertising_operating_unit'
     ],
     'external_dependencies': {
@@ -123,7 +123,7 @@ To contribute to this module, please visit https://odoo-community.org.
     },
 
     # always loaded
-    'data': ['data/transmission_sequence.xml',
+    'data': [
              'security/ir.model.access.csv',
              'views/sale_advertising_order.xml',
              'views/product_view.xml',
