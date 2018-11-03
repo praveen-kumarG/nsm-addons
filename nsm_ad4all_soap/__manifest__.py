@@ -119,7 +119,8 @@ To contribute to this module, please visit https://odoo-community.org.
                 'sale_advertising_operating_unit'
     ],
     'external_dependencies': {
-        'python': ['suds'],
+        'python': ['zeep',
+                   'dicttoxml'],
     },
 
     # always loaded
