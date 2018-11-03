@@ -121,7 +121,7 @@ class SaleOrder(models.Model):
             if order.order_ad4all_allow:
                 order.with_context(no_checks=True).write({'ad4all_tbu': True})
                 res.with_delay(
-                    description=res.salesorder_reference
+                    description=res.reference
                 ).wsdl_content(xml=xml)
         return True
 
@@ -167,8 +167,30 @@ class SaleOrder(models.Model):
             vals = {
                     'sale_order_id': self.id,
                     'order_name': self.name,
-                    'reference': 'Subject:' + unidecode(self.opportunity_subject or '') + '\n' +
-                                            'Order Nr.:' + unidecode(self.name or ''),
+                    'reference':
+                        'Subject:' +
+                        unidecode(self.opportunity_subject or '') +
+                        '\n' +
+                        'Order Nr.:' +
+                        unidecode(self.name or ''),
+                    'so_customer_id': self.published_customer.ref,
+                    'so_customer_name': self.published_customer.name,
+                    'so_customer_contacts_contact_email':
+                        self.customer_contact.email or
+                        self.published_customer.email or '',
+                    'so_customer_contacts_contact_id':
+                        self.customer_contact.ref,
+                    'so_customer_contacts_contact_name':
+                        self.customer_contact.name,
+                    'so_customer_address_street':
+                        self.published_customer.street,
+                    'so_customer_address_zip': self.published_customer.zip,
+                    'so_customer_address_city': self.published_customer.city,
+                    'so_media_agency_code': self.advertising_agency.ref,
+                    'so_media_agency_email': self.advertising_agency.email,
+                    'so_media_agency_name': self.advertising_agency.name,
+                    'so_media_agency_phone': self.advertising_agency.phone,
+                    'so_media_agency_language':self.advertising_agency.lang,
 
             }
             res = self.env['sofrom.odooto.ad4all'].sudo().create(vals)
@@ -195,6 +217,7 @@ class SaleOrder(models.Model):
                         'format_width': line.product_template_id.width,
                         'format_spread': line.product_template_id.spread,
                         'paper_pub_date': line.issue_date,
+                        'paper_deadline': line.issue_date,
                         'paper_id': line.title.code,
                         'paper_name': line.title.name,
                         'paper_issuenumber': line.adv_issue.name,
@@ -209,25 +232,6 @@ class SaleOrder(models.Model):
                                                     line.product_id.name or ''),
                         'placement_position': unidecode(line.page_reference
                                                         or ''),
-                        'customer_id': self.published_customer.ref,
-                        'customer_name': self.published_customer.name,
-                        'customer_contacts_contact_email':
-                            self.customer_contact.email or
-                            self.published_customer.email or '',
-                        'customer_contacts_contact_id':
-                            self.customer_contact.ref,
-                        'customer_contacts_contact_name':
-                            self.customer_contact.name,
-                        'customer_address_street':
-                            self.published_customer.street,
-                        'customer_address_zip': self.published_customer.zip,
-                        'customer_address_city': self.published_customer.city,
-                        'media_agency_code': self.advertising_agency.ref,
-                        'media_agency_email': self.advertising_agency.email,
-                        'media_agency_name': self.advertising_agency.name,
-                        'media_agency_phone': self.advertising_agency.phone,
-                        'media_agency_language':
-                            self.advertising_agency.lang,
                 }
                 self.env['soline.from.odooto.ad4all'].sudo().create(lvals)
         return res
@@ -278,9 +282,28 @@ class SofromOdootoAd4all(models.Model):
     _name = 'sofrom.odooto.ad4all'
     _order = 'create_date desc'
 
+    @api.depends('ad4all_so_line.ad4all_response')
+    @api.multi
+    def _compute_response(self):
+        for so in self:
+            so.so_ad4all_response = True
+            for line in so.ad4all_so_line:
+                if line.ad4all_response != 200:
+                    so.so_ad4all_response = False
+                    break
+
     sale_order_id = fields.Many2one(
         'sale.order',
         string='Sale Order'
+    )
+    so_ad4all_response = fields.Boolean(
+        compute=_compute_response,
+        default=False,
+        store=True,
+        string='Ad4all Response'
+    )
+    so_ad4all_environment = fields.Char(
+        'Ad4all Environment'
     )
     ad4all_so_line = fields.One2many(
         'soline.from.odooto.ad4all',
@@ -294,11 +317,107 @@ class SofromOdootoAd4all(models.Model):
     reference = fields.Char(
         'Order Reference'
     )
+    so_customer_id = fields.Integer(
+        string='Advertiser Number'
+    )
+    so_customer_name = fields.Char(
+        string='Advertiser Name',
+        size=64
+    )
+    so_customer_contacts_contact_id = fields.Integer(
+        string='Advertiser Contact ID',
+    )
+    so_customer_contacts_contact_name = fields.Char(
+        string='Advertiser Contact Name',
+        size=64
+    )
+    so_customer_contacts_contact_email = fields.Char(
+        string='Advertiser Contact Email',
+        size=64
+    )
+    so_customer_contacts_contact_phone = fields.Char(
+        string='Advertiser Contact Phone',
+        size=64
+    )
+    so_customer_contacts_contact_type = fields.Char(
+        string='Advertiser Contact Type',
+        size=64
+    )
+    so_customer_contacts_contact_language = fields.Char(
+        string='Advertiser Contact Language',
+        size=16,
+        default='nl'
+    )
+    so_customer_address_street = fields.Char(
+        string='Advertiser Address Street',
+        size=64
+    )
+    so_customer_address_zip = fields.Char(
+        string='Advertiser Address Zip Code',
+        size=32
+    )
+    so_customer_address_city = fields.Char(
+        string='Advertiser Address City',
+        size=64
+    )
+    so_customer_address_phone = fields.Char(
+        string='Advertiser Address Phone',
+        size=64
+    )
+    so_agency = fields.Boolean(
+        string='Agency'
+    )
+    so_media_agency_code = fields.Char(
+        string='Agency Number',
+        size=32
+    )
+    so_media_agency_name = fields.Char(
+        string='Agency Name',
+        size=64
+    )
+    so_media_agency_email = fields.Char(
+        string='Agency Email',
+        size=64
+    )
+    so_media_agency_phone = fields.Char(
+        string='Agency Email',
+        size=64
+    )
+    so_media_agency_language = fields.Char(
+        string='Agency Language',
+        size=16,
+        default='nl'
+    )
+    so_media_agency_contacts_contact_id = fields.Char(
+        string='Agency Contact Number',
+        size=32
+    )
+    so_media_agency_contacts_contact_name = fields.Char(
+        string='Agency Contact Name',
+        size=64
+    )
+    so_media_agency_contacts_contact_email = fields.Char(
+        string='Agency Contact Email',
+        size=64
+    )
+    so_media_agency_contacts_contact_phone = fields.Char(
+        string='Agency Contact Phone',
+        size=64
+    )
+    so_media_agency_contacts_contact_type = fields.Char(
+        string='Agency Contact Type',
+        size=64
+    )
+    so_media_agency_contacts_contact_language = fields.Char(
+        string='Agency Contact Language',
+        size=16,
+        default='nl'
+    )
 
     @job
     def wsdl_content(self, xml=False):
         self.ensure_one()
-        if self.ad4all_response and self.ad4all_response == 200:
+        if self.so_ad4all_response:
             raise UserError(_(
                 'This Sale Order already has been succesfully sent to Ad4all.'))
         for line in self.ad4all_so_line:
@@ -316,6 +435,8 @@ class SofromOdootoAd4all(models.Model):
                   'ad4all_tbu': False
                   }
         so.with_context(no_checks=True).write(sovals)
+        wsdl = "http://trial.ad4all.nl/data/wsdl"
+        self.so_ad4all_environment = wsdl
         return True
 
 
@@ -323,7 +444,6 @@ class SofromOdootoAd4all(models.Model):
 
 class SoLinefromOdootoAd4all(models.Model):
     _name = 'soline.from.odooto.ad4all'
-
 
     odoo_order_line = fields.Many2one(
         'sale.order.line',
@@ -335,9 +455,6 @@ class SoLinefromOdootoAd4all(models.Model):
     )
     ad4all_response = fields.Text(
         'Ad4all Response'
-    )
-    ad4all_environment = fields.Char(
-        'Ad4all Environment'
     )
     json_message = fields.Text(
         'XML message'
@@ -360,7 +477,8 @@ class SoLinefromOdootoAd4all(models.Model):
     id = fields.Integer(
         string='Material ID'
     )
-    adgr_orde_id = fields.Integer(
+    adgr_orde_id = fields.Many2one(
+        'sofrom.odooto.ad4all',
         string='Sale Order ID'
     )
     adkind = fields.Char(
@@ -442,97 +560,120 @@ class SoLinefromOdootoAd4all(models.Model):
         string='Reminder'
     )
     customer_id = fields.Integer(
+        related='adgr_orde_id.so_customer_id',
         string='Advertiser Number'
     )
     customer_name = fields.Char(
+        related='adgr_orde_id.so_customer_name',
         string='Advertiser Name',
         size=64
     )
     customer_contacts_contact_id = fields.Integer(
+        related='adgr_orde_id.so_customer_contacts_contact_id',
         string='Advertiser Contact ID',
     )
     customer_contacts_contact_name = fields.Char(
+        related='adgr_orde_id.so_customer_contacts_contact_name',
         string='Advertiser Contact Name',
         size=64
     )
     customer_contacts_contact_email = fields.Char(
+        related='adgr_orde_id.so_customer_contacts_contact_email',
         string='Advertiser Contact Email',
         size=64
     )
     customer_contacts_contact_phone = fields.Char(
+        related='adgr_orde_id.so_customer_contacts_contact_phone',
         string='Advertiser Contact Phone',
         size=64
     )
     customer_contacts_contact_type = fields.Char(
+        related='adgr_orde_id.so_customer_contacts_contact_type',
         string='Advertiser Contact Type',
         size=64
     )
     customer_contacts_contact_language = fields.Char(
+        related='adgr_orde_id.so_customer_contacts_contact_language',
         string='Advertiser Contact Language',
         size=16,
-        default='nl'
     )
     customer_address_street = fields.Char(
+        related='adgr_orde_id.so_customer_address_street',
         string='Advertiser Address Street',
         size=64
     )
     customer_address_zip = fields.Char(
+        related='adgr_orde_id.so_customer_address_zip',
         string='Advertiser Address Zip Code',
         size=32
     )
     customer_address_city = fields.Char(
+        related='adgr_orde_id.so_customer_address_city',
         string='Advertiser Address City',
         size=64
     )
     customer_address_phone = fields.Char(
+        related='adgr_orde_id.so_customer_address_phone',
         string='Advertiser Address Phone',
         size=64
     )
     agency = fields.Boolean(
+        related='adgr_orde_id.so_agency',
         string='Agency'
     )
     media_agency_code = fields.Char(
+        related='adgr_orde_id.so_media_agency_code',
         string='Agency Number',
         size=32
     )
     media_agency_name = fields.Char(
+        related='adgr_orde_id.so_media_agency_name',
         string='Agency Name',
         size=64
     )
     media_agency_email = fields.Char(
+        related='adgr_orde_id.so_media_agency_email',
         string='Agency Email',
         size=64
     )
     media_agency_phone = fields.Char(
+        related='adgr_orde_id.so_media_agency_phone',
         string='Agency Email',
         size=64
     )
     media_agency_language = fields.Char(
+        related='adgr_orde_id.so_media_agency_language',
         string='Agency Language',
         size=16,
         default='nl'
     )
     media_agency_contacts_contact_id = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact_id',
         string='Agency Contact Number',
         size=32
     )
     media_agency_contacts_contact_name = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact_name',
         string='Agency Contact Name',
         size=64
     )
     media_agency_contacts_contact_email = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact_email',
         string='Agency Contact Email',
         size=64
     )
     media_agency_contacts_contact_phone = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact_phone',
         string='Agency Contact Phone',
         size=64
     )
     media_agency_contacts_contact_type = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact_type',
         string='Agency Contact Type',
         size=64
     )
     media_agency_contacts_contact_language = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact_language',
         string='Agency Contact Language',
         size=16,
         default='nl'
@@ -584,7 +725,6 @@ class SoLinefromOdootoAd4all(models.Model):
         default='nl'
     )
 
-
     def call_wsdl(self, xml=False):
         self.ensure_one()
         session = Session()
@@ -611,7 +751,7 @@ class SoLinefromOdootoAd4all(models.Model):
             'root': {
                 'advert_id': int(float(self.advert_id)),
                 'id': int(float(self.id)),
-                'adgr_orde_id': int(float(self.adgr_orde_id)),
+                'adgr_orde_id': int(float(self.adgr_orde_id.id)),
                 'adkind': self.adkind,
                 'adstatus': self.adstatus,
                 'cancelled': "Yes" if self.cancelled else "No",
@@ -704,8 +844,9 @@ class SoLinefromOdootoAd4all(models.Model):
         #        import pdb; pdb.set_trace()
         try:
             response = client.service.soap_order(order=order_obj)
-            self.write({'ad4all_response': response['code'],
-                        'ad4all_environment': wsdl})
+            self.write({
+                'ad4all_response': response['code'],
+        })
         except Exception as e:
             if xml:
                 xml_msg = history.last_sent
