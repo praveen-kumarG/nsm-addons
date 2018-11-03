@@ -1,0 +1,406 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* bdu_pubble_soap
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-31 08:42+0000\n"
+"PO-Revision-Date: 2018-01-31 10:21+0100\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: nl\n"
+"X-Generator: Poedit 2.0.4\n"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_status
+msgid "Active"
+msgstr "Actief"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_product_category_pubble
+msgid "Ads to Pubble"
+msgstr "Advertenties naar Pubble"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_debtor_addedby
+msgid "Advertiser Added by"
+msgstr "Adverteerder toegevoegd door"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_debtor_city
+msgid "Advertiser City"
+msgstr "Plaats adverteerder"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_debtor_addeddate
+msgid "Advertiser Date Added"
+msgstr "Adverteerder toegevoegd op"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_debtor_lastmodified
+msgid "Advertiser Date Last Modified"
+msgstr "Adverteerder laatst bewerkt op"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_debtor_emailadres
+msgid "Advertiser Email"
+msgstr "Email adverteerder"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_debtor_name
+msgid "Advertiser Name"
+msgstr "Naam adverteerder"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_debtor_extaccountingid
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_debtor_extdebtorid
+msgid "Advertiser Number"
+msgstr "Debiteurennummer"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_debtor_postalcode
+msgid "Advertiser Zip Code"
+msgstr "Postcode adverteerder"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_adsize_adtypename
+msgid "Advertising Class Name"
+msgstr "Soort advertentie"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_adsize_name
+msgid "Advertising Product Name"
+msgstr "Product"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_edition_extpublicationid
+msgid "Advertising Title Name"
+msgstr "Titel"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_agency
+msgid "Agency"
+msgstr "Mediabureau"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_agency_city
+msgid "Agency City"
+msgstr "Plaats mediabureau"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_agency_addeddate
+msgid "Agency Date Added"
+msgstr "Bureau toegevoegd op"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_agency_lastmodified
+msgid "Agency Date Last Modified"
+msgstr "Bureau laatst bewerkt op"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_agency_emailadres
+msgid "Agency Email"
+msgstr "Email mediabureau"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_agency_name
+msgid "Agency Name"
+msgstr "Naam mediabureau"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_agency_extaccountingid
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_agency_extdebtorid
+msgid "Agency Number"
+msgstr "Debiteurennummer mediabureau"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_agency_postalcode
+msgid "Agency Zip Code"
+msgstr "Posctode mediabureau"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sale_order_order_pubble_allow
+msgid "Allow to Pubble"
+msgstr "Pubble toestaan"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_productiondetail_isclassified
+msgid "Classified"
+msgstr "Geclassificeerd"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_productiondetail_color
+msgid "Color"
+msgstr "Kleur"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_create_uid
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_create_date
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: bdu_pubble_soap
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_sofrom_odooto_pubble_tree
+msgid "Creation Date"
+msgstr "Aanmaakdatum"
+
+#. module: bdu_pubble_soap
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_sofrom_odooto_pubble_filter
+msgid "Date"
+msgstr "Datum"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sale_order_date_sent_pubble
+msgid "Date Sent to Pubble"
+msgstr "Datum verstuurd naar Pubble"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,help:bdu_pubble_soap.field_sale_order_date_sent_pubble
+msgid "Date on which sales order is sent to Pubble."
+msgstr "Datum waarop order naar Pubble is verstuurd"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_display_name
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_display_name
+msgid "Display Name"
+msgstr "Weergave naam"
+
+#. module: bdu_pubble_soap
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_sofrom_odooto_pubble_filter
+msgid "Group By"
+msgstr "Groepeer op"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_adsize_height
+msgid "Height mm"
+msgstr "Hoogte in mm"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_id
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_id
+msgid "ID"
+msgstr "ID"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_edition_editiondate
+msgid "Issue Date"
+msgstr "Editiedatum"
+
+#. module: bdu_pubble_soap
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_sofrom_odooto_pubble_form
+msgid "JSON Message"
+msgstr "JSON Message"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_json_message
+msgid "JSON message"
+msgstr "JSON message"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble___last_update
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble___last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_write_uid
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_write_date
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_extplacementid
+msgid "Line ID"
+msgstr "Orderregel ID"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_productiondetail_placementcomments
+msgid "Mapping Remarks"
+msgstr "Opmerking indeling"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_materialid
+msgid "Material ID"
+msgstr "Materiaal (url)"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_productiondetail_dtpcomments
+msgid "Material Remarks"
+msgstr "Opmerking materiaal"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_reference
+msgid "Opportunity Subject"
+msgstr "Onderwerp"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_odoo_order_line
+msgid "Order Line Reference"
+msgstr "Externe referentie"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sale_order_line_pubble_sent
+msgid "Order Line sent to Pubble"
+msgstr "Orderregel naar Pubble verstuurd"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_pubble_so_line
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_sofrom_odooto_pubble_form
+msgid "Order Lines"
+msgstr "Orderregels"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_order_id
+msgid "Order Reference"
+msgstr "Order referentie"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sale_order_pubble_sent
+msgid "Order to Pubble"
+msgstr "Order naar Pubble"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_price
+msgid "Price"
+msgstr "Prijs"
+
+#. module: bdu_pubble_soap
+#: model:ir.model,name:bdu_pubble_soap.model_product_category
+msgid "Product Category"
+msgstr "Productcategorie"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_adsize_extadsizeid
+msgid "Product ID"
+msgstr "Product ID"
+
+#. module: bdu_pubble_soap
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_order_form_advertising_pubble
+msgid "Pubble"
+msgstr "Pubble"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sale_order_line_line_pubble_allow
+msgid "Pubble Allowed"
+msgstr "Pubble toegestaan"
+
+#. module: bdu_pubble_soap
+#: model:ir.ui.menu,name:bdu_pubble_soap.menu_pubble
+msgid "Pubble Interface"
+msgstr "Pubble Interface"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_pubble_response
+msgid "Pubble Response"
+msgstr "Reactie Pubble"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sale_order_publog_id
+msgid "Publog id"
+msgstr "Publog id"
+
+#. module: bdu_pubble_soap
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_sofrom_odooto_pubble_form
+msgid "SO lines"
+msgstr "Orderregels"
+
+#. module: bdu_pubble_soap
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_sofrom_odooto_pubble_form
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_sofrom_odooto_pubble_tree
+msgid "SO to Pubble"
+msgstr "Order naar Pubble"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_sale_order_id
+msgid "Sale Order"
+msgstr "Verkooporder"
+
+#. module: bdu_pubble_soap
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_sofrom_odooto_pubble_form
+msgid "Sale Order :"
+msgstr "Verkooporder:"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_extorderid
+msgid "Sale Order ID"
+msgstr "Ordernummer"
+
+#. module: bdu_pubble_soap
+#: model:ir.model,name:bdu_pubble_soap.model_sale_order
+msgid "Sales Order"
+msgstr "Verkooporder"
+
+#. module: bdu_pubble_soap
+#: model:ir.model,name:bdu_pubble_soap.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Verkooporderregel"
+
+#. module: bdu_pubble_soap
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_sofrom_odooto_pubble_filter
+msgid "Search Pubble Updates"
+msgstr "Zoek naar updates Pubble"
+
+#. module: bdu_pubble_soap
+#: model:ir.actions.act_window,name:bdu_pubble_soap.action_staged_pubble
+#: model:ir.ui.menu,name:bdu_pubble_soap.menu_action_staged_pubble
+msgid "Staged Pubble"
+msgstr "Status Pubble"
+
+#. module: bdu_pubble_soap
+#: model:ir.ui.view,arch_db:bdu_pubble_soap.view_sofrom_odooto_pubble_filter
+msgid "Success"
+msgstr "Succes"
+
+#. module: bdu_pubble_soap
+#: code:addons/bdu_pubble_soap/models/sale_advertising.py:251
+#, python-format
+msgid "This Sale Order already has been succesfully sent to Pubble."
+msgstr "Deze verkooporder is reeds met succes naar Pubble verstuurd."
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_transmission_id
+msgid "Transmission ID"
+msgstr "Overdrachtsnummer"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_sofrom_odooto_pubble_salesorder_createdby
+msgid "User Name"
+msgstr "Verkoper"
+
+#. module: bdu_pubble_soap
+#: model:ir.model.fields,field_description:bdu_pubble_soap.field_soline_from_odooto_pubble_ad_adsize_width
+msgid "Width mm"
+msgstr "Breedte in mm"
+
+#. module: bdu_pubble_soap
+#: model:ir.model,name:bdu_pubble_soap.model_deleted_soline_pubble
+msgid "deleted.soline.pubble"
+msgstr "deleted.soline.pubble"
+
+#. module: bdu_pubble_soap
+#: model:ir.model,name:bdu_pubble_soap.model_sofrom_odooto_pubble
+msgid "sofrom.odooto.pubble"
+msgstr "sofrom.odooto.pubble"
+
+#. module: bdu_pubble_soap
+#: model:ir.model,name:bdu_pubble_soap.model_soline_from_odooto_pubble
+msgid "soline.from.odooto.pubble"
+msgstr "soline.from.odooto.pubble"
