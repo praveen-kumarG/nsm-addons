@@ -19,8 +19,8 @@
 ##############################################################################
 
 
-from odoo import api, fields, models, _, SUPERUSER_ID
-from odoo.exceptions import UserError, ValidationError
+import logging
+logger = logging.getLogger(__name_)
 
 class WizardUser(models.TransientModel):
     _inherit = 'portal.wizard.user'
