@@ -21,6 +21,8 @@
 
 from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
+import logging
+logger = logging.getLogger(__name_)
 
 class WizardUser(models.TransientModel):
     _inherit = 'portal.wizard.user'
@@ -36,7 +38,7 @@ class WizardUser(models.TransientModel):
 
         for wizard_line in self:
 
-            if (grp,'in', [x.get_xml_id(x.id) for x in wizard_line.user_id.groups_id]):
+            if (grp,'in', [x.get_xml_id() for x in wizard_line.user_id.groups_id]):
 
                 lang = wizard_line.user_id.lang
                 partner = wizard_line.user_id.partner_id
