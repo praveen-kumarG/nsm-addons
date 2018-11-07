@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2016 Magnus (<http://www.magnus.nl>). All Rights Reserved
+#    OpenERP, Open Source Management Solution	
+#    Copyright (C) 2004-2008 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -20,18 +20,8 @@
 #
 ##############################################################################
 
-from odoo import api, fields, models, _
+import sale_order_state
 
-class SaleOrder(models.Model):
-    _inherit = ["sale.order"]
 
-    material_contact_person = fields.Many2one('res.partner', 'Material Contact Person', domain=[('customer','=',True)])
-    
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
-
-    proof_number_payer = fields.Many2one('res.partner', 'Proof Number Payer')
-    proof_number_adv_customer = fields.Many2many('res.partner', 'partner_line_proof_rel', 'line_id', 'partner_id', string='Proof Number Advertising Customer')
-    proof_number_amt_payer = fields.Integer('Proof Number Amount Payer', default=1)
-    proof_number_amt_adv_customer = fields.Integer('Proof Number Amount Advertising', default=1)
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
