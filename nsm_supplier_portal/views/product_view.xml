@@ -21,6 +21,7 @@
             <field name="arch" type="xml">
                 <field name="type" position="after">
                     <field name="supportal" />
+                    <field name="supp_category_ids" invisible="1"/>
                 </field>
             </field>
         </record>

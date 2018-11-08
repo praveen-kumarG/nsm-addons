@@ -41,8 +41,7 @@ class Analytic(models.Model):
 
     portal_main = fields.Boolean('Portal Main')
     portal_sub = fields.Boolean('Portal Sub')
-    supp_analytic_accids = fields.Integer(compute=lambda self, cr, uid, ids, field_name, arg, context=None: dict.fromkeys(ids, True),
-                                           search=_supplier_analytic_search)
+    supp_analytic_accids = fields.Integer(default=lambda self: self._uid)
 
 
     @api.onchange('portal_main', 'portal_sub')
