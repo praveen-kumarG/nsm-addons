@@ -55,8 +55,7 @@ class Category(models.Model):
 
     supportal = fields.Boolean('Parent Portal Productcategorieen',
                                help="Indicator that determines the role of this category as parent of supplier portal categories.")
-    supp_category_ids = fields.Integer(compute=lambda self: dict.fromkeys(self._ids, True),
-                                       search=_supplier_category_search)
+    supp_category_ids = fields.Integer(default=lambda self: self._uid)
 
 
 
