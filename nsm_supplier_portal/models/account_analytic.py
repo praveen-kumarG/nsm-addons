@@ -47,7 +47,7 @@ class Analytic(models.Model):
     @api.model
     def search(self, args, offset=0, limit=0, order=None, count=False):
         if self.env.user.has_group('nsm_supplier_portal.group_module_supplier_portal_user'):
-            args.append(('supp_analytic_accids', 'in', self.env.user.partner_id.ids))
+            args = args + ['|', ('supp_analytic_accids', 'in', self.env.user.partner_id.ids), ('portal_sub', '=', True)]
         return super(Analytic, self).search(args, offset=offset, limit=limit, order=order, count=count)
 
 
