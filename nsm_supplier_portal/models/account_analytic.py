@@ -41,7 +41,14 @@ class Analytic(models.Model):
 
     portal_main = fields.Boolean('Portal Main')
     portal_sub = fields.Boolean('Portal Sub')
-    supp_analytic_accids = fields.Integer(default=lambda self: self._uid)
+    supp_analytic_accids = fields.Many2many('res.partner','partner_analytic_rel','analytic_account_id','partner_id',
+                                            'Analytic IDs', copy=True)
+
+    @api.model
+    def search(self, args, offset=0, limit=0, order=None, count=False):
+        if self.env.user.has_group('nsm_supplier_portal.group_module_supplier_portal_user'):
+            args.append(('supp_analytic_accids', 'in', self.env.user.partner_id.ids))
+        return super(Analytic, self).search(args, offset=offset, limit=limit, order=order, count=count)
 
 
     @api.onchange('portal_main', 'portal_sub')
