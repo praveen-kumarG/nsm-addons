@@ -208,7 +208,7 @@
                                 <field name="reuse" string="Hergebruik Voorwaarden"/>
                                 <field name="var_ok" string="VAR OK"/>
                                 <field name="analytic_account_ids" domain="[('portal_main','=', True)]" string="Titles/Departments"/>
-                                <field name="product_category_ids" domain="[('parent_id.supportal', '=', True)]" string="Cost Categories"/>
+                                <field name="product_category_ids" domain="['|', ('parent_id.supportal', '=', True), ('parent_id', '=', False)]" string="Cost Categories"/>
                             </group>
                         </group>
                     </page>
