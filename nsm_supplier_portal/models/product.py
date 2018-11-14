@@ -55,9 +55,14 @@ class Category(models.Model):
 
     supportal = fields.Boolean('Parent Portal Productcategorieen',
                                help="Indicator that determines the role of this category as parent of supplier portal categories.")
-    supp_category_ids = fields.Integer(compute=lambda self: dict.fromkeys(self._ids, True),
-                                       search=_supplier_category_search)
+    supp_category_ids = fields.Many2many('res.partner','partner_category_rel','product_category_id','partner_id',
+                                            'Supplier IDs', copy=True)
 
+    @api.model
+    def search(self, args, offset=0, limit=0, order=None, count=False):
+        if self.env.user.has_group('nsm_supplier_portal.group_module_supplier_portal_user'):
+            args.append(('supp_category_ids', 'in', self.env.user.partner_id.ids))
+        return super(Category, self).search(args, offset=offset, limit=limit, order=order, count=count)
 
 
 
