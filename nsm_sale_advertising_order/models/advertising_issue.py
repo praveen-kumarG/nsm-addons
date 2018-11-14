@@ -4,6 +4,7 @@
 
 from odoo import api, fields, models, _
 import json
+from odoo.exceptions import ValidationError
 
 class AdvertisingIssue(models.Model):
     _inherit = "sale.advertising.issue"
@@ -53,3 +54,17 @@ class AdvertisingIssue(models.Model):
             ads = self.env.ref('sale_advertising_order.advertising_category').id
             domain['medium'] = [('parent_id', '=', ads)]
         return {'domain': domain}
+
+    def validate_medium(self):
+        if self.parent_id:
+            if len(self.medium.ids) > 1:
+                raise ValidationError(_("You can't select more than one medium."))
+
+    @api.onchange('medium')
+    def _onchange_medium(self):
+        self.validate_medium()
+
+    @api.one
+    @api.constrains('medium')
+    def _check_medium(self):
+        self.validate_medium()
