@@ -160,8 +160,9 @@
                                         domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '=', 'other')]"
                                         options='{"no_open": True}'/>
 
+                                    <field name="acc_analytic_domain" invisible="1"/>
                                     <field name="account_analytic_id" string="Editie"
-                                        domain="[('company_id', '=', parent.company_id), ('portal_sub', '=', True)]"
+                                        domain="acc_analytic_domain"
                                         options='{"no_create": True, "no_create_edit": True, "no_open": True}' required="True"/>
 
                                     <field name="quantity"/>
