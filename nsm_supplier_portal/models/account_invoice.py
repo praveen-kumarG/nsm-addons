@@ -21,6 +21,7 @@
 from odoo import api, fields, models, _
 import odoo.addons.decimal_precision as dp
 from odoo.exceptions import UserError, ValidationError
+import json
 
 class Invoice(models.Model):
     _inherit = 'account.invoice'
@@ -389,7 +390,29 @@ class Invoice(models.Model):
 class InvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
+    @api.depends('product_id')
+    @api.multi
+    def _compute_acc_analytic_domain(self):
+        """
+        Compute the domain for the account_analytic_id domain.
+        """
+        for rec in self:
+            if rec.invoice_id.main_account_analytic_id:
+                print "\n\n\nrec.invoice_id.main_account_analytic_id>>>", rec.invoice_id.main_account_analytic_id
+                parent_adv_issues = rec.env['sale.advertising.issue'].search([('analytic_account_id', '=', rec.invoice_id.main_account_analytic_id.id), ('parent_id', '=', False)])
+                child_adv_issues = rec.env['sale.advertising.issue'].search([('parent_id', 'in', parent_adv_issues.ids)])
+                analytic_ids = child_adv_issues.mapped('analytic_account_id').ids
+                if rec.invoice_id.main_account_analytic_id:
+                    rec.acc_analytic_domain = json.dumps(
+                        [('id', '=', analytic_ids)]
+                    )
+            else:
+                rec.acc_analytic_domain = json.dumps(
+                        [('id', '=', [])]
+                    )
+
     new_tax_id = fields.Many2one('account.tax', 'Tax',)
+    acc_analytic_domain = fields.Char(compute=_compute_acc_analytic_domain, readonly=True, store=False, )
 
     @api.onchange('new_tax_id')
     def onchange_tax_id(self):

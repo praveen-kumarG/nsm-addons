@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partners_form_2_step_nsm" model="ir.ui.view">
+        <field name="name">partner.2step.validation</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account_invoice_2step_validation.view_partners_form_2_step"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='vendor_owner']" position="replace">
+                <field name="team_id" attrs="{'required': [('is_company','=',True),('supplier','=', True)],
+                                                   'invisible': [('supplier','!=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter" model="ir.ui.view">
+            <field name="name">res.partner.select</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="account_invoice_2step_validation.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                   <filter name="my_vendors" position="replace" >
+                   </filter>
+                   <field name="vendor_owner" position="replace">
+                       <field name="team_id" />
+                   </field>
+                   <filter name="salesperson" position="after" >
+                       <filter name="team_id" string="Sales Team" domain="[]" context="{'group_by' : 'team_id'}" />
+                   </filter>
+            </field>
+        </record>
+
+</odoo>
