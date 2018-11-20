@@ -45,5 +45,49 @@
             </field>
         </record>
 
+        <record id="view_proof_number_delivery_list_tree" model="ir.ui.view">
+            <field name="name">sale.order.line.proof.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <tree string="Proof Delivery Lists" create="false" edit="false" delete="false">
+                        <field name="title" />
+                        <field name="adv_issue" />
+                        <field name="issue_date" />
+                        <field name="proof_parent_name" />
+                        <field name="proof_initials" />
+                        <field name="proof_infix" />
+                        <field name="proof_lastname"/>
+                        <field name="proof_country_code"/>
+                        <field name="proof_zip"/>
+                        <field name="proof_street_number"/>
+                        <field name="proof_street_name"/>
+                        <field name="proof_city" />
+                        <field name="proof_partner_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="nsm_proof_number_delivery_list_action">
+			<field name="name">Proof Number Delivery List</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.order.line</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form,pivot</field>
+            <field name="search_view_id" ref="sale_advertising_order.view_advertising_sales_order_line_filter"/>
+			<field name="domain">[('advertising','!=',False),('state','in',('sale','done')),'|',('proof_number_payer','!=', False),('proof_number_adv_customer','!=', False)]</field>
+		</record>
+
+         <record id="nsm_proof_number_delivery_list_action_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_proof_number_delivery_list_tree"/>
+            <field name="act_window_id" ref="nsm_proof_number_delivery_list_action"/>
+        </record>
+
+        <menuitem id="menu_sale_order_line_proof" parent="sale_advertising_order.menu_advsales"
+                  action="nsm_proof_number_delivery_list_action"
+                  groups="sale_advertising_order.group_advertising_sales_user" sequence="12" />
+
+
     </data>
 </odoo>
