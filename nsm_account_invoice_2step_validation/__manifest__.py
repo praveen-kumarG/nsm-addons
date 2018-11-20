@@ -22,6 +22,7 @@ Enchanced to add
     'author'  : 'Magnus - Willem Hulshof',
     'website' : 'http://www.magnus.nl',
     'depends' : ['account_invoice_2step_validation',
+                 'nsm_supplier_portal',
     ],
     'data' : [
         "security/account_security.xml",
