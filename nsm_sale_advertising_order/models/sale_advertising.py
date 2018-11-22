@@ -58,6 +58,13 @@ class SaleOrderLine(models.Model):
                 line.proof_city = proof_cus.city or ''
                 line.proof_partner_name = proof_cus.name or ''
 
+    @api.model
+    def default_get(self, fields_list):
+        result = super(SaleOrderLine, self).default_get(fields_list)
+        if 'customer_contact' in self.env.context:
+            result.update({'proof_number_payer':self.env.context['customer_contact']})
+        return result
+
     proof_number_payer = fields.Many2one('res.partner', 'Proof Number Payer')
     proof_number_adv_customer = fields.Many2many('res.partner', 'partner_line_proof_rel', 'line_id', 'partner_id', string='Proof Number Advertising Customer')
     proof_number_amt_payer = fields.Integer('Proof Number Amount Payer', default=1)
