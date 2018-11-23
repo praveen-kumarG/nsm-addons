@@ -124,6 +124,8 @@
                                options='{"no_create": True, "no_create_edit": True, "no_open": True}' required="True"
                                attrs="{'readonly': [('state','!=','portalcreate')],}"/>
 
+                            <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit" attrs="{'readonly': [('state','!=','portalcreate')]}" options='{"no_create": True, "no_create_edit": True, "no_open": True}'/>
+
                             <field name="team_id" string="Redactie" widget="selection" readonly="1" invisible="1"/>
                             <field name="fiscal_position_id" widget="selection" invisible="1"/>
                             <field name="origin" invisible="1"/>
@@ -325,6 +327,8 @@
                                options='{"no_create": True, "no_create_edit": True, "no_open": True}' required="True"
                                attrs="{'readonly': [('state','!=','draft')],}"/>
 
+                            <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit" attrs="{'readonly': [('state','!=','draft')],}" options='{"no_create": True, "no_create_edit": True, "no_open": True}'/>
+
                             <field name="team_id" string="Redactie/Afdeling" widget="selection" readonly="True" />
                             <field name="fiscal_position_id" widget="selection" invisible="1"/>
                             <field name="origin" invisible="1"/>
@@ -486,6 +490,7 @@
                             <field name="main_account_analytic_id" string="Titel/Afdeling"
                                options='{"no_create": True, "no_create_edit": True, "no_open": True}' required="True"
                                attrs="{'readonly': [('state','!=','draft')],}"/>
+                            <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit" attrs="{'readonly': [('state','!=','draft')],}" options='{"no_create": True, "no_create_edit": True, "no_open": True}'/>
                             <field name="fiscal_position_id" widget="selection" invisible="1"/>
                             <field name="origin" invisible="1"/>
                             <!--label for="reference_type"/>
