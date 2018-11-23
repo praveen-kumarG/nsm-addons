@@ -256,6 +256,13 @@ class Invoice(models.Model):
         if llist:
             res = { 'value': { 'invoice_line_ids': llist },
                     'warning': {'title': 'Let op!', 'message': 'U heeft de Titel/Afdeling aangepast. Nu moet u opnieuw Edities/Kostenplaatsen selecteren in de factuurregel(s)'}}
+
+        operating_unit_ids = self.main_account_analytic_id.operating_unit_ids
+        if len(operating_unit_ids) > 1:
+            res['domain'] = {'operating_unit_id':[('id','in',operating_unit_ids.ids)]}
+        else:
+            res['domain'] = {'operating_unit_id':[('id','in',operating_unit_ids.ids)]}
+            res['value'] = {'operating_unit_id':operating_unit_ids.ids[0]}
         return res
 
 
@@ -284,7 +291,8 @@ class Invoice(models.Model):
                         'date_invoice': fields.Date.context_today(self),
                         'state': 'draft',
                         # 'section_id': salesTeam.sales_team_id.id,
-                        'user_id':  salesTeam.sales_team_id.user_id.id})
+                        'team_id':  salesTeam.sales_team_id.id,
+                        'user_id':  salesTeam.sales_team_id.user_id.id or self.env.user.id})
             # self.button_reset_taxes(cr, uid, ids, context=context)
 
         return True
@@ -398,7 +406,6 @@ class InvoiceLine(models.Model):
         """
         for rec in self:
             if rec.invoice_id.main_account_analytic_id:
-                print "\n\n\nrec.invoice_id.main_account_analytic_id>>>", rec.invoice_id.main_account_analytic_id
                 parent_adv_issues = rec.env['sale.advertising.issue'].search([('analytic_account_id', '=', rec.invoice_id.main_account_analytic_id.id), ('parent_id', '=', False)])
                 child_adv_issues = rec.env['sale.advertising.issue'].search([('parent_id', 'in', parent_adv_issues.ids)])
                 analytic_ids = child_adv_issues.mapped('analytic_account_id').ids
