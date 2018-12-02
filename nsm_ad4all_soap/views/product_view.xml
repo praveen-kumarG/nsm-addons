@@ -17,7 +17,7 @@
 	 <record id="product_category_form_view_ad4all" model="ir.ui.view">
 		<field name="name">product.category.form.ad4all</field>
 		<field name="model">product.category</field>
-		<field name="inherit_id" ref="product.product_category_form_view"/>
+		<field name="inherit_id" ref="sale_advertising_order.product_category_form_view_inherit"/>
 		<field name="groups_id" eval="[(4, ref('sale_advertising_order.group_traffic_user'))]"/>
 		<field name="arch" type="xml">
 			<field name="deadline_offset" position="after">
