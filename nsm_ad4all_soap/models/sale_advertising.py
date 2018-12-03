@@ -211,7 +211,7 @@ class SaleOrder(models.Model):
                         'materialtype': line.ad_class.ad4all_material_type,
                         'sales': self.user_id.name,
                         'sales_mail': self.user_id.email,
-                        'reminder': not self.no_copy_chase,
+                        'reminder': not line.no_copy_chase,
                         'format_id': line.product_template_id.default_code,
                         'format_height': False,
                         'format_trim_height': line.product_uom_qty
