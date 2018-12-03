@@ -276,7 +276,7 @@ class HonIssueLine(models.Model):
 
     date_publish = fields.Date(related='account_analytic_id.date_publish', readonly=True, string='Publishing Date', store=True,)
 
-    activity_id = fields.Many2one('project.activity_al', 'Page Type', ondelete='set null', index=True)
+    tag_id = fields.Many2one('account.analytic.tag', 'Page Type', ondelete='set null', index=True)
     company_id = fields.Many2one(related='issue_id.company_id', relation='res.company',string='Company', store=True, readonly=True)
     price_subtotal = fields.Float(compute='_amount_line', string='Amount',
        digits = dp.get_precision('Account'), store=True)

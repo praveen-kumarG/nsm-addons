@@ -119,5 +119,4 @@ class InvoiceLine(models.Model):
     _inherit = 'account.invoice.line'
 
 
-    activity_id = fields.Many2one('project.activity_al', 'Activity')
     hon_issue_line_id = fields.Many2one('hon.issue.line', 'Hon Issue Line')
