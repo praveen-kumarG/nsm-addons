@@ -752,6 +752,10 @@ class SoLinefromOdootoAd4all(models.Model):
             deliverer="nsm",
             order_code=self.adgr_orde_id
         )
+        paper_deadline = datetime.datetime.strptime(self.paper_deadline, '%Y-%m-%d').strftime(
+            '%Y%m%d') if self.paper_deadline else False
+        paper_pub_date = datetime.datetime.strptime(self.paper_pub_date, '%Y-%m-%d').strftime(
+            '%Y%m%d') if self.paper_pub_date else False
 
         xml_dict = {
             'root': {
@@ -775,10 +779,8 @@ class SoLinefromOdootoAd4all(models.Model):
                     'spread': "Yes" if self.format_spread else "No",
                 },
                 'paper': {
-                    'pub_date': datetime.datetime.strptime(
-                        self.paper_pub_date, '%Y-%m-%d').strftime('%Y%m%d'),
-                    'deadline': datetime.datetime.strptime(
-                        self.paper_deadline, '%Y-%m-%d').strftime('%Y%m%d'),
+                    'pub_date': paper_pub_date,
+                    'deadline': paper_deadline,
                     'id': self.paper_id,
                     'name': self.paper_name,
                     'issuenumber': self.paper_issuenumber,
