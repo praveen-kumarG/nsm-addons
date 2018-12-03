@@ -10,15 +10,6 @@ class productCategory(models.Model):
 
 
     ad4all = fields.Boolean('Ads to Ad4all', default=False)
-    ad4all_material_type = fields.Selection(
-        [
-            ('PRINT','Print'),
-            ('ONLINE','Online'),
-            ('DEEL', 'Share'),
-        ],
-        string='Ad4all Type',
-        readonly=False
-    )
 
 
 class productTemplate(models.Model):
