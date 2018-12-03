@@ -135,6 +135,8 @@
             <field name="arch" type="xml">
                 <group name="ad_refs" position="after">
                     <group string="Ad4all" name="ad4all" >
+                        <field name="no_copy_chase"
+                               attrs="{'invisible': [('line_ad4all_allow','!=', True)]}"/>
                         <field name="line_ad4all_allow" readonly="1" />
                         <field name="ad4all_sent" readonly="1"/>
                     </group>
@@ -151,6 +153,12 @@
                     <button name="action_ad4all_no_xml" type="object" string="Update Ad4all"
                             attrs="{'invisible': ['|',('order_ad4all_allow','!=', True),('state','!=','sale')]}"/>
                 </button>
+                <field name="proof_number_payer" position="after">
+                    <field name="recurring" />
+                    <field name="recurring_id"
+                           attrs="{'invisible': [('recurring','!=', True)]}"
+                           domain="[('order_advertiser_id','=', parent.published_customer),('recurring','=', False)]"/>
+                </field>
             </field>
         </record>
 
