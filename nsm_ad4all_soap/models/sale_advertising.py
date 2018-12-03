@@ -208,28 +208,29 @@ class SaleOrder(models.Model):
                         'adgr_orde_id': res.id,
                         'cancelled': del_param,
                         'herplaats': line.recurring,
+                        'materialtype': line.ad_class.ad4all_material_type,
                         'sales': self.user_id.name,
                         'sales_mail': self.user_id.email,
+                        'reminder': not self.no_copy_chase,
                         'format_id': line.product_template_id.default_code,
-                        'format_height': line.product_uom_qty
+                        'format_height': False,
+                        'format_trim_height': line.product_uom_qty
                                         if line.product_uom.name == 'mm'
                                         else line.product_template_id.height,
-                        'format_width': line.product_template_id.width,
+                        'format_width': False,
+                        'format_trim_width': line.product_template_id.width,
                         'format_spread': line.product_template_id.spread,
                         'paper_pub_date': line.issue_date,
-                        'paper_deadline': line.issue_date,
+                        'paper_deadline': line.deadline or False,
                         'paper_id': line.title.code,
                         'paper_name': line.title.name,
                         'paper_issuenumber': line.adv_issue.name,
                         'placement_adclass': line.ad_class.name,
-                        'placement_notice': 'Externe Referentie:' +
-                                            unidecode(line.ad_number or '') +
-                                            '\n' +
-                                            unidecode(line.layout_remark or ''),
-                        'placement_description': unidecode(line.name or '') +
-                                                 '\n' +
-                                                 unidecode(
-                                                    line.product_id.name or ''),
+                        'placement_notice': unidecode(line.layout_remark or ''),
+                        'placement_description': unidecode(
+                                                    line.product_id.name or '')
+                                                 + '\n' +
+                                                 unidecode(line.name or ''),
                         'placement_position': unidecode(line.page_reference
                                                         or ''),
                 }
@@ -263,9 +264,14 @@ class SaleOrderLine(models.Model):
         'Recurring Advertisement',
         copy=False
     )
+    no_copy_chase = fields.Boolean(
+        'No Copy Chasing',
+        copy=False,
+        default=False
+    )
     recurring_id = fields.Many2one(
         'sale.order.line',
-        string='Recurring Order Line'
+        string='Recurring Order Line',
     )
 
     @api.multi
@@ -834,7 +840,8 @@ class SoLinefromOdootoAd4all(models.Model):
                             'email': self.creative_agency_contacts_contact_email,
                             'phone': self.creative_agency_contacts_contact_phone,
                             'type': self.creative_agency_contacts_contact_type,
-                            'language': self.creative_agency_contacts_contact_language,
+                            'language': self.
+                                creative_agency_contacts_contact_language,
                         },
                     },
                 },

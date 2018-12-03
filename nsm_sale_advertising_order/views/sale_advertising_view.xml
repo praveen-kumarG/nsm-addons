@@ -7,6 +7,9 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale_advertising_order.view_order_form_advertising"/>
             <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']" position="attributes">
+                    <attribute name="context">{'customer_contact': customer_contact}</attribute>
+                </xpath>
                 <xpath expr="//field[@name='advertising_agency']" position="after">
                     <field name="material_contact_person" domain="[('customer', '=', True)]" context="{'default_parent_id': 'parent.partner_id', 'show_email': 1}"/>
                 </xpath>

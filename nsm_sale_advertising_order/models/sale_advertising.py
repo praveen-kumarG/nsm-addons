@@ -58,6 +58,32 @@ class SaleOrderLine(models.Model):
                 line.proof_city = proof_cus.city or ''
                 line.proof_partner_name = proof_cus.name or ''
 
+    @api.model
+    def default_get(self, fields_list):
+        result = super(SaleOrderLine, self).default_get(fields_list)
+        if 'customer_contact' in self.env.context:
+            result.update({'proof_number_payer':self.env.context['customer_contact']})
+        return result
+
+    @api.onchange('ad_class', 'title', 'title_ids')
+    def onchange_ad_clsss_title(self):
+        vals, data, result = {}, {}, {}
+        vals['product_template_id'] = False
+        data['product_template_id'] = []
+        if self.ad_class: data['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
+        titles = self.title if self.title else self.title_ids or False
+        if titles:
+            product_ids = self.env['product.product']
+            for title in titles:
+                if title.product_attribute_value_id:
+                    product_ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
+                    product_ids += product_ids
+
+            if product_ids:
+                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
+                data['product_template_id'] += [('id', 'in', product_tmpl_ids)]
+        return {'value': vals, 'domain': data, 'warning': result}
+
     proof_number_payer = fields.Many2one('res.partner', 'Proof Number Payer')
     proof_number_adv_customer = fields.Many2many('res.partner', 'partner_line_proof_rel', 'line_id', 'partner_id', string='Proof Number Advertising Customer')
     proof_number_amt_payer = fields.Integer('Proof Number Amount Payer', default=1)
