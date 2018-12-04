@@ -34,7 +34,7 @@ class SaleOrderLine(models.Model):
     def _get_proof_data(self):
         for line in self:
             proof_payer = line.proof_number_payer
-            proof_cus = line.proof_number_adv_customer
+            proof_cus = line.proof_number_adv_customer and line.proof_number_adv_customer[0]
             if proof_payer:
                 line.proof_parent_name = proof_payer.parent_id and proof_payer.parent_id.name or False
                 line.proof_initials = proof_payer.initials or ''
