@@ -18,35 +18,48 @@ class NSMDeliveryListReport(ReportXlsx):
             title = ",".join(list(set(title))) if title else ' '
             return title
 
-        def _prepare_data(customer, seq, orderLine):
+        def _prepare_data(customer, orderLine):
             records = []
-            records.append(seq)
+            parent = customer.parent_id
             records.append(_get_title(orderLine))
-            records.append(customer.parent_id.name or '')
-            records.append(customer.initials or '')
-            records.append(customer.infix or '')
-            records.append(customer.lastname or '')
-            records.append(customer.country_id.code or '')
-            records.append(customer.zip or '')
-            records.append(customer.street_number or '')
-            records.append(' ')
-            records.append(customer.street_name or '')
-            records.append(customer.city or '')
-            records.append(customer.id)
-            records.append(customer.name)
+            records.append(parent.name if parent else customer.name)
+            if parent and not parent.is_company:
+                records.append(parent.initials or '')
+                records.append(parent.infix or '')
+                records.append(parent.lastname or '')
+            elif not parent and not customer.is_company:
+                records.append(customer.initials or '')
+                records.append(customer.infix or '')
+                records.append(customer.lastname or '')
+            else:
+                records.append('')
+                records.append('')
+                records.append('')
+            records.append(customer.country_id.code or parent.country_id.code or '')
+            records.append(customer.zip or parent.zip or '')
+            records.append(customer.street_number or parent.street_number or '')
+            records.append('')
+            records.append(customer.street_name or parent.street_name or '')
+            records.append(customer.city or parent.city or '')
+
+            amount = 0
+            if customer.id in orderLine.proof_number_adv_customer.ids:
+                amount = orderLine.proof_number_amt_adv_customer
+            elif orderLine.proof_number_payer and orderLine.proof_number_payer.id == customer.id:
+                amount = orderLine.proof_number_amt_payer
+            records.append(amount)
+            records.append(customer.name if parent else '')
             return records
 
         def _form_data(orderLines):
-            seq = 1
             row_datas = []
             for orderLine in orderLines:
                 partners = orderLine.proof_number_adv_customer | orderLine.proof_number_payer
                 for part in partners:
-                    row_datas.append(_prepare_data(part, seq, orderLine))
-                    seq += 1
+                    row_datas.append(_prepare_data(part, orderLine))
             return row_datas
 
-        header = ['S.NO', 'PAPERCODE', 'CUSTOMER NAME', 'VOORLETTERS', 'TUSSENVOEGSEL', 'COUNTRY CODE', 'ADDRESS ZIP',
+        header = ['PAPERCODE', 'CUSTOMER NAME', 'VOORLETTERS', 'TUSSENVOEGSEL', 'ACHTERNAAM', 'COUNTRY CODE', 'ADDRESS ZIP',
                   'HUISNUMMER', 'AANVULLING', 'ADDRESS STREET', 'ADDRESS CITY', 'AANTAL', 'CONTACT PERSOON']
 
         row_datas = _form_data(orderLines)
