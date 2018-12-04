@@ -43,7 +43,6 @@ representing the Issue and to the products representing the type and price of th
     'author'  : 'Magnus - Willem Hulshof',
     'website' : 'http://www.magnus.nl',
     'depends' : ['product',
-                 'analytic_secondaxis',
                  'partner_firstname',
                  'publishing_accounts',
     ],

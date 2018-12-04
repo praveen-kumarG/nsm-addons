@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <report
+            id="report_nsm_delivery_list_report_xlsx"
+            model="sale.order.line"
+            string="P.N.D.L List XLSX"
+            report_type="xlsx"
+            name="report_pndl_delivery_list.xlsx"
+            file="report_pndl_delivery_list.xlsx"
+            attachment_use="False"
+        />
+    </data>
+</odoo>
