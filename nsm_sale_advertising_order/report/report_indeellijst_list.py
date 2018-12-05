@@ -16,6 +16,7 @@ class IndeellijstListReport(ReportXlsx):
                 pro_name += '('+str(sol.product_uom_qty) + ')'
             sline.append(sol.order_advertiser_id.name)
             sline.append(sol.id)
+            sline.append(sol.recurring_id.id if sol.recurring_id else sol.id)
             sline.append(pro_name)
             ref = sol.page_reference or ''
             if sol.layout_remark:
@@ -62,7 +63,7 @@ class IndeellijstListReport(ReportXlsx):
         sheet.write(row, 1, issue_date, cell_format)
         row += 2
 
-        ad_class_header = ['Adverteerder', 'Order ID', 'Product', 'Opmerkingen', 'Paginasoort']
+        ad_class_header = ['Adverteerder', 'Order ID', 'Material ID', 'Product', 'Opmerkingen', 'Paginasoort']
 
         for rdata in orderByAdClass:
             ad_class_id = rdata['ad_class'][0]
