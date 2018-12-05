@@ -33,6 +33,13 @@ class IndeellijstListReport(ReportXlsx):
         orderByAdClass = orderLines.read_group([('id', 'in', orderLines.ids)], ['ad_class'], ['ad_class'])
 
         bold_format = workbook.add_format({'bold': True})
+        bold_format.set_border(style=2)
+
+        cell_format = workbook.add_format()
+        cell_format.set_border(style=2)
+
+        adClsFmt = workbook.add_format({'bold': True})
+
         title = orderLines[0].title
         adv_issue = orderLines[0].adv_issue
         issue_date = orderLines[0].issue_date
@@ -42,17 +49,17 @@ class IndeellijstListReport(ReportXlsx):
         row = 0
         #add title and it's values
         sheet.write(row, 0, 'Titel', bold_format)
-        sheet.write(row, 1, title.name+'('+title.code+')')
+        sheet.write(row, 1, title.name+'('+title.code+')', cell_format)
         row += 1
 
         # add issue and it's values
         sheet.write(row, 0, 'Editie', bold_format)
-        sheet.write(row, 1, adv_issue.name+'('+adv_issue.code+')')
+        sheet.write(row, 1, adv_issue.name+'('+adv_issue.code+')', cell_format)
         row += 1
 
         # add issue_date
         sheet.write(row, 0, 'Editiedatum', bold_format)
-        sheet.write(row, 1, issue_date)
+        sheet.write(row, 1, issue_date, cell_format)
         row += 2
 
         ad_class_header = ['Adverteerder', 'Order ID', 'Product', 'Opmerkingen', 'Paginasoort']
@@ -60,7 +67,7 @@ class IndeellijstListReport(ReportXlsx):
         for rdata in orderByAdClass:
             ad_class_id = rdata['ad_class'][0]
             ad_class = self.env['product.category'].browse(ad_class_id)
-            sheet.write(row, 0, ad_class.name, bold_format)
+            sheet.write(row, 0, ad_class.name, adClsFmt)
             row += 1
             for i, title in enumerate(ad_class_header):
                 sheet.write(row, i, title, bold_format)
@@ -68,7 +75,7 @@ class IndeellijstListReport(ReportXlsx):
             for sol in orderLines.filtered(lambda sl: sl.ad_class.id == ad_class_id):
                 row_datas = _form_data(sol)
                 for cell_index, cell_value in enumerate(row_datas):
-                    sheet.write(row, cell_index, cell_value)
+                    sheet.write(row, cell_index, cell_value, cell_format)
                 row += 1
             row += 2
 
