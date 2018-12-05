@@ -30,6 +30,20 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
+    @api.depends('state')
+    def _get_indeellijst_data(self):
+        sol_pb = self.env['soline.from.odooto.pubble']
+        for line in self:
+            prod = line.product_id
+            if prod:
+                line.product_width = prod.width
+                line.product_height = prod.height
+            pubbleObj = sol_pb.search([('odoo_order_line', '=', line.id)])
+            if pubbleObj:
+                line.mapping_remark = pubbleObj[0].ad_productiondetail_placementcomments
+                line.material_id = pubbleObj[0].ad_materialid
+
+
     @api.depends('proof_number_payer','proof_number_adv_customer')
     def _get_proof_data(self):
         for line in self:
@@ -98,4 +112,9 @@ class SaleOrderLine(models.Model):
     proof_street_name = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Street Name")
     proof_city = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="City")
     proof_partner_name = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Name")
+    product_width = fields.Float(compute='_get_indeellijst_data', readonly=True, store=False, string="Width")
+    product_height = fields.Float(compute='_get_indeellijst_data', readonly=True, store=False, string="Height")
+    mapping_remark = fields.Char(compute='_get_indeellijst_data', readonly=True, store=False, string="Mapping Remark")
+    material_id = fields.Integer(compute='_get_indeellijst_data', readonly=True, store=False, string="Material ID")
+
 
