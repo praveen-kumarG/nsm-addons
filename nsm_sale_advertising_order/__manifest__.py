@@ -33,6 +33,7 @@ This module allows you to use both CRM and Sales Management to run your advertis
     'website': 'http://www.magnus.nl',
     'depends': [
                 'sale_advertising_order',
+                'nsm_ad4all_soap',
                 'partner_firstname',
                 'l10n_nl_partner_name',
                 'report_xlsx'

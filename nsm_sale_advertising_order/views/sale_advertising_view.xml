@@ -110,7 +110,7 @@
                         <field name="product_height"/>
                         <field name="page_reference"/>
                         <field name="layout_remark" />
-                        <field name="mapping_remark"/>
+                        <field name="name"/>
                         <field name="analytic_tag_ids"/>
                 </tree>
             </field>
