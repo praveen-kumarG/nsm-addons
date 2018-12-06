@@ -12,8 +12,8 @@ class IndeellijstListReport(ReportXlsx):
             pro_name = sol.product_template_id.name
             if sol.product_id.width and sol.product_id.height:
                 pro_name += ', ' + str(sol.product_id.width) + 'x' + str(sol.product_id.height) + 'mm'
-            if sol.product_uom_qty > 0:
-                pro_name += '('+str(sol.product_uom_qty) + ')'
+            if sol.product_uom_qty > 1:
+                pro_name += '('+str(int(sol.product_uom_qty)) + 'p)'
             sline.append(sol.order_advertiser_id.name)
             sline.append(sol.id)
             sline.append(sol.recurring_id.id if sol.recurring_id else sol.id)
@@ -50,12 +50,12 @@ class IndeellijstListReport(ReportXlsx):
         row = 0
         #add title and it's values
         sheet.write(row, 0, 'Titel', bold_format)
-        sheet.write(row, 1, title.name+'('+title.code+')', cell_format)
+        sheet.write(row, 1, title.name, cell_format)
         row += 1
 
         # add issue and it's values
         sheet.write(row, 0, 'Editie', bold_format)
-        sheet.write(row, 1, adv_issue.name+'('+adv_issue.code+')', cell_format)
+        sheet.write(row, 1, adv_issue.name, cell_format)
         row += 1
 
         # add issue_date
