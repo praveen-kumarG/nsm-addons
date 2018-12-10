@@ -753,9 +753,9 @@ class SoLinefromOdootoAd4all(models.Model):
             order_code=self.adgr_orde_id
         )
         paper_deadline = datetime.datetime.strptime(self.paper_deadline, '%Y-%m-%d').strftime(
-            '%Y%m%d') if self.paper_deadline else False
+            '%Y%m%d') if self.paper_deadline else ''
         paper_pub_date = datetime.datetime.strptime(self.paper_pub_date, '%Y-%m-%d').strftime(
-            '%Y%m%d') if self.paper_pub_date else False
+            '%Y%m%d') if self.paper_pub_date else ''
 
         xml_dict = {
             'root': {
