@@ -221,7 +221,7 @@ class SaleOrder(models.Model):
                         'format_trim_width': line.product_template_id.width,
                         'format_spread': line.product_template_id.spread,
                         'paper_pub_date': line.issue_date,
-                        'paper_deadline': line.deadline or False,
+                        'paper_deadline': line.deadline or '',
                         'paper_id': line.title.code,
                         'paper_name': line.title.name,
                         'paper_issuenumber': line.adv_issue.name,
