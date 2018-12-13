@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="circulation_type_form">
+        <field name="name">circulation.type.form</field>
+        <field name="type">form</field>
+        <field name="model">circulation.type</field>
+        <field name="arch" type="xml">
+            <form string="Circulation Type">
+                <sheet>
+                    <group col="4">
+                        <field name="name" required="True"/>
+                        <field name="selective_circulation"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="circulation_type_tree">
+        <field name="name">circulation.type.tree</field>
+        <field name="type">tree</field>
+        <field name="model">circulation.type</field>
+        <field name="arch" type="xml">
+            <tree string="Circulation Type">
+                <field name="name"/>
+                <field name="selective_circulation"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_circulation_type">
+        <field name="name">Circulation Type</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">circulation.type</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="circulation_type_tree"/>
+    </record>
+
+</odoo>
