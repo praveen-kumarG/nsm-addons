@@ -10,5 +10,15 @@
             file="report_pndl_delivery_list.xlsx"
             attachment_use="False"
         />
+
+        <report
+            id="report_nsm_indeellijst_report_xlsx"
+            model="sale.order.line"
+            string="Indeellijst XLSX"
+            report_type="xlsx"
+            name="report_indeellijst_list.xlsx"
+            file="report_indeellijst_list.xlsx"
+            attachment_use="False"
+        />
     </data>
 </odoo>

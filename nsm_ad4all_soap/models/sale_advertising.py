@@ -220,8 +220,8 @@ class SaleOrder(models.Model):
                         'format_width': False,
                         'format_trim_width': line.product_template_id.width,
                         'format_spread': line.product_template_id.spread,
-                        'paper_pub_date': line.issue_date,
-                        'paper_deadline': line.deadline or False,
+                        'paper_pub_date': line.issue_date or line.from_date,
+                        'paper_deadline': line.deadline or '',
                         'paper_id': line.title.code,
                         'paper_name': line.title.name,
                         'paper_issuenumber': line.adv_issue.name,
@@ -753,9 +753,9 @@ class SoLinefromOdootoAd4all(models.Model):
             order_code=self.adgr_orde_id
         )
         paper_deadline = datetime.datetime.strptime(self.paper_deadline, '%Y-%m-%d').strftime(
-            '%Y%m%d') if self.paper_deadline else False
+            '%Y%m%d') if self.paper_deadline else ''
         paper_pub_date = datetime.datetime.strptime(self.paper_pub_date, '%Y-%m-%d').strftime(
-            '%Y%m%d') if self.paper_pub_date else False
+            '%Y%m%d') if self.paper_pub_date else ''
 
         xml_dict = {
             'root': {
