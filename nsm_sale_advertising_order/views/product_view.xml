@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<!-- Product.Category Views -->
+
+		 <record id="product_category_form_view_nsm_inherit" model="ir.ui.view">
+				<field name="name">product.category.form.nsm.inherit</field>
+				<field name="model">product.category</field>
+				<field name="inherit_id" ref="sale_advertising_order.product_category_form_view_inherit"/>
+				<field name="arch" type="xml">
+					<field name="date_type" position="before">
+						<field name="is_plusproposition_category"/>
+					</field>
+				</field>
+		 </record>
+
+	</data>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+<odoo>
+	<data noupdate="1">
+
+	<!-- Circulation Type Demo Data -->
+		<record id="circulation_type0" model="circulation.type">
+			<field name="name">Full Circulation</field>
+			<field name="selective_circulation">False</field>
+		</record>
+
+		<record id="circulation_type1" model="circulation.type">
+			<field name="name">Subscription Circulation</field>
+			<field name="selective_circulation">False</field>
+		</record>
+
+		<record id="circulation_type2" model="circulation.type">
+			<field name="name">Selective Circulation</field>
+			<field name="selective_circulation">True</field>
+		</record>
+
+	</data>
+</odoo>
