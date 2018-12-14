@@ -39,6 +39,7 @@ This module allows you to use both CRM and Sales Management to run your advertis
                 'report_xlsx'
                 ],
     'data': [
+             "security/ir.model.access.csv",
              "data/circulation_type.xml",
              "report/nsm_report.xml",
              "views/sale_advertising_view.xml",
