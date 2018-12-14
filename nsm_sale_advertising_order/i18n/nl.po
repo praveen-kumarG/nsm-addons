@@ -1,0 +1,32 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* nsm_sale_advertising_order
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-13 13:13+0000\n"
+"PO-Revision-Date: 2018-12-13 13:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+
+#. module: nsm_sale_advertising_order
+#: model:circulation.type,name:nsm_sale_advertising_order.circulation_type0
+msgid "Full Circulation"
+msgstr "Hele Oplage"
+
+#. module: nsm_sale_advertising_order
+#: model:circulation.type,name:nsm_sale_advertising_order.circulation_type1
+msgid "Subscription Circulation"
+msgstr "Abonnements Oplage"
+
+#. module: nsm_sale_advertising_order
+#: model:circulation.type,name:nsm_sale_advertising_order.circulation_type2
+msgid "Selective Circulation"
+msgstr "Selectieve Oplage"

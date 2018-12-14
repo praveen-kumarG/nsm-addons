@@ -30,11 +30,21 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
+    @api.depends('state')
+    def _get_indeellijst_data(self):
+        for line in self:
+            prod = line.product_id
+            if prod:
+                line.product_width = prod.width
+                line.product_height = prod.height
+                line.material_id = line.recurring_id.id if line.recurring_id else line.id
+
+
     @api.depends('proof_number_payer','proof_number_adv_customer')
     def _get_proof_data(self):
         for line in self:
             proof_payer = line.proof_number_payer
-            proof_cus = line.proof_number_adv_customer
+            proof_cus = line.proof_number_adv_customer and line.proof_number_adv_customer[0]
             if proof_payer:
                 line.proof_parent_name = proof_payer.parent_id and proof_payer.parent_id.name or False
                 line.proof_initials = proof_payer.initials or ''
@@ -70,7 +80,9 @@ class SaleOrderLine(models.Model):
         vals, data, result = {}, {}, {}
         vals['product_template_id'] = False
         data['product_template_id'] = []
-        if self.ad_class: data['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
+        if self.ad_class:
+            data['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
+            vals['is_plusproposition_category'] = self.ad_class.is_plusproposition_category
         titles = self.title if self.title else self.title_ids or False
         if titles:
             product_ids = self.env['product.product']
@@ -83,6 +95,10 @@ class SaleOrderLine(models.Model):
                 product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
                 data['product_template_id'] += [('id', 'in', product_tmpl_ids)]
         return {'value': vals, 'domain': data, 'warning': result}
+
+    @api.onchange('circulation_type')
+    def onchange_circulation_type(self):
+        self.selective_circulation = self.circulation_type.selective_circulation if self.circulation_type else False
 
     proof_number_payer = fields.Many2one('res.partner', 'Proof Number Payer')
     proof_number_adv_customer = fields.Many2many('res.partner', 'partner_line_proof_rel', 'line_id', 'partner_id', string='Proof Number Advertising Customer')
@@ -98,4 +114,16 @@ class SaleOrderLine(models.Model):
     proof_street_name = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Street Name")
     proof_city = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="City")
     proof_partner_name = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Name")
+    product_width = fields.Float(compute='_get_indeellijst_data', readonly=True, store=False, string="Width")
+    product_height = fields.Float(compute='_get_indeellijst_data', readonly=True, store=False, string="Height")
+    material_id = fields.Integer(compute='_get_indeellijst_data', readonly=True, store=False, string="Material ID")
+    plus_proposition_weight = fields.Integer(string='Plusproposition Weight')
+    plus_proposition_height = fields.Integer(string='Plusproposition Height')
+    plus_proposition_width = fields.Integer(string='Plusproposition Width')
+    is_plusproposition_category = fields.Boolean(string='Plusproposition')
+    selective_circulation = fields.Boolean(string='Selective Circulation')
+    circulation_description = fields.Text(string='Circulation Description')
+    circulation_type = fields.Many2one('circulation.type', string='Circulation Type')
+
+
 

@@ -58,7 +58,7 @@
                                         <field name="product_category_id"
                                                domain="['|',('id', '=',  %(freelancer_self_billing.hon_categoryT)d),('id', '=',  %(freelancer_self_billing.hon_categoryB)d)]"/>
                                         <field name="page_number"/>
-                                        <field name="activity_id" invisible="0"  />
+                                        <field name="tag_id" invisible="0"  />
                                         <field name="product_id"
                                                domain="[('categ_id', '=', product_category_id)]"/>
                                         <field name="quantity"
@@ -124,7 +124,8 @@
                            attrs="{'readonly': [('state','!=','draft')]}"
                            domain="[('id','in', [ %(freelancer_self_billing.hon_categoryT)d, %(freelancer_self_billing.hon_categoryB)d])]"/>
                     <field name="page_number"/>
-                    <field name="activity_id" invisible="0"  attrs="{'readonly': [('state','!=','draft')]}"/>
+                    <field name="tag_id" invisible="0"
+                           attrs="{'readonly': [('state','!=','draft')]}"/>
                     <field name="product_id"
                            attrs="{'readonly': [('state','!=','draft')]}"
                            domain="[('categ_id', '=', product_category_id)]"/>
@@ -151,7 +152,7 @@
                 <search string="Search Issue Lines">
                     <field name="account_analytic_id" string="Issue" filter_domain="[ ('account_analytic_id','ilike',self)]"/>
                     <field name="partner_id" />
-                    <field name="activity_id" />
+                    <field name="tag_id" />
                     <field name="product_category_id" />
                     <filter name="state" string="Draft" domain="[('state','=','draft')]" help="Draft Issue Lines"/>
                     <filter name="state" string="Confirmed" domain="[('state','=','confirmed')]" help="Confirmed Issue Lines"/>
@@ -165,7 +166,8 @@
                     	<filter name="group_by_issue" string="Issue" context="{'group_by':'account_analytic_id'}"/>
                         <filter name="group_by_product_category_id" string="Tekst/Beeld" context="{'group_by':'product_category_id'}"/>
                         <filter name="group_by_product_id" string="Product" context="{'group_by':'product_id'}"/>
-                        <filter name="group_by_activity_id" string="Page Type" context="{'group_by':'activity_id'}"/>
+                        <filter name="group_by_tag_id" string="Page Type"
+                                context="{'group_by':'tag_id'}"/>
                         <filter name="group_by_partner" string="Partner" context="{'group_by':'partner_id'}"/>
                     <separator/>
                     </group>
