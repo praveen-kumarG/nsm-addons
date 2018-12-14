@@ -855,13 +855,13 @@ class SoLinefromOdootoAd4all(models.Model):
                 },
             },
         }
-        order_obj.xml_data = str(dicttoxml(xml_dict))
+        order_obj.xml_data = str(dicttoxml(xml_dict, attr_type=False))
         #        import pdb; pdb.set_trace()
         try:
             response = client.service.soap_order(order=order_obj)
             self.write({
                 'ad4all_response': response['code'],
-                'json_message': order_obj.xml_data, 
+                'json_message': order_obj.xml_data,
         })
         except Exception as e:
             if xml:
