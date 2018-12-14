@@ -25,6 +25,24 @@
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="after">
                      <field name="proof_number_amt_adv_customer" attrs="{'invisible':[('proof_number_adv_customer','=', False)],'required':[('proof_number_adv_customer','!=', False)]}"/>
                 </xpath>
+                <xpath expr="//field[@name='product_template_id']" position="after">
+                    <field name="is_plusproposition_category" invisible="True"/>
+                    <field name="selective_circulation" invisible="True"/>
+                        <label for="plus_proposition_weight" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div>
+                            <field name="plus_proposition_weight" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> gm
+                        </div>
+                        <label for="plus_proposition_weight" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div>
+                            <field name="plus_proposition_weight" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> mm
+                        </div>
+                        <label for="plus_proposition_width" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div>
+                            <field name="plus_proposition_width" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> mm
+                        </div>
+                        <field name="circulation_type" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}" options="{'no_create_edit': True}"/>
+                        <field name="circulation_description" attrs="{'required':[('selective_circulation', '=', True)], 'invisible':[('selective_circulation', '=', False)]}" placeholder="Such as ZIP code, channel, etc."/>
+                </xpath>
             </field>
         </record>
 
@@ -44,6 +62,24 @@
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="after">
                      <field name="proof_number_amt_adv_customer" attrs="{'invisible':[('proof_number_adv_customer','=', False)],'required':[('proof_number_adv_customer','!=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='product_template_id']" position="after">
+                    <field name="is_plusproposition_category" invisible="True"/>
+                    <field name="selective_circulation" invisible="True"/>
+                        <label for="plus_proposition_weight" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div>
+                            <field name="plus_proposition_weight" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> gm
+                        </div>
+                        <label for="plus_proposition_weight" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div>
+                            <field name="plus_proposition_weight" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> mm
+                        </div>
+                        <label for="plus_proposition_width" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div>
+                            <field name="plus_proposition_width" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> mm
+                        </div>
+                        <field name="circulation_type" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}" options="{'no_create_edit': True}"/>
+                        <field name="circulation_description" attrs="{'required':[('selective_circulation', '=', True)], 'invisible':[('selective_circulation', '=', False)]}" placeholder="Such as ZIP code, channel, etc."/>
                 </xpath>
             </field>
         </record>

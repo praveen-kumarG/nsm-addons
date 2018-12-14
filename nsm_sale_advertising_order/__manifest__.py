@@ -39,9 +39,13 @@ This module allows you to use both CRM and Sales Management to run your advertis
                 'report_xlsx'
                 ],
     'data': [
+             "data/circulation_type.xml",
              "report/nsm_report.xml",
              "views/sale_advertising_view.xml",
              "views/advertising_issue_view.xml",
+             "views/product_view.xml",
+             "views/circulation_type_view.xml",
+             "views/menuitem.xml",
              ],
     'qweb': [
     ],

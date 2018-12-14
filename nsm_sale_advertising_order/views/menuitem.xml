@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <menuitem id="menu_circulation_type" parent="sales_team.menu_sale_config" action="action_circulation_type" groups="sale_advertising_order.group_advertising_sales_user"/>
+
+</odoo>
