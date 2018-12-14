@@ -311,6 +311,12 @@ class SofromOdootoAd4all(models.Model):
     so_ad4all_environment = fields.Char(
         'Ad4all Environment'
     )
+    json_message = fields.Text(
+        'XML message'
+    )
+    reply_message = fields.Text(
+        'Reply message'
+    )
     ad4all_so_line = fields.One2many(
         'soline.from.odooto.ad4all',
         'adgr_orde_id',
