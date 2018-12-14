@@ -855,7 +855,7 @@ class SoLinefromOdootoAd4all(models.Model):
                 },
             },
         }
-        order_obj.xml_data = str(dicttoxml(xml_dict, attr_type=False))
+        order_obj.xml_data = str(dicttoxml(xml_dict, attr_type=False, root=False))
         #        import pdb; pdb.set_trace()
         try:
             response = client.service.soap_order(order=order_obj)
