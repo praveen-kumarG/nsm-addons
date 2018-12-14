@@ -69,6 +69,11 @@
                                     </tree>
                                 </field>
                             </page>
+                            <page name="json_msg" string="XML Message">
+                                <group>
+                                    <field name="json_message"/>
+                                </group>
+                            </page>
                         </notebook>
                     </sheet>
                 </form>
