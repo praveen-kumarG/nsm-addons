@@ -861,6 +861,7 @@ class SoLinefromOdootoAd4all(models.Model):
             response = client.service.soap_order(order=order_obj)
             self.write({
                 'ad4all_response': response['code'],
+                'json_message': order_obj.xml_data, 
         })
         except Exception as e:
             if xml:
