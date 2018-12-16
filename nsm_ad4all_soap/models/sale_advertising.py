@@ -776,6 +776,7 @@ class SoLinefromOdootoAd4all(models.Model):
                 'sales': self.sales,
                 'sales_mail': self.sales_mail,
                 'reminder': "Yes" if self.reminder else "No",
+            },
                 'format': {
                     'id': self.format_id,
                     'height': int(float(self.format_height)),
@@ -853,7 +854,6 @@ class SoLinefromOdootoAd4all(models.Model):
                         },
                     },
                 },
-            },
         }
         order_obj.xml_data = str(dicttoxml(xml_dict, attr_type=False, root=False))
         #        import pdb; pdb.set_trace()
