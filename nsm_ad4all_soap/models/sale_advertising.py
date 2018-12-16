@@ -764,6 +764,7 @@ class SoLinefromOdootoAd4all(models.Model):
             '%Y%m%d') if self.paper_pub_date else ''
 
         xml_dict = {
+            'root': {
                 'advert_id': int(float(self.advert_id)),
                 'id': int(float(self.mat_id)),
                 'adgr_orde_id': int(float(self.adgr_orde_id.id)),
@@ -853,7 +854,10 @@ class SoLinefromOdootoAd4all(models.Model):
                     },
                 },
             },
-        order_obj.xml_data = str(dicttoxml(xml_dict, attr_type=False, root=True))
+        }
+        order_obj.xml_data = "<?xml version="1.0" encoding="UTF-8" ?>" + str(
+            dicttoxml(xml_dict, attr_type=False,
+                                           root=False))
         #        import pdb; pdb.set_trace()
         try:
             response = client.service.soap_order(order=order_obj)
