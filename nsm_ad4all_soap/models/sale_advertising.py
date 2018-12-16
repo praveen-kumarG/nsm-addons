@@ -855,7 +855,8 @@ class SoLinefromOdootoAd4all(models.Model):
                 },
             },
         }
-        order_obj.xml_data = "<?xml version="1.0" encoding="UTF-8" ?>" + str(
+        order_obj.xml_data = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + \
+                             str(
             dicttoxml(xml_dict, attr_type=False,
                                            root=False))
         #        import pdb; pdb.set_trace()
