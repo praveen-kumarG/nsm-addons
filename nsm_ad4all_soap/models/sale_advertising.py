@@ -203,7 +203,7 @@ class SaleOrder(models.Model):
                 lvals = {
                         'odoo_order_line': line.id,
                         'advert_id': line.id,
-                        'id': line.id if not line.recurring else
+                        'mat_id': line.id if not line.recurring else
                                                             line.recurring_id,
                         'adgr_orde_id': res.id,
                         'cancelled': del_param,
@@ -486,7 +486,7 @@ class SoLinefromOdootoAd4all(models.Model):
     advert_id = fields.Integer(
         string='Line ID'
     )
-    id = fields.Integer(
+    mat_id = fields.Integer(
         string='Material ID'
     )
     adgr_orde_id = fields.Many2one(
@@ -765,7 +765,7 @@ class SoLinefromOdootoAd4all(models.Model):
 
         xml_dict = {
                 'advert_id': int(float(self.advert_id)),
-                'id': int(float(self.id)),
+                'id': int(float(self.mat_id)),
                 'adgr_orde_id': int(float(self.adgr_orde_id.id)),
                 'adkind': self.adkind,
                 'adstatus': self.adstatus,
