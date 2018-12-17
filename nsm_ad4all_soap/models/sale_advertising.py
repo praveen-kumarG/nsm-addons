@@ -314,7 +314,7 @@ class SaleOrder(models.Model):
                         'cancelled': del_param,
                         'herplaats': line.recurring,
                         'materialtype': line.ad_class.ad4all_material_type,
-                        'sales': self.user_id.name,
+                        'sales': unidecode(self.user_id.name),
                         'sales_mail': self.user_id.email,
                         'reminder': not line.no_copy_chase,
                         'format_id': line.product_template_id.default_code,
