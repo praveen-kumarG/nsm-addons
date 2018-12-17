@@ -317,7 +317,7 @@ class SaleOrder(models.Model):
                         'sales': unidecode(self.user_id.name),
                         'sales_mail': self.user_id.email,
                         'reminder': not line.no_copy_chase,
-                        'format_id': line.product_template_id.default_code,
+                        'format_id': line.product_template_id.name,
                         'format_height': False,
                         'format_trim_height': line.product_uom_qty
                                         if line.product_uom.name == 'mm'
