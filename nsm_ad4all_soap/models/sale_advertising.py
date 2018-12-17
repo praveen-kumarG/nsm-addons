@@ -175,17 +175,31 @@ class SaleOrder(models.Model):
                         unidecode(self.name or ''),
                     'so_customer_id': self.published_customer.ref,
                     'so_customer_name': self.published_customer.name,
-                    'so_customer_contacts_contact_email':
-                        self.customer_contact.email or
-                        self.published_customer.email or '',
                     'so_customer_contacts_contact_id':
                         self.customer_contact.ref or False,
                     'so_customer_contacts_contact_name':
-                        self.customer_contact.name,
+                        self.customer_contact.name or False,
+                    'so_customer_contacts_contact_email':
+                        self.customer_contact.email or
+                        self.published_customer.email or False,
                     'so_customer_contacts_contact_phone':
-                        self.customer_contact.phone or '',
+                        self.customer_contact.phone or
+                        self.published_customer.phone or False,
                     'so_customer_contacts_contact_type': '',
                     'so_customer_contacts_contact_language':
+                        self.customer_contact.lang or '',
+                    'so_customer_contacts_contact2_id':
+                        self.customer_contact.ref or False,
+                    'so_customer_contacts_contact2_name':
+                        self.customer_contact.name or False,
+                    'so_customer_contacts_contact2_email':
+                        self.customer_contact.email or
+                        self.published_customer.email or False,
+                    'so_customer_contacts_contact2_phone':
+                        self.customer_contact.phone or
+                        self.published_customer.phone or False,
+                    'so_customer_contacts_contact2_type': '',
+                    'so_customer_contacts_contact2_language':
                         self.customer_contact.lang or '',
                     'so_customer_address_street':
                         self.published_customer.street or '',
@@ -386,6 +400,30 @@ class SofromOdootoAd4all(models.Model):
         size=16,
         default='nl'
     )
+    so_customer_contacts_contact2_id = fields.Integer(
+        string='Advertiser Contact2 ID',
+    )
+    so_customer_contacts_contact2_name = fields.Char(
+        string='Advertiser Contact2 Name',
+        size=64
+    )
+    so_customer_contacts_contact2_email = fields.Char(
+        string='Advertiser Contact2 Email',
+        size=64
+    )
+    so_customer_contacts_contact2_phone = fields.Char(
+        string='Advertiser Contact2 Phone',
+        size=64
+    )
+    so_customer_contacts_contact2_type = fields.Char(
+        string='Advertiser Contact2 Type',
+        size=64
+    )
+    so_customer_contacts_contact2_language = fields.Char(
+        string='Advertiser Contact2 Language',
+        size=16,
+        default='nl'
+    )
     so_customer_address_street = fields.Char(
         string='Advertiser Address Street',
         size=64
@@ -448,6 +486,31 @@ class SofromOdootoAd4all(models.Model):
     )
     so_media_agency_contacts_contact_language = fields.Char(
         string='Agency Contact Language',
+        size=16,
+        default='nl'
+    )
+    so_media_agency_contacts_contact2_id = fields.Char(
+        string='Agency Contact2 Number',
+        size=32
+    )
+    so_media_agency_contacts_contact2_name = fields.Char(
+        string='Agency Contact2 Name',
+        size=64
+    )
+    so_media_agency_contacts_contact2_email = fields.Char(
+        string='Agency Contact2 Email',
+        size=64
+    )
+    so_media_agency_contacts_contact2_phone = fields.Char(
+        string='Agency Contact2 Phone',
+        size=64
+    )
+    so_media_agency_contacts_contact2_type = fields.Char(
+        string='Agency Contact2 Type',
+        size=64
+    )
+    so_media_agency_contacts_contact2_language = fields.Char(
+        string='Agency Contact2 Language',
         size=16,
         default='nl'
     )
@@ -785,8 +848,8 @@ class SoLinefromOdootoAd4all(models.Model):
             order_code=self.adgr_orde_id
         )
         paper_deadline = datetime.datetime.strptime(
-            self.paper_deadline, '%Y-%m-%d').strftime(
-            '%Y%m%d') if self.paper_deadline else ''
+            self.paper_deadline, '%Y-%m-%d').strftime('%Y%m%d') \
+            if self.paper_deadline else ''
         paper_pub_date = datetime.datetime.strptime(
             self.paper_pub_date, '%Y-%m-%d').strftime(
             '%Y%m%d') if self.paper_pub_date else ''
