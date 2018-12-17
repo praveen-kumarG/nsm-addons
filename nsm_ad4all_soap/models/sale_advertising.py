@@ -166,7 +166,7 @@ class SaleOrder(models.Model):
         else:
             vals = {
                     'sale_order_id': self.id,
-                    'order_name': self.name,
+                    'order_name': self.name or '',
                     'reference':
                         'Subject:' +
                         unidecode(self.opportunity_subject or '') +
@@ -179,18 +179,45 @@ class SaleOrder(models.Model):
                         self.customer_contact.email or
                         self.published_customer.email or '',
                     'so_customer_contacts_contact_id':
-                        self.customer_contact.ref,
+                        self.customer_contact.ref or False,
                     'so_customer_contacts_contact_name':
                         self.customer_contact.name,
+                    'so_customer_contacts_contact_phone':
+                        self.customer_contact.phone or '',
+                    'so_customer_contacts_contact_type': '',
+                    'so_customer_contacts_contact_language':
+                        self.customer_contact.lang or '',
                     'so_customer_address_street':
-                        self.published_customer.street,
-                    'so_customer_address_zip': self.published_customer.zip,
-                    'so_customer_address_city': self.published_customer.city,
-                    'so_media_agency_code': self.advertising_agency.ref,
-                    'so_media_agency_email': self.advertising_agency.email,
-                    'so_media_agency_name': self.advertising_agency.name,
-                    'so_media_agency_phone': self.advertising_agency.phone,
-                    'so_media_agency_language':self.advertising_agency.lang,
+                        self.published_customer.street or '',
+                    'so_customer_address_zip':
+                        self.published_customer.zip or '',
+                    'so_customer_address_city':
+                        self.published_customer.city or '',
+                    'so_customer_address_phone':
+                        self.published_customer.phone or '',
+                    'so_agency':
+                        True if self.partner_id.is_ad_agency,
+                    'so_media_agency_code':
+                        self.advertising_agency.ref or '',
+                    'so_media_agency_email':
+                        self.advertising_agency.email or '',
+                    'so_media_agency_name':
+                        self.advertising_agency.name or '',
+                    'so_media_agency_phone':
+                        self.advertising_agency.phone or '',
+                    'so_media_agency_language':
+                        self.advertising_agency.lang or '',
+                    'so_media_agency_contacts_contact_email':
+                        self.customer_contact.email,
+                    'so_media_agency_contacts_contact_id':
+                        self.customer_contact.ref,
+                    'so_media_agency_contacts_contact_name':
+                        self.customer_contact.name,
+                    'so_media_agency_contacts_contact_phone':
+                        self.customer_contact.phone,
+                    'so_media_agency_contacts_contact_type': '',
+                    'so_media_agency_contacts_contact_language':
+                        self.customer_contact.lang or '',
 
             }
             res = self.env['sofrom.odooto.ad4all'].sudo().create(vals)
@@ -216,9 +243,9 @@ class SaleOrder(models.Model):
                         'format_height': False,
                         'format_trim_height': line.product_uom_qty
                                         if line.product_uom.name == 'mm'
-                                        else line.product_template_id.height,
+                                        else line.product_id.height,
                         'format_width': False,
-                        'format_trim_width': line.product_template_id.width,
+                        'format_trim_width': line.product_id.width,
                         'format_spread': line.product_template_id.spread,
                         'paper_pub_date': line.issue_date or line.from_date,
                         'paper_deadline': line.deadline or '',
@@ -758,13 +785,15 @@ class SoLinefromOdootoAd4all(models.Model):
             deliverer="nsm",
             order_code=self.adgr_orde_id
         )
-        paper_deadline = datetime.datetime.strptime(self.paper_deadline, '%Y-%m-%d').strftime(
+        paper_deadline = datetime.datetime.strptime(
+            self.paper_deadline, '%Y-%m-%d').strftime(
             '%Y%m%d') if self.paper_deadline else ''
-        paper_pub_date = datetime.datetime.strptime(self.paper_pub_date, '%Y-%m-%d').strftime(
+        paper_pub_date = datetime.datetime.strptime(
+            self.paper_pub_date, '%Y-%m-%d').strftime(
             '%Y%m%d') if self.paper_pub_date else ''
 
-        xml_dict = [{
-            'root': [
+        xml_dict = [
+            {'root': [
                 {'advert_id': int(float(self.advert_id))},
                 {'id': int(float(self.mat_id))},
                 {'adgr_orde_id': int(float(self.adgr_orde_id.id))},
@@ -810,16 +839,15 @@ class SoLinefromOdootoAd4all(models.Model):
                                 {'type': self.customer_contacts_contact_type},
                                 {'language': self.customer_contacts_contact_language},
                             ]
-                        },
-                        {
-                            'address': [
-                                {'street': self.customer_address_street},
-                                {'zip': self.customer_address_zip},
-                                {'city': self.customer_address_city},
-                                {'phone': self.customer_address_phone},
-                            ]
-                        },
-                    ]
+                        }] if self.customer_contacts_contact_id else '',
+                    {'address': [
+                            {'street': self.customer_address_street},
+                            {'zip': self.customer_address_zip},
+                            {'city': self.customer_address_city},
+                            {'phone': self.customer_address_phone},
+                        ]
+                    },
+                ]
                     }
                 ]},
                 {'media_agency': [
@@ -839,34 +867,17 @@ class SoLinefromOdootoAd4all(models.Model):
                         ],
                     },
                     },
-                ],},
-                {'creative_agency': [
-                    {'code': self.creative_agency_code},
-                    {'name': self.creative_agency_name},
-                    {'email': self.creative_agency_email},
-                    {'phone': self.creative_agency_phone},
-                    {'language': self.creative_agency_language},
-                    {'contacts': {
-                        'contact': [
-                                    {'id': self.creative_agency_contacts_contact_id},
-                                    {'name': self.creative_agency_contacts_contact_name},
-                                    {'email': self.creative_agency_contacts_contact_email},
-                                    {'phone': self.creative_agency_contacts_contact_phone},
-                                    {'type': self.creative_agency_contacts_contact_type},
-                                    {'language': self.creative_agency_contacts_contact_language},
-                                ],
-                            },
-                        }
-                    ],}
-                ]
-            }]
+                ] if self.agency else ''
+                },
+            ]
+        }]
 
         xmlData = dicttoxml(xml_dict, attr_type=False, root=False)
         xmlData = (xmlData.replace('<item>', '')).replace('</item>', '')
         import pprint
         pp = pprint.PrettyPrinter(indent=4)
-        pp.pprint(xmlData)
-        order_obj.xml_data = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + str(xmlData)
+#        order_obj.xml_data = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
+        order_obj.xml_data = str(pp.pprint(xmlData))
         #        import pdb; pdb.set_trace()
         try:
             response = client.service.soap_order(order=order_obj)
