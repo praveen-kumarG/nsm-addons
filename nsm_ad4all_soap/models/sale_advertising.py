@@ -828,33 +828,32 @@ class SoLinefromOdootoAd4all(models.Model):
             ]
         }]
 
-        contacts_data = [{
-            'contact': [
-                {'id': self.customer_contacts_contact_id},
-                {'name': self.customer_contacts_contact_name},
-                {'email': self.customer_contacts_contact_email},
-                {'phone': self.customer_contacts_contact_phone},
-                {'type': self.customer_contacts_contact_type},
-                {'language': self.customer_contacts_contact_language},
-            ]
-
-        }]
-
-        if self.customer_contacts_contact_id:
-            contacts_data.append({
-                'address': [
-                    {'street': self.customer_address_street},
-                    {'zip': self.customer_address_zip},
-                    {'city': self.customer_address_city},
-                    {'phone': self.customer_address_phone},
-                ]
-            }, )
-
         customer_dict = {'customer': [
             {'id': int(float(self.customer_id))},
             {'name': self.customer_name},
-            {'contacts': contacts_data}
+            {'address': [
+                {'street': self.customer_address_street},
+                {'zip': self.customer_address_zip},
+                {'city': self.customer_address_city},
+                {'phone': self.customer_address_phone},
+            ]},
         ]}
+
+        if self.customer_contacts_contact_id:
+            contacts_data = [{
+                'contact': [
+                    {'id': self.customer_contacts_contact_id},
+                    {'name': self.customer_contacts_contact_name},
+                    {'email': self.customer_contacts_contact_email},
+                    {'phone': self.customer_contacts_contact_phone},
+                    {'type': self.customer_contacts_contact_type},
+                    {'language': self.customer_contacts_contact_language},
+                ]
+
+            }]
+            customer_dict['customer'].append({'contacts':contacts_data})
+
+
         xml_dict[0]['root'].append(customer_dict)
 
         if self.agency:
