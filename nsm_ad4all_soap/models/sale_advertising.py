@@ -871,8 +871,7 @@ class SoLinefromOdootoAd4all(models.Model):
                         {'email': self.media_agency_contacts_contact_email},
                         {'phone': self.media_agency_contacts_contact_phone},
                         {'type': self.media_agency_contacts_contact_type},
-                        {'language': self.
-                            media_agency_contacts_contact_language},
+                        {'language': self.media_agency_contacts_contact_language},
                     ],
                 },
                 },
