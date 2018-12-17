@@ -166,7 +166,7 @@ class SaleOrder(models.Model):
         else:
             vals = {
                     'sale_order_id': self.id,
-                    'order_name': self.name,
+                    'order_name': self.name or '',
                     'reference':
                         'Subject:' +
                         unidecode(self.opportunity_subject or '') +
@@ -182,15 +182,40 @@ class SaleOrder(models.Model):
                         self.customer_contact.ref,
                     'so_customer_contacts_contact_name':
                         self.customer_contact.name,
+                    'so_customer_contacts_contact_phone':
+                        self.customer_contact.phone or '',
+                    'so_customer_contacts_contact_type': '',
+                    'so_customer_contacts_contact_language':
+                        self.customer_contact.lang or '',
                     'so_customer_address_street':
-                        self.published_customer.street,
-                    'so_customer_address_zip': self.published_customer.zip,
-                    'so_customer_address_city': self.published_customer.city,
-                    'so_media_agency_code': self.advertising_agency.ref,
-                    'so_media_agency_email': self.advertising_agency.email,
-                    'so_media_agency_name': self.advertising_agency.name,
-                    'so_media_agency_phone': self.advertising_agency.phone,
-                    'so_media_agency_language':self.advertising_agency.lang,
+                        self.published_customer.street or '',
+                    'so_customer_address_zip':
+                        self.published_customer.zip or '',
+                    'so_customer_address_city':
+                        self.published_customer.city or '',
+                    'so_customer_address_phone':
+                        self.published_customer.phone or '',
+                    'so_media_agency_code':
+                        self.advertising_agency.ref or '',
+                    'so_media_agency_email':
+                        self.advertising_agency.email or '',
+                    'so_media_agency_name':
+                        self.advertising_agency.name or '',
+                    'so_media_agency_phone':
+                        self.advertising_agency.phone or '',
+                    'so_media_agency_language':
+                        self.advertising_agency.lang or '',
+                    'so_media_agency_contacts_contact_email':
+                        self.customer_contact.email,
+                    'so_media_agency_contacts_contact_id':
+                        self.customer_contact.ref,
+                    'so_media_agency_contacts_contact_name':
+                        self.customer_contact.name,
+                    'so_media_agency_contacts_contact_phone':
+                        self.customer_contact.phone,
+                    'so_media_agency_contacts_contact_type': '',
+                    'so_media_agency_contacts_contact_language':
+                        self.customer_contact.lang or '',
 
             }
             res = self.env['sofrom.odooto.ad4all'].sudo().create(vals)
@@ -758,9 +783,11 @@ class SoLinefromOdootoAd4all(models.Model):
             deliverer="nsm",
             order_code=self.adgr_orde_id
         )
-        paper_deadline = datetime.datetime.strptime(self.paper_deadline, '%Y-%m-%d').strftime(
+        paper_deadline = datetime.datetime.strptime(
+            self.paper_deadline, '%Y-%m-%d').strftime(
             '%Y%m%d') if self.paper_deadline else ''
-        paper_pub_date = datetime.datetime.strptime(self.paper_pub_date, '%Y-%m-%d').strftime(
+        paper_pub_date = datetime.datetime.strptime(
+            self.paper_pub_date, '%Y-%m-%d').strftime(
             '%Y%m%d') if self.paper_pub_date else ''
 
         xml_dict = [{
