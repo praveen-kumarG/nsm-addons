@@ -879,10 +879,8 @@ class SoLinefromOdootoAd4all(models.Model):
 
         xmlData = dicttoxml(xml_dict, attr_type=False, root=False)
         xmlData = (xmlData.replace('<item>', '')).replace('</item>', '')
-        import pprint
-        pp = pprint.PrettyPrinter(indent=4)
-#        order_obj.xml_data = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" +
-        order_obj.xml_data = str(pp.pprint(xmlData))
+
+        order_obj.xml_data = xmlpprint(xmlData)
         #        import pdb; pdb.set_trace()
         try:
             response = client.service.soap_order(order=order_obj)
