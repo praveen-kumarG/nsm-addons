@@ -203,7 +203,7 @@ class SaleOrder(models.Model):
                 lvals = {
                         'odoo_order_line': line.id,
                         'advert_id': line.id,
-                        'id': line.id if not line.recurring else
+                        'mat_id': line.id if not line.recurring else
                                                             line.recurring_id,
                         'adgr_orde_id': res.id,
                         'cancelled': del_param,
@@ -310,6 +310,12 @@ class SofromOdootoAd4all(models.Model):
     )
     so_ad4all_environment = fields.Char(
         'Ad4all Environment'
+    )
+    json_message = fields.Text(
+        'XML message'
+    )
+    reply_message = fields.Text(
+        'Reply message'
     )
     ad4all_so_line = fields.One2many(
         'soline.from.odooto.ad4all',
@@ -480,7 +486,7 @@ class SoLinefromOdootoAd4all(models.Model):
     advert_id = fields.Integer(
         string='Line ID'
     )
-    id = fields.Integer(
+    mat_id = fields.Integer(
         string='Material ID'
     )
     adgr_orde_id = fields.Many2one(
@@ -760,7 +766,7 @@ class SoLinefromOdootoAd4all(models.Model):
         xml_dict = {
             'root': {
                 'advert_id': int(float(self.advert_id)),
-                'id': int(float(self.id)),
+                'id': int(float(self.mat_id)),
                 'adgr_orde_id': int(float(self.adgr_orde_id.id)),
                 'adkind': self.adkind,
                 'adstatus': self.adstatus,
@@ -849,12 +855,16 @@ class SoLinefromOdootoAd4all(models.Model):
                 },
             },
         }
-        order_obj.xml_data = str(dicttoxml(xml_dict))
+        order_obj.xml_data = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + \
+                             str(
+            dicttoxml(xml_dict, attr_type=False,
+                                           root=False))
         #        import pdb; pdb.set_trace()
         try:
             response = client.service.soap_order(order=order_obj)
             self.write({
                 'ad4all_response': response['code'],
+                'json_message': order_obj.xml_data,
         })
         except Exception as e:
             if xml:
