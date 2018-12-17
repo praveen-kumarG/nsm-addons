@@ -763,98 +763,103 @@ class SoLinefromOdootoAd4all(models.Model):
         paper_pub_date = datetime.datetime.strptime(self.paper_pub_date, '%Y-%m-%d').strftime(
             '%Y%m%d') if self.paper_pub_date else ''
 
-        xml_dict = {
-            'root': {
-                'advert_id': int(float(self.advert_id)),
-                'id': int(float(self.mat_id)),
-                'adgr_orde_id': int(float(self.adgr_orde_id.id)),
-                'adkind': self.adkind,
-                'adstatus': self.adstatus,
-                'cancelled': "Yes" if self.cancelled else "No",
-                'herplaats': "Yes" if self.herplaats else "No",
-                'materialtype': self.materialtype,
-                'sales': self.sales,
-                'sales_mail': self.sales_mail,
-                'reminder': "Yes" if self.reminder else "No",
-                'format': {
-                    'id': self.format_id,
-                    'height': int(float(self.format_height)),
-                    'width': int(float(self.format_width)),
-                    'trim_height': int(float(self.format_trim_height)),
-                    'trim_width': int(float(self.format_trim_width)),
-                    'spread': "Yes" if self.format_spread else "No",
-                },
-                'paper': {
-                    'pub_date': paper_pub_date,
-                    'deadline': paper_deadline,
-                    'id': self.paper_id,
-                    'name': self.paper_name,
-                    'issuenumber': self.paper_issuenumber,
-                },
-                'placement': {
-                    'adclass': self.placement_adclass,
-                    'description': self.placement_description,
-                    'notice': self.placement_notice,
-                    'position': self.placement_position,
-                },
-                'customer': {
-                    'id': int(float(self.customer_id)),
-                    'name': self.customer_name,
-                    'contacts': {
-                        'contact': {
-                            'id': self.customer_contacts_contact_id,
-                            'name': self.customer_contacts_contact_name,
-                            'email': self.customer_contacts_contact_email,
-                            'phone': self.customer_contacts_contact_phone,
-                            'type': self.customer_contacts_contact_type,
-                            'language': self.customer_contacts_contact_language,
+        xml_dict = [{
+            'root': [
+                {'advert_id': int(float(self.advert_id))},
+                {'id': int(float(self.mat_id))},
+                {'adgr_orde_id': int(float(self.adgr_orde_id.id))},
+                {'adkind': self.adkind},
+                {'adstatus': self.adstatus},
+                {'cancelled': "Yes" if self.cancelled else "No"},
+                {'herplaats': "Yes" if self.herplaats else "No"},
+                {'materialtype': self.materialtype},
+                {'sales': self.sales},
+                {'sales_mail': self.sales_mail},
+                {'reminder': "Yes" if self.reminder else "No"},
+                {'format': [
+                    {'id': self.format_id},
+                    {'height': int(float(self.format_height))},
+                    {'width': int(float(self.format_width))},
+                    {'trim_height': int(float(self.format_trim_height))},
+                    {'trim_width': int(float(self.format_trim_width))},
+                    {'spread': "Yes" if self.format_spread else "No"},
+                ]},
+                {'paper': [
+                    {'pub_date': paper_pub_date},
+                    {'deadline': paper_deadline},
+                    {'id': self.paper_id},
+                    {'name': self.paper_name},
+                    {'issuenumber': self.paper_issuenumber},
+                ]},
+                {'placement': [
+                    {'adclass': self.placement_adclass},
+                    {'description': self.placement_description},
+                    {'notice': self.placement_notice},
+                    {'position': self.placement_position},
+                ]},
+                {'customer': [
+                    {'id': int(float(self.customer_id))},
+                    {'name': self.customer_name},
+                    {'contacts': [
+                        {
+                            'contact': [
+                                {'id': self.customer_contacts_contact_id},
+                                {'name': self.customer_contacts_contact_name},
+                                {'email': self.customer_contacts_contact_email},
+                                {'phone': self.customer_contacts_contact_phone},
+                                {'type': self.customer_contacts_contact_type},
+                                {'language': self.customer_contacts_contact_language},
+                            ]
                         },
-                    },
-                    'address': {
-                        'street': self.customer_address_street,
-                        'zip': self.customer_address_zip,
-                        'city': self.customer_address_city,
-                        'phone': self.customer_address_phone,
-                    },
-                },
-                'media_agency': {
-                    'code': self.media_agency_code,
-                    'name': self.media_agency_name,
-                    'email': self.media_agency_email,
-                    'phone': self.media_agency_phone,
-                    'language': self.media_agency_language,
-                    'contacts': {
-                        'contact': {
-                            'id': self.media_agency_contacts_contact_id,
-                            'name': self.media_agency_contacts_contact_name,
-                            'email': self.media_agency_contacts_contact_email,
-                            'phone': self.media_agency_contacts_contact_phone,
-                            'type': self.media_agency_contacts_contact_type,
-                            'language': self.
-                                media_agency_contacts_contact_language,
+                        {
+                            'address': [
+                                {'street': self.customer_address_street},
+                                {'zip': self.customer_address_zip},
+                                {'city': self.customer_address_city},
+                                {'phone': self.customer_address_phone},
+                            ]
                         },
+                    ]
+                    }
+                ]},
+                {'media_agency': [
+                    {'code': self.media_agency_code},
+                    {'name': self.media_agency_name},
+                    {'email': self.media_agency_email},
+                    {'phone': self.media_agency_phone},
+                    {'language': self.media_agency_language},
+                    {'contacts': {
+                        'contact': [
+                            {'id': self.media_agency_contacts_contact_id},
+                            {'name': self.media_agency_contacts_contact_name},
+                            {'email': self.media_agency_contacts_contact_email},
+                            {'phone': self.media_agency_contacts_contact_phone},
+                            {'type': self.media_agency_contacts_contact_type},
+                            {'language': self.media_agency_contacts_contact_language},
+                        ],
                     },
-                },
-                'creative_agency': {
-                    'code': self.creative_agency_code,
-                    'name': self.creative_agency_name,
-                    'email': self.creative_agency_email,
-                    'phone': self.creative_agency_phone,
-                    'language': self.creative_agency_language,
-                    'contacts': {
-                        'contact': {
-                            'id': self.creative_agency_contacts_contact_id,
-                            'name': self.creative_agency_contacts_contact_name,
-                            'email': self.creative_agency_contacts_contact_email,
-                            'phone': self.creative_agency_contacts_contact_phone,
-                            'type': self.creative_agency_contacts_contact_type,
-                            'language': self.
-                                creative_agency_contacts_contact_language,
-                        },
                     },
-                },
-            },
-        }
+                ],},
+                {'creative_agency': [
+                    {'code': self.creative_agency_code},
+                    {'name': self.creative_agency_name},
+                    {'email': self.creative_agency_email},
+                    {'phone': self.creative_agency_phone},
+                    {'language': self.creative_agency_language},
+                    {'contacts': {
+                        'contact': [
+                                    {'id': self.creative_agency_contacts_contact_id},
+                                    {'name': self.creative_agency_contacts_contact_name},
+                                    {'email': self.creative_agency_contacts_contact_email},
+                                    {'phone': self.creative_agency_contacts_contact_phone},
+                                    {'type': self.creative_agency_contacts_contact_type},
+                                    {'language': self.creative_agency_contacts_contact_language},
+                                ],
+                            },
+                        }
+                    ],}
+                ]
+            }]
         order_obj.xml_data = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>" + \
                              str(
             dicttoxml(xml_dict, attr_type=False,
