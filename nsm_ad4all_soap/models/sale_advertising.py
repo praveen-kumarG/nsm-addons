@@ -195,8 +195,7 @@ class SaleOrder(models.Model):
                         self.published_customer.city or '',
                     'so_customer_address_phone':
                         self.published_customer.phone or '',
-                    'so_agency':
-                        True if self.partner_id.is_ad_agency,
+                    'so_agency': self.partner_id.is_ad_agency,
                     'so_media_agency_code':
                         self.advertising_agency.ref or '',
                     'so_media_agency_email':
@@ -792,8 +791,8 @@ class SoLinefromOdootoAd4all(models.Model):
             self.paper_pub_date, '%Y-%m-%d').strftime(
             '%Y%m%d') if self.paper_pub_date else ''
 
-        xml_dict = [
-            {'root': [
+        xml_dict = [{
+            'root': [
                 {'advert_id': int(float(self.advert_id))},
                 {'id': int(float(self.mat_id))},
                 {'adgr_orde_id': int(float(self.adgr_orde_id.id))},
@@ -826,51 +825,59 @@ class SoLinefromOdootoAd4all(models.Model):
                     {'notice': self.placement_notice},
                     {'position': self.placement_position},
                 ]},
-                {'customer': [
-                    {'id': int(float(self.customer_id))},
-                    {'name': self.customer_name},
-                    {'contacts': [
-                        {
-                            'contact': [
-                                {'id': self.customer_contacts_contact_id},
-                                {'name': self.customer_contacts_contact_name},
-                                {'email': self.customer_contacts_contact_email},
-                                {'phone': self.customer_contacts_contact_phone},
-                                {'type': self.customer_contacts_contact_type},
-                                {'language': self.customer_contacts_contact_language},
-                            ]
-                        }] if self.customer_contacts_contact_id else '',
-                    {'address': [
-                            {'street': self.customer_address_street},
-                            {'zip': self.customer_address_zip},
-                            {'city': self.customer_address_city},
-                            {'phone': self.customer_address_phone},
-                        ]
-                    },
-                ]
-                    }
-                ]},
-                {'media_agency': [
-                    {'code': self.media_agency_code},
-                    {'name': self.media_agency_name},
-                    {'email': self.media_agency_email},
-                    {'phone': self.media_agency_phone},
-                    {'language': self.media_agency_language},
-                    {'contacts': {
-                        'contact': [
-                            {'id': self.media_agency_contacts_contact_id},
-                            {'name': self.media_agency_contacts_contact_name},
-                            {'email': self.media_agency_contacts_contact_email},
-                            {'phone': self.media_agency_contacts_contact_phone},
-                            {'type': self.media_agency_contacts_contact_type},
-                            {'language': self.media_agency_contacts_contact_language},
-                        ],
-                    },
-                    },
-                ] if self.agency else ''
-                },
             ]
         }]
+
+        contacts_data = [{
+            'contact': [
+                {'id': self.customer_contacts_contact_id},
+                {'name': self.customer_contacts_contact_name},
+                {'email': self.customer_contacts_contact_email},
+                {'phone': self.customer_contacts_contact_phone},
+                {'type': self.customer_contacts_contact_type},
+                {'language': self.customer_contacts_contact_language},
+            ]
+
+        }]
+
+        if self.customer_contacts_contact_id:
+            contacts_data.append({
+                'address': [
+                    {'street': self.customer_address_street},
+                    {'zip': self.customer_address_zip},
+                    {'city': self.customer_address_city},
+                    {'phone': self.customer_address_phone},
+                ]
+            }, )
+
+        customer_dict = {'customer': [
+            {'id': int(float(self.customer_id))},
+            {'name': self.customer_name},
+            {'contacts': contacts_data}
+        ]}
+        xml_dict[0]['root'].append(customer_dict)
+
+        if self.agency:
+            media_data = {'media_agency': [
+                {'code': self.media_agency_code},
+                {'name': self.media_agency_name},
+                {'email': self.media_agency_email},
+                {'phone': self.media_agency_phone},
+                {'language': self.media_agency_language},
+                {'contacts': {
+                    'contact': [
+                        {'id': self.media_agency_contacts_contact_id},
+                        {'name': self.media_agency_contacts_contact_name},
+                        {'email': self.media_agency_contacts_contact_email},
+                        {'phone': self.media_agency_contacts_contact_phone},
+                        {'type': self.media_agency_contacts_contact_type},
+                        {'language': self.
+                            media_agency_contacts_contact_language},
+                    ],
+                },
+                },
+            ]}
+            xml_dict[0]['root'].append(media_data)
 
         xmlData = dicttoxml(xml_dict, attr_type=False, root=False)
         xmlData = (xmlData.replace('<item>', '')).replace('</item>', '')
