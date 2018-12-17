@@ -239,7 +239,7 @@ class SaleOrder(models.Model):
                      self.customer_contact.parent_id == self.advertising_agency)
                     or (self.material_contact_person and \
                     self.material_contact_person.parent_id ==
-                    self.published_customer)):
+                    self.advertising_agency)):
                 vals4 = {
                     'so_media_agency_code':
                         self.advertising_agency.ref or '',
@@ -251,48 +251,88 @@ class SaleOrder(models.Model):
                         self.advertising_agency.phone or '',
                     'so_media_agency_language':
                         self.advertising_agency.lang or '',
-                    'so_media_agency_contacts_contact_email':
-                        self.customer_contact.email
-                        or False,
-                    'so_media_agency_contacts_contact_id':
-                        self.customer_contact.ref
-                        or False,
-                    'so_media_agency_contacts_contact_name':
-                        self.customer_contact.name
-                        or False,
-                    'so_media_agency_contacts_contact_phone':
-                        self.customer_contact.phone
-                        or False,
-                    'so_media_agency_contacts_contact_type': '',
-                    'so_media_agency_contacts_contact_language':
-                        self.customer_contact.lang or '',
                 }
-
-
-            if self.partner_id.is_ad_agency \
-                        and self.customer_contact \
-                        and self.customer_contact.parent_id == \
+                if self.customer_contact and self.customer_contact.parent_id == \
+                        self.advertising_agency
+                        and not (self.material_contact_person
+                                 and self.material_contact_person.parent_id == \
+                                     self.advertising_agency):
+                     vals5 = {
+                        'so_media_agency_contacts_contact_id':
+                            self.customer_contact.ref
+                            or self.material_contact_person.ref
+                            or False,
+                        'so_media_agency_contacts_contact_name':
+                            self.customer_contact.name
+                            or self.material_contact_person.name
+                            or False,
+                        'so_media_agency_contacts_contact_email':
+                            self.customer_contact.email
+                            or self.material_contact_person.email
+                            or False,
+                        'so_media_agency_contacts_contact_phone':
+                            self.customer_contact.phone
+                            or self.material_contact_person.phone
+                            or False,
+                        'so_media_agency_contacts_contact_type': '',
+                        'so_media_agency_contacts_contact_language':
+                            self.customer_contact.lang
+                            or self.material_contact_person.lang
+                            or '',
+                     }
+                elif self.material_contact_person and \
+                     self.material_contact_person.parent_id == \
                         self.advertising_agency \
-                        and self.material_contact_person \
-                        and self.material_contact_person.parent_id == \
-                            self.advertising_agency:
-                vals5 = {
-                    'so_media_agency_contacts_contact2_id':
-                        self.material_contact_person.ref
-                        or False,
-                    'so_media_agency_contacts_contact2_name':
-                        self.material_contact_person.name
-                        or False,
-                    'so_media_agency_contacts_contact2_email':
-                        self.material_contact_person.email
-                        or False,
-                    'so_media_agency_contacts_contact2_phone':
-                        self.material_contact_person.phone
-                        or False,
-                    'so_media_agency_contacts_contact2_type': '',
-                    'so_media_agency_contacts_contact2_language':
-                        self.material_contact_person.lang or '',
-                }
+                     and not (self.customer_contact and \
+                              self.customer_contact.parent_id == \
+                                self.advertising_agency):
+                     vals5 = {
+                        'so_media_agency_contacts_contact_id':
+                            self.customer_contact.ref
+                            or self.material_contact_person.ref
+                            or False,
+                        'so_media_agency_contacts_contact_name':
+                            self.customer_contact.name
+                            or self.material_contact_person.name
+                            or False,
+                        'so_media_agency_contacts_contact_email':
+                            self.customer_contact.email
+                            or self.material_contact_person.email
+                            or False,
+                        'so_media_agency_contacts_contact_phone':
+                            self.customer_contact.phone
+                            or self.material_contact_person.phone
+                            or False,
+                        'so_media_agency_contacts_contact_type': '',
+                        'so_media_agency_contacts_contact_language':
+                            self.customer_contact.lang
+                            or self.material_contact_person.lang
+                            or '',
+                     }
+
+
+                if self.customer_contact and self.customer_contact.parent_id == \
+                            self.advertising_agency \
+                            and self.material_contact_person \
+                            and self.material_contact_person.parent_id == \
+                                self.advertising_agency:
+                    vals5 = {
+                        'so_media_agency_contacts_contact2_id':
+                            self.material_contact_person.ref
+                            or False,
+                        'so_media_agency_contacts_contact2_name':
+                            self.material_contact_person.name
+                            or False,
+                        'so_media_agency_contacts_contact2_email':
+                            self.material_contact_person.email
+                            or False,
+                        'so_media_agency_contacts_contact2_phone':
+                            self.material_contact_person.phone
+                            or False,
+                        'so_media_agency_contacts_contact2_type': '',
+                        'so_media_agency_contacts_contact2_language':
+                            self.material_contact_person.lang or '',
+                    }
             vals.update(vals2)
             vals.update(vals3)
             vals.update(vals4)
@@ -763,31 +803,31 @@ class SoLinefromOdootoAd4all(models.Model):
         string='Advertiser Contact Language',
         size=16,
     )
-    so_customer_contacts_contact2_id = fields.Integer(
+    customer_contacts_contact2_id = fields.Integer(
         related='adgr_orde_id.so_customer_contacts_contact2_id',
         string='Advertiser Contact2 ID',
     )
-    so_customer_contacts_contact2_name = fields.Char(
+    customer_contacts_contact2_name = fields.Char(
         related='adgr_orde_id.so_customer_contacts_contact2_name',
         string='Advertiser Contact2 Name',
         size=64
     )
-    so_customer_contacts_contact2_email = fields.Char(
+    customer_contacts_contact2_email = fields.Char(
         related='adgr_orde_id.so_customer_contacts_contact2_email',
         string='Advertiser Contact2 Email',
         size=64
     )
-    so_customer_contacts_contact2_phone = fields.Char(
+    customer_contacts_contact2_phone = fields.Char(
         related='adgr_orde_id.so_customer_contacts_contact2_phone',
         string='Advertiser Contact2 Phone',
         size=64
     )
-    so_customer_contacts_contact2_type = fields.Char(
+    customer_contacts_contact2_type = fields.Char(
         related='adgr_orde_id.so_customer_contacts_contact2_type',
         string='Advertiser Contact2 Type',
         size=64
     )
-    so_customer_contacts_contact2_language = fields.Char(
+    customer_contacts_contact2_language = fields.Char(
         related='adgr_orde_id.so_customer_contacts_contact2_language',
         string='Advertiser Contact2 Language',
         size=16,
@@ -1038,7 +1078,6 @@ class SoLinefromOdootoAd4all(models.Model):
                     {'type': self.customer_contacts_contact_type},
                     {'language': self.customer_contacts_contact_language},
                 ]
-
             }]
             if self.customer_contacts_contact2_id:
                 contact2_data = {
@@ -1050,12 +1089,9 @@ class SoLinefromOdootoAd4all(models.Model):
                         {'type': self.customer_contacts_contact2_type},
                         {'language': self.customer_contacts_contact2_language},
                     ]
-
                 }
                 contacts_data.append(contact2_data)
             customer_dict['customer'].append({'contacts': contacts_data})
-
-
         xml_dict[0]['root'].append(customer_dict)
 
         if self.agency:
@@ -1065,31 +1101,32 @@ class SoLinefromOdootoAd4all(models.Model):
                 {'email': self.media_agency_email},
                 {'phone': self.media_agency_phone},
                 {'language': self.media_agency_language},
-                {'contacts': {
-                    'contact': [
-                        {'id': self.media_agency_contacts_contact_id},
-                        {'name': self.media_agency_contacts_contact_name},
-                        {'email': self.media_agency_contacts_contact_email},
-                        {'phone': self.media_agency_contacts_contact_phone},
-                        {'type': self.media_agency_contacts_contact_type},
-                        {'language': self.media_agency_contacts_contact_language},
-                    ],
-                },
-                },
-            ]}
-            if self.media_agency_contacts_contact2_id:
-                media2_data = {
-                    'contact': [
-                        {'id': self.media_agency_contacts_contact2_id},
-                        {'name': self.media_agency_contacts_contact2_name},
-                        {'email': self.media_agency_contacts_contact2_email},
-                        {'phone': self.media_agency_contacts_contact2_phone},
-                        {'type': self.media_agency_contacts_contact2_type},
-                        {'language': self.media_agency_contacts_contact2_language},
-                    ]
-
-                }
-                media_data.append(media2_data)
+                ]
+            }
+            if self.media_agency_contacts_contact_id:
+                agency_contacts_data = [{
+                        'contact': [
+                            {'id': self.media_agency_contacts_contact_id},
+                            {'name': self.media_agency_contacts_contact_name},
+                            {'email': self.media_agency_contacts_contact_email},
+                            {'phone': self.media_agency_contacts_contact_phone},
+                            {'type': self.media_agency_contacts_contact_type},
+                            {'language': self.media_agency_contacts_contact_language},
+                        ],
+                    }]
+                if self.media_agency_contacts_contact2_id:
+                    agency_contacts2_data = {
+                            'contact': [
+                                {'id': self.media_agency_contacts_contact2_id},
+                                {'name': self.media_agency_contacts_contact2_name},
+                                {'email': self.media_agency_contacts_contact2_email},
+                                {'phone': self.media_agency_contacts_contact2_phone},
+                                {'type': self.media_agency_contacts_contact2_type},
+                                {'language': self.media_agency_contacts_contact2_language},
+                            ],
+                        },
+                    agency_contacts_data.append(agency_contacts2_data)
+                media_data['media_agency'].append({'contacts': agency_contacts_data})
             xml_dict[0]['root'].append(media_data)
 
         xmlData = dicttoxml(xml_dict, attr_type=False, root=False)
@@ -1104,19 +1141,19 @@ class SoLinefromOdootoAd4all(models.Model):
                 'json_message': order_obj.xml_data,
         })
         except Exception as e:
-            if xml:
-                xml_msg = history.last_sent
-                reply = history.last_received if \
-                    history.last_received else \
-                    False
-                self.write({'json_message': xml_msg, 'reply_message': reply})
-                self.env.cr.commit()
+#            if xml:
+#                xml_msg = history.last_sent
+#                reply = history.last_received if \
+#                    history.last_received else \
+#                    False
+#                self.write({'json_message': xml_msg, 'reply_message': reply})
+#                self.env.cr.commit()
             raise FailedJobError(
                 _('Error wsdl call: %s') % (e))
         #        finally:
-        if xml:
-            xml_msg = history.last_sent
-            reply = history.last_received if history.last_received else False
-            self.write({'json_message': xml_msg, 'reply_message': reply})
+#        if xml:
+#            xml_msg = history.last_sent
+#            reply = history.last_received if history.last_received else False
+#            self.write({'json_message': xml_msg, 'reply_message': reply})
         return response
 
