@@ -763,31 +763,31 @@ class SoLinefromOdootoAd4all(models.Model):
         string='Advertiser Contact Language',
         size=16,
     )
-    so_customer_contacts_contact2_id = fields.Integer(
+    customer_contacts_contact2_id = fields.Integer(
         related='adgr_orde_id.so_customer_contacts_contact2_id',
         string='Advertiser Contact2 ID',
     )
-    so_customer_contacts_contact2_name = fields.Char(
+    customer_contacts_contact2_name = fields.Char(
         related='adgr_orde_id.so_customer_contacts_contact2_name',
         string='Advertiser Contact2 Name',
         size=64
     )
-    so_customer_contacts_contact2_email = fields.Char(
+    customer_contacts_contact2_email = fields.Char(
         related='adgr_orde_id.so_customer_contacts_contact2_email',
         string='Advertiser Contact2 Email',
         size=64
     )
-    so_customer_contacts_contact2_phone = fields.Char(
+    customer_contacts_contact2_phone = fields.Char(
         related='adgr_orde_id.so_customer_contacts_contact2_phone',
         string='Advertiser Contact2 Phone',
         size=64
     )
-    so_customer_contacts_contact2_type = fields.Char(
+    customer_contacts_contact2_type = fields.Char(
         related='adgr_orde_id.so_customer_contacts_contact2_type',
         string='Advertiser Contact2 Type',
         size=64
     )
-    so_customer_contacts_contact2_language = fields.Char(
+    customer_contacts_contact2_language = fields.Char(
         related='adgr_orde_id.so_customer_contacts_contact2_language',
         string='Advertiser Contact2 Language',
         size=16,
