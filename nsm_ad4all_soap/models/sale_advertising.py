@@ -186,60 +186,81 @@ class SaleOrder(models.Model):
                     self.published_customer.phone or '',
                 'so_agency': self.partner_id.is_ad_agency,
             }
-            vals2 = vals3 = vals4 = vals5 = {}
+            vals2 = vals3 = vals4 = vals5 = vals6 = {}
+            varb = 0
+
             if self.customer_contact and \
-                self.customer_contact.parent_id == self.published_customer or \
-                self.material_contact_person and \
-                self.material_contact_person.parent_id == self.published_customer:
+                    self.customer_contact.parent_id == \
+                    self.published_customer:
+                varb = 1
+                if self.material_contact_person and \
+                    self.material_contact_person.parent_id == \
+                    self.published_customer:
+                    varb = 3
+            elif self.material_contact_person and \
+                    self.material_contact_person.parent_id == \
+                    self.published_customer:
+                varb = 2
+            if self.customer_contact and \
+                    self.customer_contact.parent_id == \
+                    self.advertising_agency:
+                varb = 11
+                if self.material_contact_person and \
+                    self.material_contact_person.parent_id == \
+                    self.advertising_agency:
+                    varb = 13
+            elif self.material_contact_person and \
+                    self.material_contact_person.parent_id == \
+                    self.advertising_agency:
+                varb = 12
+
+            if varb == 1 or varb == 3:
                 vals2 = {
                     'so_customer_contacts_contact_id':
-                        self.customer_contact.ref or
-                        self.material_contact_person.ref or False,
+                        self.customer_contact.ref or False,
                     'so_customer_contacts_contact_name':
-                        self.customer_contact.name or
-                        self.material_contact_person.name or False,
+                        self.customer_contact.name or False,
                     'so_customer_contacts_contact_email':
                         self.customer_contact.email or
-                        self.material_contact_person.email or
                         self.published_customer.email or False,
                     'so_customer_contacts_contact_phone':
                         self.customer_contact.phone or
+                        self.published_customer.phone or False,
+                    'so_customer_contacts_contact_type': '',
+                    'so_customer_contacts_contact_language':
+                        self.customer_contact.lang or '',
+                }
+            if varb == 2 :
+                vals2 = {
+                    'so_customer_contacts_contact_id':
+                        self.material_contact_person.ref or False,
+                    'so_customer_contacts_contact_name':
+                        self.material_contact_person.name or False,
+                    'so_customer_contacts_contact_email':
+                        self.material_contact_person.email or
+                        self.published_customer.email or False,
+                    'so_customer_contacts_contact_phone':
                         self.material_contact_person.phone or
                         self.published_customer.phone or False,
                     'so_customer_contacts_contact_type': '',
                     'so_customer_contacts_contact_language':
-                        self.customer_contact.lang or
                         self.material_contact_person.lang or '',
                 }
-            if self.material_contact_person and \
-                    self.material_contact_person.parent_id == \
-                    self.published_customer and \
-                    self.customer_contact and \
-                    self.customer_contact.parent_id == \
-                    self.published_customer:
+            if varb == 3:
                 vals3 = {
                     'so_customer_contacts_contact2_id':
-                        self.material_contact_person.ref
-                        or False,
+                        self.material_contact_person.ref or False,
                     'so_customer_contacts_contact2_name':
-                        self.material_contact_person.name
-                        or False,
+                        self.material_contact_person.name or False,
                     'so_customer_contacts_contact2_email':
-                        self.material_contact_person.email
-                        or False,
+                        self.material_contact_person.email or False,
                     'so_customer_contacts_contact2_phone':
-                        self.material_contact_person.phone
-                        or False,
+                        self.material_contact_person.phone or False,
                     'so_customer_contacts_contact2_type': '',
                     'so_customer_contacts_contact2_language':
                         self.material_contact_person.lang or '',
                 }
-            if self.partner_id.is_ad_agency and \
-                    ((self.customer_contact and
-                     self.customer_contact.parent_id == self.advertising_agency)
-                    or (self.material_contact_person and \
-                    self.material_contact_person.parent_id ==
-                    self.advertising_agency)):
+            if self.partner_id.is_ad_agency:
                 vals4 = {
                     'so_media_agency_code':
                         self.advertising_agency.ref or '',
@@ -252,83 +273,44 @@ class SaleOrder(models.Model):
                     'so_media_agency_language':
                         self.advertising_agency.lang or '',
                 }
-                if self.customer_contact and self.customer_contact.parent_id == \
-                        self.advertising_agency
-                        and not (self.material_contact_person
-                                 and self.material_contact_person.parent_id == \
-                                     self.advertising_agency):
+                if varb == 11 or varb == 13:
                      vals5 = {
                         'so_media_agency_contacts_contact_id':
-                            self.customer_contact.ref
-                            or self.material_contact_person.ref
-                            or False,
+                            self.customer_contact.ref or False,
                         'so_media_agency_contacts_contact_name':
-                            self.customer_contact.name
-                            or self.material_contact_person.name
-                            or False,
+                            self.customer_contact.name or False,
                         'so_media_agency_contacts_contact_email':
-                            self.customer_contact.email
-                            or self.material_contact_person.email
-                            or False,
+                            self.customer_contact.email or False,
                         'so_media_agency_contacts_contact_phone':
-                            self.customer_contact.phone
-                            or self.material_contact_person.phone
-                            or False,
+                            self.customer_contact.phone or False,
                         'so_media_agency_contacts_contact_type': '',
                         'so_media_agency_contacts_contact_language':
-                            self.customer_contact.lang
-                            or self.material_contact_person.lang
-                            or '',
+                            self.customer_contact.lang or '',
                      }
-                elif self.material_contact_person and \
-                     self.material_contact_person.parent_id == \
-                        self.advertising_agency \
-                     and not (self.customer_contact and \
-                              self.customer_contact.parent_id == \
-                                self.advertising_agency):
+                if varb == 12:
                      vals5 = {
                         'so_media_agency_contacts_contact_id':
-                            self.customer_contact.ref
-                            or self.material_contact_person.ref
-                            or False,
+                            self.material_contact_person.ref or False,
                         'so_media_agency_contacts_contact_name':
-                            self.customer_contact.name
-                            or self.material_contact_person.name
-                            or False,
+                            self.material_contact_person.name or False,
                         'so_media_agency_contacts_contact_email':
-                            self.customer_contact.email
-                            or self.material_contact_person.email
-                            or False,
+                            self.material_contact_person.email or False,
                         'so_media_agency_contacts_contact_phone':
-                            self.customer_contact.phone
-                            or self.material_contact_person.phone
-                            or False,
+                            self.material_contact_person.phone or False,
                         'so_media_agency_contacts_contact_type': '',
                         'so_media_agency_contacts_contact_language':
-                            self.customer_contact.lang
-                            or self.material_contact_person.lang
-                            or '',
+                            self.material_contact_person.lang or '',
                      }
-
-
-                if self.customer_contact and self.customer_contact.parent_id == \
-                            self.advertising_agency \
-                            and self.material_contact_person \
-                            and self.material_contact_person.parent_id == \
-                                self.advertising_agency:
-                    vals5 = {
+                if varb == 13:
+                    vals6 = {
                         'so_media_agency_contacts_contact2_id':
-                            self.material_contact_person.ref
-                            or False,
+                            self.material_contact_person.ref or False,
                         'so_media_agency_contacts_contact2_name':
-                            self.material_contact_person.name
-                            or False,
+                            self.material_contact_person.name or False,
                         'so_media_agency_contacts_contact2_email':
-                            self.material_contact_person.email
-                            or False,
+                            self.material_contact_person.email or False,
                         'so_media_agency_contacts_contact2_phone':
-                            self.material_contact_person.phone
-                            or False,
+                            self.material_contact_person.phone or False,
                         'so_media_agency_contacts_contact2_type': '',
                         'so_media_agency_contacts_contact2_language':
                             self.material_contact_person.lang or '',
@@ -337,6 +319,13 @@ class SaleOrder(models.Model):
             vals.update(vals3)
             vals.update(vals4)
             vals.update(vals5)
+            vals.update(vals6)
+
+            for key, value in vals.iter():
+                if value == False:
+                    raise UserError(_(
+                        'Field %s is required in AdPortal, but has value False'
+                    ) % (key))
 
             res = self.env['sofrom.odooto.ad4all'].sudo().create(vals)
             for line in self.order_line:
