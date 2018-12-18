@@ -227,8 +227,8 @@ class SaleOrder(models.Model):
                         self.customer_contact.phone or
                         self.published_customer.phone or False,
                     'so_customer_contacts_contact_type': '',
-                    'so_customer_contacts_contact_language':
-                        self.customer_contact.lang or '',
+                    'so_customer_contacts_contact_language': 'NL'
+#                        self.customer_contact.lang or '',
                 }
             if varb == 2 :
                 vals2 = {
@@ -243,8 +243,8 @@ class SaleOrder(models.Model):
                         self.material_contact_person.phone or
                         self.published_customer.phone or False,
                     'so_customer_contacts_contact_type': '',
-                    'so_customer_contacts_contact_language':
-                        self.material_contact_person.lang or '',
+                    'so_customer_contacts_contact_language': 'NL'
+#                        self.material_contact_person.lang or '',
                 }
             if varb == 3:
                 vals3 = {
@@ -257,8 +257,8 @@ class SaleOrder(models.Model):
                     'so_customer_contacts_contact2_phone':
                         self.material_contact_person.phone or False,
                     'so_customer_contacts_contact2_type': '',
-                    'so_customer_contacts_contact2_language':
-                        self.material_contact_person.lang or '',
+                    'so_customer_contacts_contact2_language': 'NL'
+#                        self.material_contact_person.lang or '',
                 }
             if self.partner_id.is_ad_agency:
                 vals4 = {
@@ -270,8 +270,8 @@ class SaleOrder(models.Model):
                         self.advertising_agency.name or '',
                     'so_media_agency_phone':
                         self.advertising_agency.phone or '',
-                    'so_media_agency_language':
-                        self.advertising_agency.lang or '',
+                    'so_media_agency_language': 'NL'
+#                        self.advertising_agency.lang or '',
                 }
                 if varb == 11 or varb == 13:
                      vals5 = {
@@ -284,8 +284,8 @@ class SaleOrder(models.Model):
                         'so_media_agency_contacts_contact_phone':
                             self.customer_contact.phone or False,
                         'so_media_agency_contacts_contact_type': '',
-                        'so_media_agency_contacts_contact_language':
-                            self.customer_contact.lang or '',
+                        'so_media_agency_contacts_contact_language': 'NL'
+#                            self.customer_contact.lang or '',
                      }
                 if varb == 12:
                      vals5 = {
@@ -298,8 +298,8 @@ class SaleOrder(models.Model):
                         'so_media_agency_contacts_contact_phone':
                             self.material_contact_person.phone or False,
                         'so_media_agency_contacts_contact_type': '',
-                        'so_media_agency_contacts_contact_language':
-                            self.material_contact_person.lang or '',
+                        'so_media_agency_contacts_contact_language': 'NL'
+#                            self.material_contact_person.lang or '',
                      }
                 if varb == 13:
                     vals6 = {
@@ -312,8 +312,8 @@ class SaleOrder(models.Model):
                         'so_media_agency_contacts_contact2_phone':
                             self.material_contact_person.phone or False,
                         'so_media_agency_contacts_contact2_type': '',
-                        'so_media_agency_contacts_contact2_language':
-                            self.material_contact_person.lang or '',
+                        'so_media_agency_contacts_contact2_language': 'NL'
+#                            self.material_contact_person.lang or '',
                     }
             vals.update(vals2)
             vals.update(vals3)
@@ -492,7 +492,7 @@ class SofromOdootoAd4all(models.Model):
     so_customer_contacts_contact_language = fields.Char(
         string='Advertiser Contact Language',
         size=16,
-        default='nl'
+        default='NL'
     )
     so_customer_contacts_contact2_id = fields.Integer(
         string='Advertiser Contact2 ID',
@@ -516,7 +516,7 @@ class SofromOdootoAd4all(models.Model):
     so_customer_contacts_contact2_language = fields.Char(
         string='Advertiser Contact2 Language',
         size=16,
-        default='nl'
+        default='NL'
     )
     so_customer_address_street = fields.Char(
         string='Advertiser Address Street',
@@ -556,7 +556,7 @@ class SofromOdootoAd4all(models.Model):
     so_media_agency_language = fields.Char(
         string='Agency Language',
         size=16,
-        default='nl'
+        default='NL'
     )
     so_media_agency_contacts_contact_id = fields.Char(
         string='Agency Contact Number',
@@ -581,7 +581,7 @@ class SofromOdootoAd4all(models.Model):
     so_media_agency_contacts_contact_language = fields.Char(
         string='Agency Contact Language',
         size=16,
-        default='nl'
+        default='NL'
     )
     so_media_agency_contacts_contact2_id = fields.Char(
         string='Agency Contact2 Number',
@@ -606,7 +606,7 @@ class SofromOdootoAd4all(models.Model):
     so_media_agency_contacts_contact2_language = fields.Char(
         string='Agency Contact2 Language',
         size=16,
-        default='nl'
+        default='NL'
     )
 
     @job
