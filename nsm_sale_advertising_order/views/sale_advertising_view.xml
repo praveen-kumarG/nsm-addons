@@ -11,7 +11,7 @@
                     <attribute name="context">{'customer_contact': customer_contact}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='advertising_agency']" position="after">
-                    <field name="material_contact_person" domain="[('customer', '=', True)]" context="{'default_parent_id': 'parent.partner_id', 'show_email': 1}"/>
+                    <field name="material_contact_person" domain="[('customer', '=', True)]"  context="{'default_parent_id': partner_id, 'show_email': 1}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_payer']" position="replace">
                     <field name="proof_number_payer" domain="[('customer', '=', True),('id','child_of',parent.partner_id)]" context="{'default_parent_id': 'order_partner_id', 'show_address': 1}" options="{'no_create_edit': True, 'always_reload': True}"/>
