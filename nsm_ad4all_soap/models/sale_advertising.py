@@ -347,12 +347,10 @@ class SaleOrder(models.Model):
                         'sales_mail': self.user_id.email,
                         'reminder': not line.no_copy_chase,
                         'format_id': line.product_template_id.name,
-                        'format_height': False,
-                        'format_trim_height': line.product_uom_qty
-                                        if line.product_uom.name == 'mm'
-                                        else line.product_id.height,
-                        'format_width': False,
-                        'format_trim_width': line.product_id.width,
+                        'format_height': line.product_id.height or False,
+                        'format_trim_height': line.product_id.height or False,
+                        'format_width': line.product_id.width or False,
+                        'format_trim_width': line.product_id.width or False,
                         'format_spread': line.product_template_id.spread,
                         'paper_pub_date': line.issue_date or line.from_date,
                         'paper_deadline': line.deadline or '',
