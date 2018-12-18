@@ -322,7 +322,7 @@ class SaleOrder(models.Model):
             vals.update(vals6)
 
             for key, value in vals.iteritems():
-                if value == False:
+                if value == False and not key == 'so_agency':
                     raise UserError(_(
                         'Field %s is required in AdPortal, but has value False'
                     ) % (key))
