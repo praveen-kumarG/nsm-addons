@@ -47,7 +47,7 @@
                                 <field name="ad4all_so_line" nolabel="1" widget="one2many_list" mode="tree">
                                     <tree string="Order Lines" >
                                         <field name="odoo_order_line"/>
-                                        <field name="id"/>
+                                        <field name="mat_id"/>
                                         <field name="adgr_orde_id"/>
                                         <field name="cancelled"/>
                                         <field name="herplaats"/>

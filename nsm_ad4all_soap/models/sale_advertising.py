@@ -165,34 +165,168 @@ class SaleOrder(models.Model):
             res = self.env['sofrom.odooto.ad4all'].sudo().create(vals)
         else:
             vals = {
-                    'sale_order_id': self.id,
-                    'order_name': self.name,
-                    'reference':
-                        'Subject:' +
-                        unidecode(self.opportunity_subject or '') +
-                        '\n' +
-                        'Order Nr.:' +
-                        unidecode(self.name or ''),
-                    'so_customer_id': self.published_customer.ref,
-                    'so_customer_name': self.published_customer.name,
+                'sale_order_id': self.id,
+                'order_name': self.name or '',
+                'reference':
+                    'Subject:' +
+                    unidecode(self.opportunity_subject or '') +
+                    '\n' +
+                    'Order Nr.:' +
+                    unidecode(self.name or ''),
+                'so_customer_id': self.published_customer.ref,
+                'so_customer_name': self.published_customer.name,
+
+                'so_customer_address_street':
+                    self.published_customer.street or '',
+                'so_customer_address_zip':
+                    self.published_customer.zip or '',
+                'so_customer_address_city':
+                    self.published_customer.city or '',
+                'so_customer_address_phone':
+                    self.published_customer.phone or '',
+                'so_agency': self.partner_id.is_ad_agency,
+            }
+            vals2 = vals3 = vals4 = vals5 = vals6 = {}
+            varb = 0
+
+            if self.customer_contact and \
+                    self.customer_contact.parent_id == \
+                    self.published_customer:
+                varb = 1
+                if self.material_contact_person and \
+                    self.material_contact_person.parent_id == \
+                    self.published_customer:
+                    varb = 3
+            elif self.material_contact_person and \
+                    self.material_contact_person.parent_id == \
+                    self.published_customer:
+                varb = 2
+            if self.customer_contact and \
+                    self.customer_contact.parent_id == \
+                    self.advertising_agency:
+                varb = 11
+                if self.material_contact_person and \
+                    self.material_contact_person.parent_id == \
+                    self.advertising_agency:
+                    varb = 13
+            elif self.material_contact_person and \
+                    self.material_contact_person.parent_id == \
+                    self.advertising_agency:
+                varb = 12
+
+            if varb == 1 or varb == 3:
+                vals2 = {
+                    'so_customer_contacts_contact_id':
+                        self.customer_contact.ref or False,
+                    'so_customer_contacts_contact_name':
+                        self.customer_contact.name or False,
                     'so_customer_contacts_contact_email':
                         self.customer_contact.email or
-                        self.published_customer.email or '',
+                        self.published_customer.email or False,
+                    'so_customer_contacts_contact_phone':
+                        self.customer_contact.phone or
+                        self.published_customer.phone or False,
+                    'so_customer_contacts_contact_type': '',
+                    'so_customer_contacts_contact_language':
+                        self.customer_contact.lang or '',
+                }
+            if varb == 2 :
+                vals2 = {
                     'so_customer_contacts_contact_id':
-                        self.customer_contact.ref,
+                        self.material_contact_person.ref or False,
                     'so_customer_contacts_contact_name':
-                        self.customer_contact.name,
-                    'so_customer_address_street':
-                        self.published_customer.street,
-                    'so_customer_address_zip': self.published_customer.zip,
-                    'so_customer_address_city': self.published_customer.city,
-                    'so_media_agency_code': self.advertising_agency.ref,
-                    'so_media_agency_email': self.advertising_agency.email,
-                    'so_media_agency_name': self.advertising_agency.name,
-                    'so_media_agency_phone': self.advertising_agency.phone,
-                    'so_media_agency_language':self.advertising_agency.lang,
+                        self.material_contact_person.name or False,
+                    'so_customer_contacts_contact_email':
+                        self.material_contact_person.email or
+                        self.published_customer.email or False,
+                    'so_customer_contacts_contact_phone':
+                        self.material_contact_person.phone or
+                        self.published_customer.phone or False,
+                    'so_customer_contacts_contact_type': '',
+                    'so_customer_contacts_contact_language':
+                        self.material_contact_person.lang or '',
+                }
+            if varb == 3:
+                vals3 = {
+                    'so_customer_contacts_contact2_id':
+                        self.material_contact_person.ref or False,
+                    'so_customer_contacts_contact2_name':
+                        self.material_contact_person.name or False,
+                    'so_customer_contacts_contact2_email':
+                        self.material_contact_person.email or False,
+                    'so_customer_contacts_contact2_phone':
+                        self.material_contact_person.phone or False,
+                    'so_customer_contacts_contact2_type': '',
+                    'so_customer_contacts_contact2_language':
+                        self.material_contact_person.lang or '',
+                }
+            if self.partner_id.is_ad_agency:
+                vals4 = {
+                    'so_media_agency_code':
+                        self.advertising_agency.ref or '',
+                    'so_media_agency_email':
+                        self.advertising_agency.email or '',
+                    'so_media_agency_name':
+                        self.advertising_agency.name or '',
+                    'so_media_agency_phone':
+                        self.advertising_agency.phone or '',
+                    'so_media_agency_language':
+                        self.advertising_agency.lang or '',
+                }
+                if varb == 11 or varb == 13:
+                     vals5 = {
+                        'so_media_agency_contacts_contact_id':
+                            self.customer_contact.ref or False,
+                        'so_media_agency_contacts_contact_name':
+                            self.customer_contact.name or False,
+                        'so_media_agency_contacts_contact_email':
+                            self.customer_contact.email or False,
+                        'so_media_agency_contacts_contact_phone':
+                            self.customer_contact.phone or False,
+                        'so_media_agency_contacts_contact_type': '',
+                        'so_media_agency_contacts_contact_language':
+                            self.customer_contact.lang or '',
+                     }
+                if varb == 12:
+                     vals5 = {
+                        'so_media_agency_contacts_contact_id':
+                            self.material_contact_person.ref or False,
+                        'so_media_agency_contacts_contact_name':
+                            self.material_contact_person.name or False,
+                        'so_media_agency_contacts_contact_email':
+                            self.material_contact_person.email or False,
+                        'so_media_agency_contacts_contact_phone':
+                            self.material_contact_person.phone or False,
+                        'so_media_agency_contacts_contact_type': '',
+                        'so_media_agency_contacts_contact_language':
+                            self.material_contact_person.lang or '',
+                     }
+                if varb == 13:
+                    vals6 = {
+                        'so_media_agency_contacts_contact2_id':
+                            self.material_contact_person.ref or False,
+                        'so_media_agency_contacts_contact2_name':
+                            self.material_contact_person.name or False,
+                        'so_media_agency_contacts_contact2_email':
+                            self.material_contact_person.email or False,
+                        'so_media_agency_contacts_contact2_phone':
+                            self.material_contact_person.phone or False,
+                        'so_media_agency_contacts_contact2_type': '',
+                        'so_media_agency_contacts_contact2_language':
+                            self.material_contact_person.lang or '',
+                    }
+            vals.update(vals2)
+            vals.update(vals3)
+            vals.update(vals4)
+            vals.update(vals5)
+            vals.update(vals6)
 
-            }
+            for key, value in vals.iteritems():
+                if value == False:
+                    raise UserError(_(
+                        'Field %s is required in AdPortal, but has value False'
+                    ) % (key))
+
             res = self.env['sofrom.odooto.ad4all'].sudo().create(vals)
             for line in self.order_line:
                 del_param = False
@@ -203,22 +337,22 @@ class SaleOrder(models.Model):
                 lvals = {
                         'odoo_order_line': line.id,
                         'advert_id': line.id,
-                        'id': line.id if not line.recurring else
+                        'mat_id': line.id if not line.recurring else
                                                             line.recurring_id,
                         'adgr_orde_id': res.id,
                         'cancelled': del_param,
                         'herplaats': line.recurring,
                         'materialtype': line.ad_class.ad4all_material_type,
-                        'sales': self.user_id.name,
+                        'sales': unidecode(self.user_id.name),
                         'sales_mail': self.user_id.email,
                         'reminder': not line.no_copy_chase,
-                        'format_id': line.product_template_id.default_code,
+                        'format_id': line.product_template_id.name,
                         'format_height': False,
                         'format_trim_height': line.product_uom_qty
                                         if line.product_uom.name == 'mm'
-                                        else line.product_template_id.height,
+                                        else line.product_id.height,
                         'format_width': False,
-                        'format_trim_width': line.product_template_id.width,
+                        'format_trim_width': line.product_id.width,
                         'format_spread': line.product_template_id.spread,
                         'paper_pub_date': line.issue_date or line.from_date,
                         'paper_deadline': line.deadline or '',
@@ -311,6 +445,12 @@ class SofromOdootoAd4all(models.Model):
     so_ad4all_environment = fields.Char(
         'Ad4all Environment'
     )
+    json_message = fields.Text(
+        'XML message'
+    )
+    reply_message = fields.Text(
+        'Reply message'
+    )
     ad4all_so_line = fields.One2many(
         'soline.from.odooto.ad4all',
         'adgr_orde_id',
@@ -351,6 +491,30 @@ class SofromOdootoAd4all(models.Model):
     )
     so_customer_contacts_contact_language = fields.Char(
         string='Advertiser Contact Language',
+        size=16,
+        default='nl'
+    )
+    so_customer_contacts_contact2_id = fields.Integer(
+        string='Advertiser Contact2 ID',
+    )
+    so_customer_contacts_contact2_name = fields.Char(
+        string='Advertiser Contact2 Name',
+        size=64
+    )
+    so_customer_contacts_contact2_email = fields.Char(
+        string='Advertiser Contact2 Email',
+        size=64
+    )
+    so_customer_contacts_contact2_phone = fields.Char(
+        string='Advertiser Contact2 Phone',
+        size=64
+    )
+    so_customer_contacts_contact2_type = fields.Char(
+        string='Advertiser Contact2 Type',
+        size=64
+    )
+    so_customer_contacts_contact2_language = fields.Char(
+        string='Advertiser Contact2 Language',
         size=16,
         default='nl'
     )
@@ -419,6 +583,31 @@ class SofromOdootoAd4all(models.Model):
         size=16,
         default='nl'
     )
+    so_media_agency_contacts_contact2_id = fields.Char(
+        string='Agency Contact2 Number',
+        size=32
+    )
+    so_media_agency_contacts_contact2_name = fields.Char(
+        string='Agency Contact2 Name',
+        size=64
+    )
+    so_media_agency_contacts_contact2_email = fields.Char(
+        string='Agency Contact2 Email',
+        size=64
+    )
+    so_media_agency_contacts_contact2_phone = fields.Char(
+        string='Agency Contact2 Phone',
+        size=64
+    )
+    so_media_agency_contacts_contact2_type = fields.Char(
+        string='Agency Contact2 Type',
+        size=64
+    )
+    so_media_agency_contacts_contact2_language = fields.Char(
+        string='Agency Contact2 Language',
+        size=16,
+        default='nl'
+    )
 
     @job
     def wsdl_content(self, xml=False):
@@ -480,7 +669,7 @@ class SoLinefromOdootoAd4all(models.Model):
     advert_id = fields.Integer(
         string='Line ID'
     )
-    id = fields.Integer(
+    mat_id = fields.Integer(
         string='Material ID'
     )
     adgr_orde_id = fields.Many2one(
@@ -603,6 +792,36 @@ class SoLinefromOdootoAd4all(models.Model):
         string='Advertiser Contact Language',
         size=16,
     )
+    customer_contacts_contact2_id = fields.Integer(
+        related='adgr_orde_id.so_customer_contacts_contact2_id',
+        string='Advertiser Contact2 ID',
+    )
+    customer_contacts_contact2_name = fields.Char(
+        related='adgr_orde_id.so_customer_contacts_contact2_name',
+        string='Advertiser Contact2 Name',
+        size=64
+    )
+    customer_contacts_contact2_email = fields.Char(
+        related='adgr_orde_id.so_customer_contacts_contact2_email',
+        string='Advertiser Contact2 Email',
+        size=64
+    )
+    customer_contacts_contact2_phone = fields.Char(
+        related='adgr_orde_id.so_customer_contacts_contact2_phone',
+        string='Advertiser Contact2 Phone',
+        size=64
+    )
+    customer_contacts_contact2_type = fields.Char(
+        related='adgr_orde_id.so_customer_contacts_contact2_type',
+        string='Advertiser Contact2 Type',
+        size=64
+    )
+    customer_contacts_contact2_language = fields.Char(
+        related='adgr_orde_id.so_customer_contacts_contact2_language',
+        string='Advertiser Contact2 Language',
+        size=16,
+        default='nl'
+    )
     customer_address_street = fields.Char(
         related='adgr_orde_id.so_customer_address_street',
         string='Advertiser Address Street',
@@ -684,6 +903,37 @@ class SoLinefromOdootoAd4all(models.Model):
         size=16,
         default='nl'
     )
+    media_agency_contacts_contact2_id = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact2_id',
+        string='Agency Contact2 Number',
+        size=32
+    )
+    media_agency_contacts_contact2_name = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact2_name',
+        string='Agency Contact2 Name',
+        size=64
+    )
+    media_agency_contacts_contact2_email = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact2_email',
+        string='Agency Contact2 Email',
+        size=64
+    )
+    media_agency_contacts_contact2_phone = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact2_phone',
+        string='Agency Contact2 Phone',
+        size=64
+    )
+    media_agency_contacts_contact2_type = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact2_type',
+        string='Agency Contact2 Type',
+        size=64
+    )
+    media_agency_contacts_contact2_language = fields.Char(
+        related='adgr_orde_id.so_media_agency_contacts_contact2_language',
+        string='Agency Contact2 Language',
+        size=16,
+        default='nl'
+    )
     creative_agency_code = fields.Char(
         string='Creative Number',
         size=32
@@ -752,124 +1002,147 @@ class SoLinefromOdootoAd4all(models.Model):
             deliverer="nsm",
             order_code=self.adgr_orde_id
         )
-        paper_deadline = datetime.datetime.strptime(self.paper_deadline, '%Y-%m-%d').strftime(
-            '%Y%m%d') if self.paper_deadline else ''
-        paper_pub_date = datetime.datetime.strptime(self.paper_pub_date, '%Y-%m-%d').strftime(
+        paper_deadline = datetime.datetime.strptime(
+            self.paper_deadline, '%Y-%m-%d').strftime('%Y%m%d') \
+            if self.paper_deadline else ''
+        paper_pub_date = datetime.datetime.strptime(
+            self.paper_pub_date, '%Y-%m-%d').strftime(
             '%Y%m%d') if self.paper_pub_date else ''
 
-        xml_dict = {
-            'root': {
-                'advert_id': int(float(self.advert_id)),
-                'id': int(float(self.id)),
-                'adgr_orde_id': int(float(self.adgr_orde_id.id)),
-                'adkind': self.adkind,
-                'adstatus': self.adstatus,
-                'cancelled': "Yes" if self.cancelled else "No",
-                'herplaats': "Yes" if self.herplaats else "No",
-                'materialtype': self.materialtype,
-                'sales': self.sales,
-                'sales_mail': self.sales_mail,
-                'reminder': "Yes" if self.reminder else "No",
-                'format': {
-                    'id': self.format_id,
-                    'height': int(float(self.format_height)),
-                    'width': int(float(self.format_width)),
-                    'trim_height': int(float(self.format_trim_height)),
-                    'trim_width': int(float(self.format_trim_width)),
-                    'spread': "Yes" if self.format_spread else "No",
-                },
-                'paper': {
-                    'pub_date': paper_pub_date,
-                    'deadline': paper_deadline,
-                    'id': self.paper_id,
-                    'name': self.paper_name,
-                    'issuenumber': self.paper_issuenumber,
-                },
-                'placement': {
-                    'adclass': self.placement_adclass,
-                    'description': self.placement_description,
-                    'notice': self.placement_notice,
-                    'position': self.placement_position,
-                },
-                'customer': {
-                    'id': int(float(self.customer_id)),
-                    'name': self.customer_name,
-                    'contacts': {
-                        'contact': {
-                            'id': self.customer_contacts_contact_id,
-                            'name': self.customer_contacts_contact_name,
-                            'email': self.customer_contacts_contact_email,
-                            'phone': self.customer_contacts_contact_phone,
-                            'type': self.customer_contacts_contact_type,
-                            'language': self.customer_contacts_contact_language,
+        xml_dict = [{
+            'root': [
+                {'advert_id': int(float(self.advert_id))},
+                {'id': int(float(self.mat_id))},
+                {'adgr_orde_id': int(float(self.adgr_orde_id.id))},
+                {'adkind': self.adkind},
+                {'adstatus': self.adstatus},
+                {'cancelled': "Yes" if self.cancelled else "No"},
+                {'herplaats': "Yes" if self.herplaats else "No"},
+                {'materialtype': self.materialtype},
+                {'sales': self.sales},
+                {'sales_mail': self.sales_mail},
+                {'reminder': "Yes" if self.reminder else "No"},
+                {'format': [
+                    {'id': self.format_id},
+                    {'height': int(float(self.format_height))},
+                    {'width': int(float(self.format_width))},
+                    {'trim_height': int(float(self.format_trim_height))},
+                    {'trim_width': int(float(self.format_trim_width))},
+                    {'spread': "Yes" if self.format_spread else "No"},
+                ]},
+                {'paper': [
+                    {'pub_date': paper_pub_date},
+                    {'deadline': paper_deadline},
+                    {'id': self.paper_id},
+                    {'name': self.paper_name},
+                    {'issuenumber': self.paper_issuenumber},
+                ]},
+                {'placement': [
+                    {'adclass': self.placement_adclass},
+                    {'description': self.placement_description},
+                    {'notice': self.placement_notice},
+                    {'position': self.placement_position},
+                ]},
+            ]
+        }]
+
+        customer_dict = {'customer': [
+            {'id': int(float(self.customer_id))},
+            {'name': self.customer_name},
+            {'address': [
+                {'street': self.customer_address_street},
+                {'zip': self.customer_address_zip},
+                {'city': self.customer_address_city},
+                {'phone': self.customer_address_phone},
+            ]},
+        ]}
+
+        if self.customer_contacts_contact_id:
+            contacts_data = [{
+                'contact': [
+                    {'id': self.customer_contacts_contact_id},
+                    {'name': self.customer_contacts_contact_name},
+                    {'email': self.customer_contacts_contact_email},
+                    {'phone': self.customer_contacts_contact_phone},
+                    {'type': self.customer_contacts_contact_type},
+                    {'language': self.customer_contacts_contact_language},
+                ]
+            }]
+            if self.customer_contacts_contact2_id:
+                contact2_data = {
+                    'contact': [
+                        {'id': self.customer_contacts_contact2_id},
+                        {'name': self.customer_contacts_contact2_name},
+                        {'email': self.customer_contacts_contact2_email},
+                        {'phone': self.customer_contacts_contact2_phone},
+                        {'type': self.customer_contacts_contact2_type},
+                        {'language': self.customer_contacts_contact2_language},
+                    ]
+                }
+                contacts_data.append(contact2_data)
+            customer_dict['customer'].append({'contacts': contacts_data})
+        xml_dict[0]['root'].append(customer_dict)
+
+        if self.agency:
+            media_data = {'media_agency': [
+                {'code': self.media_agency_code},
+                {'name': self.media_agency_name},
+                {'email': self.media_agency_email},
+                {'phone': self.media_agency_phone},
+                {'language': self.media_agency_language},
+                ]
+            }
+            if self.media_agency_contacts_contact_id:
+                agency_contacts_data = [{
+                        'contact': [
+                            {'id': self.media_agency_contacts_contact_id},
+                            {'name': self.media_agency_contacts_contact_name},
+                            {'email': self.media_agency_contacts_contact_email},
+                            {'phone': self.media_agency_contacts_contact_phone},
+                            {'type': self.media_agency_contacts_contact_type},
+                            {'language': self.media_agency_contacts_contact_language},
+                        ],
+                    }]
+                if self.media_agency_contacts_contact2_id:
+                    agency_contacts2_data = {
+                            'contact': [
+                                {'id': self.media_agency_contacts_contact2_id},
+                                {'name': self.media_agency_contacts_contact2_name},
+                                {'email': self.media_agency_contacts_contact2_email},
+                                {'phone': self.media_agency_contacts_contact2_phone},
+                                {'type': self.media_agency_contacts_contact2_type},
+                                {'language': self.media_agency_contacts_contact2_language},
+                            ],
                         },
-                    },
-                    'address': {
-                        'street': self.customer_address_street,
-                        'zip': self.customer_address_zip,
-                        'city': self.customer_address_city,
-                        'phone': self.customer_address_phone,
-                    },
-                },
-                'media_agency': {
-                    'code': self.media_agency_code,
-                    'name': self.media_agency_name,
-                    'email': self.media_agency_email,
-                    'phone': self.media_agency_phone,
-                    'language': self.media_agency_language,
-                    'contacts': {
-                        'contact': {
-                            'id': self.media_agency_contacts_contact_id,
-                            'name': self.media_agency_contacts_contact_name,
-                            'email': self.media_agency_contacts_contact_email,
-                            'phone': self.media_agency_contacts_contact_phone,
-                            'type': self.media_agency_contacts_contact_type,
-                            'language': self.
-                                media_agency_contacts_contact_language,
-                        },
-                    },
-                },
-                'creative_agency': {
-                    'code': self.creative_agency_code,
-                    'name': self.creative_agency_name,
-                    'email': self.creative_agency_email,
-                    'phone': self.creative_agency_phone,
-                    'language': self.creative_agency_language,
-                    'contacts': {
-                        'contact': {
-                            'id': self.creative_agency_contacts_contact_id,
-                            'name': self.creative_agency_contacts_contact_name,
-                            'email': self.creative_agency_contacts_contact_email,
-                            'phone': self.creative_agency_contacts_contact_phone,
-                            'type': self.creative_agency_contacts_contact_type,
-                            'language': self.
-                                creative_agency_contacts_contact_language,
-                        },
-                    },
-                },
-            },
-        }
-        order_obj.xml_data = str(dicttoxml(xml_dict))
+                    agency_contacts_data.append(agency_contacts2_data)
+                media_data['media_agency'].append({'contacts': agency_contacts_data})
+            xml_dict[0]['root'].append(media_data)
+
+        xmlData = dicttoxml(xml_dict, attr_type=False, root=False)
+        xmlData = (xmlData.replace('<item>', '')).replace('</item>', '')
+
+        order_obj.xml_data = xmlpprint(xmlData)
         #        import pdb; pdb.set_trace()
         try:
             response = client.service.soap_order(order=order_obj)
             self.write({
                 'ad4all_response': response['code'],
+                'json_message': order_obj.xml_data,
         })
         except Exception as e:
-            if xml:
-                xml_msg = history.last_sent
-                reply = history.last_received if \
-                    history.last_received else \
-                    False
-                self.write({'json_message': xml_msg, 'reply_message': reply})
-                self.env.cr.commit()
+#            if xml:
+#                xml_msg = history.last_sent
+#                reply = history.last_received if \
+#                    history.last_received else \
+#                    False
+#                self.write({'json_message': xml_msg, 'reply_message': reply})
+#                self.env.cr.commit()
             raise FailedJobError(
                 _('Error wsdl call: %s') % (e))
         #        finally:
-        if xml:
-            xml_msg = history.last_sent
-            reply = history.last_received if history.last_received else False
-            self.write({'json_message': xml_msg, 'reply_message': reply})
+#        if xml:
+#            xml_msg = history.last_sent
+#            reply = history.last_received if history.last_received else False
+#            self.write({'json_message': xml_msg, 'reply_message': reply})
         return response
 

@@ -28,17 +28,17 @@
                 <xpath expr="//field[@name='product_template_id']" position="after">
                     <field name="is_plusproposition_category" invisible="True"/>
                     <field name="selective_circulation" invisible="True"/>
-                        <label for="plus_proposition_weight" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
-                        <div>
-                            <field name="plus_proposition_weight" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> gm
+                        <label for="plus_proposition_weight" attrs="{'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div attrs="{'invisible':[('is_plusproposition_category', '=', False)]}">
+                            <field name="plus_proposition_weight" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)]}"/> gm
                         </div>
-                        <label for="plus_proposition_weight" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
-                        <div>
-                            <field name="plus_proposition_weight" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> mm
+                        <label for="plus_proposition_height" attrs="{'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div attrs="{'invisible':[('is_plusproposition_category', '=', False)]}">
+                            <field name="plus_proposition_height" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)]}"/> mm
                         </div>
-                        <label for="plus_proposition_width" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
-                        <div>
-                            <field name="plus_proposition_width" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> mm
+                        <label for="plus_proposition_width" attrs="{'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div attrs="{'invisible':[('is_plusproposition_category', '=', False)]}">
+                            <field name="plus_proposition_width" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)]}"/> mm
                         </div>
                         <field name="circulation_type" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}" options="{'no_create_edit': True}"/>
                         <field name="circulation_description" attrs="{'required':[('selective_circulation', '=', True)], 'invisible':[('selective_circulation', '=', False)]}" placeholder="Such as ZIP code, channel, etc."/>
@@ -66,17 +66,17 @@
                 <xpath expr="//field[@name='product_template_id']" position="after">
                     <field name="is_plusproposition_category" invisible="True"/>
                     <field name="selective_circulation" invisible="True"/>
-                        <label for="plus_proposition_weight" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
-                        <div>
-                            <field name="plus_proposition_weight" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> gm
+                        <label for="plus_proposition_weight" attrs="{'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div attrs="{'invisible':[('is_plusproposition_category', '=', False)]}">
+                            <field name="plus_proposition_weight" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)]}"/> gm
                         </div>
-                        <label for="plus_proposition_weight" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
-                        <div>
-                            <field name="plus_proposition_weight" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> mm
+                        <label for="plus_proposition_height" attrs="{'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div attrs="{'invisible':[('is_plusproposition_category', '=', False)]}">
+                            <field name="plus_proposition_height" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)]}"/> mm
                         </div>
-                        <label for="plus_proposition_width" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/>
-                        <div>
-                            <field name="plus_proposition_width" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}"/> mm
+                        <label for="plus_proposition_width" attrs="{'invisible':[('is_plusproposition_category', '=', False)]}"/>
+                        <div attrs="{'invisible':[('is_plusproposition_category', '=', False)]}">
+                            <field name="plus_proposition_width" class="oe_inline" attrs="{'required':[('is_plusproposition_category', '=', True)]}"/> mm
                         </div>
                         <field name="circulation_type" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}" options="{'no_create_edit': True}"/>
                         <field name="circulation_description" attrs="{'required':[('selective_circulation', '=', True)], 'invisible':[('selective_circulation', '=', False)]}" placeholder="Such as ZIP code, channel, etc."/>
@@ -123,11 +123,6 @@
             <field name="act_window_id" ref="nsm_proof_number_delivery_list_action"/>
         </record>
 
-        <menuitem id="menu_sale_order_line_proof" parent="sale_advertising_order.menu_advsales"
-                  action="nsm_proof_number_delivery_list_action"
-                  groups="sale_advertising_order.group_advertising_sales_user" sequence="12" />
-
-
         <record id="view_indeellijst_list_tree" model="ir.ui.view">
             <field name="name">sale.order.line.indeellijst.tree</field>
             <field name="model">sale.order.line</field>
@@ -169,10 +164,50 @@
             <field name="act_window_id" ref="nsm_indeellijst_action"/>
         </record>
 
-        <menuitem id="menu_sale_order_line_indeellijst" parent="sale_advertising_order.menu_advsales"
-                  action="nsm_indeellijst_action"
-                  groups="sale_advertising_order.group_advertising_sales_user" sequence="12" />
+                <record id="view_order_form_inherited" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tax_id']" position="before">
+                    <field name="send_with_advertising_issue" />
+                    <field name="adv_issue" domain="[('parent_id','!=', False)]" attrs="{'required':[('send_with_advertising_issue', '=', True)], 'invisible':[('send_with_advertising_issue', '=', False)]}" options="{'no_open': True,'no_create': True, 'no_create_edit': True}"/>
+                </xpath>
+            </field>
+        </record>
 
+        <record id="view_advertising_send_along_list_tree" model="ir.ui.view">
+            <field name="name">sale.order.advertising.send.along.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <tree string="Advertising Send Along Lists" create="false" edit="false" delete="false">
+                        <field name="order_id"/>
+                        <field name="order_partner_id"/>
+                        <field name="product_id"/>
+                        <field name="product_uom_qty"/>
+                        <field name="adv_issue"/>
+                        <field name="issue_date"/>
+                        <field name="adv_issue_parent"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="nsm_advertising_send_along_list_action">
+			<field name="name">Advertising Send Along List</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">sale.order.line</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,pivot</field>
+            <field name="search_view_id" ref="sale.view_sales_order_line_filter"/>
+			<field name="domain">[('advertising','=',False),('state','in',('sale','done')),('send_with_advertising_issue','=',True)]</field>
+		</record>
+
+        <record id="nsm_advertising_send_along_list_action_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_advertising_send_along_list_tree"/>
+            <field name="act_window_id" ref="nsm_advertising_send_along_list_action"/>
+        </record>
 
     </data>
 </odoo>

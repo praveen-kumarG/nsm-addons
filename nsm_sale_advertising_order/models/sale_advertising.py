@@ -124,6 +124,8 @@ class SaleOrderLine(models.Model):
     selective_circulation = fields.Boolean(string='Selective Circulation')
     circulation_description = fields.Text(string='Circulation Description')
     circulation_type = fields.Many2one('circulation.type', string='Circulation Type')
+    send_with_advertising_issue = fields.Boolean(string="Send with advertising issue")
+    adv_issue_parent = fields.Many2one(related='adv_issue.parent_id', string='Advertising Issue Parent', readonly=True, store=True)
 
 
 
