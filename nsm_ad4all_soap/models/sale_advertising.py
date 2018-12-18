@@ -339,7 +339,7 @@ class SaleOrder(models.Model):
                         'advert_id': line.id,
                         'mat_id': line.id if not line.recurring else
                                                             line.recurring_id,
-                        'adgr_orde_id': res.id,
+                        'adgr_orde_id': self.id,
                         'cancelled': del_param,
                         'herplaats': line.recurring,
                         'materialtype': line.ad_class.ad4all_material_type,
@@ -998,7 +998,7 @@ class SoLinefromOdootoAd4all(models.Model):
         order_obj = Order.order(
             portal="nsm_L8hd6Ep",
             deliverer="nsm",
-            order_code=self.adgr_orde_id
+            order_code=int(float(self.adgr_orde_id))
         )
         paper_deadline = datetime.datetime.strptime(
             self.paper_deadline, '%Y-%m-%d').strftime('%Y%m%d') \
@@ -1011,7 +1011,7 @@ class SoLinefromOdootoAd4all(models.Model):
             'root': [
                 {'advert_id': int(float(self.advert_id))},
                 {'id': int(float(self.mat_id))},
-                {'adgr_orde_id': int(float(self.adgr_orde_id.id))},
+                {'adgr_orde_id': int(float(self.adgr_orde_id))},
                 {'adkind': self.adkind},
                 {'adstatus': self.adstatus},
                 {'cancelled': "Yes" if self.cancelled else "No"},
