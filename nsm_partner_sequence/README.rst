@@ -3,20 +3,19 @@
    :alt: License: AGPL-3
 
 =====================
-Base Partner Sequence
+NSM Partner Sequence
 =====================
 
 This module adds the possibility to define a sequence for
 the partner's reference. This reference is then set as default
 when you create a new partner, using the defined sequence.
 
-The reference field is treated as a commercial field, i.e. it
-is managed from the commercial partner and then propagated to
-the partner's contacts. The field is visible on the contacts,
-but it can only be modified from the commercial partner.
+The module is a variant of base_partner_sequence.
 
-No references are assigned for contacts such as shipping and
-invoice addresses.
+Contrary to the original the reference field is not treated as a commercial
+field, i.e. it  is set in every partner except users and company partners.
+The 'ref' is readonly.
+
 
 Installation
 ============
@@ -57,6 +56,7 @@ Images
 Contributors
 ------------
 
+* Willem Hulshof <w.hulshof@magnus.nl>
 * Thomas Rehn <thomas.rehn@initos.com>
 * Stefan Rijnhart <stefan@therp.nl>
 * Yannick Vaucher <yannick.vaucher@camptocamp.com>
@@ -68,17 +68,3 @@ Contributors
 * Akim Juillerat <akim.juillerat@camptocamp.com>
 
 
-Maintainer
-----------
-
-.. image:: https://odoo-community.org/logo.png
-   :alt: Odoo Community Association
-   :target: https://odoo-community.org
-
-This module is maintained by the OCA.
-
-OCA, or the Odoo Community Association, is a nonprofit organization whose
-mission is to support the collaborative development of Odoo features and
-promote its widespread use.
-
-To contribute to this module, please visit https://odoo-community.org.
