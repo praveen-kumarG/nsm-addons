@@ -2,6 +2,16 @@
 <odoo>
     <data>
         <report
+            id="sale.report_sale_order"
+            string="Quotation / Order / Advertising"
+            model="sale.order"
+            report_type="qweb-pdf"
+            file="sale.report_saleorder"
+            name="sale.report_saleorder"
+            paperformat="operating_unit_report_layout.paperformat_ou_layout"
+        />
+
+        <report
             id="report_nsm_delivery_list_report_xlsx"
             model="sale.order.line"
             string="P.N.D.L List XLSX"
