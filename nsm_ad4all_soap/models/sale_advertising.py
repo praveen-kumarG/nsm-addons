@@ -740,8 +740,7 @@ class SoLinefromOdootoAd4all(models.Model):
         size=64
     )
     placement_description = fields.Char(
-        string='Advertising Description',
-        size=64
+        string='Advertising Description'
     )
     placement_notice = fields.Char(
         string='Material Remarks'
