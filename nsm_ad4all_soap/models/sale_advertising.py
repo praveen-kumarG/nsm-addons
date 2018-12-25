@@ -335,6 +335,7 @@ class SaleOrder(models.Model):
                 elif int(line.product_uom_qty) == 0 or arg == 'delete' or (line.ad4all_sent and not line.line_ad4all_allow):
                     del_param = True
                 lvals = {
+                        'so_id': res.id,
                         'odoo_order_line': line.id,
                         'advert_id': line.id,
                         'mat_id': line.id if not line.recurring else
@@ -451,7 +452,7 @@ class SofromOdootoAd4all(models.Model):
     )
     ad4all_so_line = fields.One2many(
         'soline.from.odooto.ad4all',
-        'adgr_orde_id',
+        'so_id',
         string='Order Lines',
         copy=False
     )
@@ -638,6 +639,13 @@ class SofromOdootoAd4all(models.Model):
 class SoLinefromOdootoAd4all(models.Model):
     _name = 'soline.from.odooto.ad4all'
 
+    so_id = fields.Many2one(
+        'so.from.odooto.ad4all',
+        string='so_from_Reference',
+        ondelete='cascade',
+        required=True,
+        copy=False
+    )
     odoo_order_line = fields.Many2one(
         'sale.order.line',
         string='Order Line Reference',
