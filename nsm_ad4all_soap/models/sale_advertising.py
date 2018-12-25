@@ -225,6 +225,7 @@ class SaleOrder(models.Model):
                         self.published_customer.email or False,
                     'so_customer_contacts_contact_phone':
                         self.customer_contact.phone or
+                        self.customer_contact.mobile or
                         self.published_customer.phone or False,
                     'so_customer_contacts_contact_type': '',
                     'so_customer_contacts_contact_language': 'NL'
@@ -241,6 +242,7 @@ class SaleOrder(models.Model):
                         self.published_customer.email or False,
                     'so_customer_contacts_contact_phone':
                         self.material_contact_person.phone or
+                        self.material_contact_person.mobile or
                         self.published_customer.phone or False,
                     'so_customer_contacts_contact_type': '',
                     'so_customer_contacts_contact_language': 'NL'
@@ -255,7 +257,8 @@ class SaleOrder(models.Model):
                     'so_customer_contacts_contact2_email':
                         self.material_contact_person.email or False,
                     'so_customer_contacts_contact2_phone':
-                        self.material_contact_person.phone or False,
+                        self.material_contact_person.phone or
+                        self.material_contact_person.mobile or False,
                     'so_customer_contacts_contact2_type': '',
                     'so_customer_contacts_contact2_language': 'NL'
 #                        self.material_contact_person.lang or '',
@@ -282,7 +285,8 @@ class SaleOrder(models.Model):
                         'so_media_agency_contacts_contact_email':
                             self.customer_contact.email or False,
                         'so_media_agency_contacts_contact_phone':
-                            self.customer_contact.phone or False,
+                            self.customer_contact.phone or
+                            self.customer_contact.mobile or False,
                         'so_media_agency_contacts_contact_type': '',
                         'so_media_agency_contacts_contact_language': 'NL'
 #                            self.customer_contact.lang or '',
@@ -296,7 +300,8 @@ class SaleOrder(models.Model):
                         'so_media_agency_contacts_contact_email':
                             self.material_contact_person.email or False,
                         'so_media_agency_contacts_contact_phone':
-                            self.material_contact_person.phone or False,
+                            self.material_contact_person.phone or
+                            self.material_contact_person.mobile or False,
                         'so_media_agency_contacts_contact_type': '',
                         'so_media_agency_contacts_contact_language': 'NL'
 #                            self.material_contact_person.lang or '',
@@ -310,7 +315,8 @@ class SaleOrder(models.Model):
                         'so_media_agency_contacts_contact2_email':
                             self.material_contact_person.email or False,
                         'so_media_agency_contacts_contact2_phone':
-                            self.material_contact_person.phone or False,
+                            self.material_contact_person.phone or
+                            self.material_contact_person.mobile or False,
                         'so_media_agency_contacts_contact2_type': '',
                         'so_media_agency_contacts_contact2_language': 'NL'
 #                            self.material_contact_person.lang or '',
@@ -640,7 +646,7 @@ class SoLinefromOdootoAd4all(models.Model):
     _name = 'soline.from.odooto.ad4all'
 
     so_id = fields.Many2one(
-        'so.from.odooto.ad4all',
+        'sofrom.odooto.ad4all',
         string='so_from_Reference',
         ondelete='cascade',
         required=True,
@@ -679,7 +685,7 @@ class SoLinefromOdootoAd4all(models.Model):
         string='Material ID'
     )
     adgr_orde_id = fields.Many2one(
-        'sofrom.odooto.ad4all',
+        'sale.order',
         string='Sale Order ID'
     )
     adkind = fields.Char(
@@ -740,7 +746,7 @@ class SoLinefromOdootoAd4all(models.Model):
         size=64
     )
     placement_description = fields.Char(
-        string='Advertising Description'
+        string='Advertising Description',
     )
     placement_notice = fields.Char(
         string='Material Remarks'
@@ -760,181 +766,181 @@ class SoLinefromOdootoAd4all(models.Model):
         string='Reminder'
     )
     customer_id = fields.Integer(
-        related='adgr_orde_id.so_customer_id',
+        related='so_id.so_customer_id',
         string='Advertiser Number'
     )
     customer_name = fields.Char(
-        related='adgr_orde_id.so_customer_name',
+        related='so_id.so_customer_name',
         string='Advertiser Name',
         size=64
     )
     customer_contacts_contact_id = fields.Integer(
-        related='adgr_orde_id.so_customer_contacts_contact_id',
+        related='so_id.so_customer_contacts_contact_id',
         string='Advertiser Contact ID',
     )
     customer_contacts_contact_name = fields.Char(
-        related='adgr_orde_id.so_customer_contacts_contact_name',
+        related='so_id.so_customer_contacts_contact_name',
         string='Advertiser Contact Name',
         size=64
     )
     customer_contacts_contact_email = fields.Char(
-        related='adgr_orde_id.so_customer_contacts_contact_email',
+        related='so_id.so_customer_contacts_contact_email',
         string='Advertiser Contact Email',
         size=64
     )
     customer_contacts_contact_phone = fields.Char(
-        related='adgr_orde_id.so_customer_contacts_contact_phone',
+        related='so_id.so_customer_contacts_contact_phone',
         string='Advertiser Contact Phone',
         size=64
     )
     customer_contacts_contact_type = fields.Char(
-        related='adgr_orde_id.so_customer_contacts_contact_type',
+        related='so_id.so_customer_contacts_contact_type',
         string='Advertiser Contact Type',
         size=64
     )
     customer_contacts_contact_language = fields.Char(
-        related='adgr_orde_id.so_customer_contacts_contact_language',
+        related='so_id.so_customer_contacts_contact_language',
         string='Advertiser Contact Language',
         size=16,
     )
     customer_contacts_contact2_id = fields.Integer(
-        related='adgr_orde_id.so_customer_contacts_contact2_id',
+        related='so_id.so_customer_contacts_contact2_id',
         string='Advertiser Contact2 ID',
     )
     customer_contacts_contact2_name = fields.Char(
-        related='adgr_orde_id.so_customer_contacts_contact2_name',
+        related='so_id.so_customer_contacts_contact2_name',
         string='Advertiser Contact2 Name',
         size=64
     )
     customer_contacts_contact2_email = fields.Char(
-        related='adgr_orde_id.so_customer_contacts_contact2_email',
+        related='so_id.so_customer_contacts_contact2_email',
         string='Advertiser Contact2 Email',
         size=64
     )
     customer_contacts_contact2_phone = fields.Char(
-        related='adgr_orde_id.so_customer_contacts_contact2_phone',
+        related='so_id.so_customer_contacts_contact2_phone',
         string='Advertiser Contact2 Phone',
         size=64
     )
     customer_contacts_contact2_type = fields.Char(
-        related='adgr_orde_id.so_customer_contacts_contact2_type',
+        related='so_id.so_customer_contacts_contact2_type',
         string='Advertiser Contact2 Type',
         size=64
     )
     customer_contacts_contact2_language = fields.Char(
-        related='adgr_orde_id.so_customer_contacts_contact2_language',
+        related='so_id.so_customer_contacts_contact2_language',
         string='Advertiser Contact2 Language',
         size=16,
         default='nl'
     )
     customer_address_street = fields.Char(
-        related='adgr_orde_id.so_customer_address_street',
+        related='so_id.so_customer_address_street',
         string='Advertiser Address Street',
         size=64
     )
     customer_address_zip = fields.Char(
-        related='adgr_orde_id.so_customer_address_zip',
+        related='so_id.so_customer_address_zip',
         string='Advertiser Address Zip Code',
         size=32
     )
     customer_address_city = fields.Char(
-        related='adgr_orde_id.so_customer_address_city',
+        related='so_id.so_customer_address_city',
         string='Advertiser Address City',
         size=64
     )
     customer_address_phone = fields.Char(
-        related='adgr_orde_id.so_customer_address_phone',
+        related='so_id.so_customer_address_phone',
         string='Advertiser Address Phone',
         size=64
     )
     agency = fields.Boolean(
-        related='adgr_orde_id.so_agency',
+        related='so_id.so_agency',
         string='Agency'
     )
     media_agency_code = fields.Char(
-        related='adgr_orde_id.so_media_agency_code',
+        related='so_id.so_media_agency_code',
         string='Agency Number',
         size=32
     )
     media_agency_name = fields.Char(
-        related='adgr_orde_id.so_media_agency_name',
+        related='so_id.so_media_agency_name',
         string='Agency Name',
         size=64
     )
     media_agency_email = fields.Char(
-        related='adgr_orde_id.so_media_agency_email',
+        related='so_id.so_media_agency_email',
         string='Agency Email',
         size=64
     )
     media_agency_phone = fields.Char(
-        related='adgr_orde_id.so_media_agency_phone',
+        related='so_id.so_media_agency_phone',
         string='Agency Email',
         size=64
     )
     media_agency_language = fields.Char(
-        related='adgr_orde_id.so_media_agency_language',
+        related='so_id.so_media_agency_language',
         string='Agency Language',
         size=16,
         default='nl'
     )
     media_agency_contacts_contact_id = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact_id',
+        related='so_id.so_media_agency_contacts_contact_id',
         string='Agency Contact Number',
         size=32
     )
     media_agency_contacts_contact_name = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact_name',
+        related='so_id.so_media_agency_contacts_contact_name',
         string='Agency Contact Name',
         size=64
     )
     media_agency_contacts_contact_email = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact_email',
+        related='so_id.so_media_agency_contacts_contact_email',
         string='Agency Contact Email',
         size=64
     )
     media_agency_contacts_contact_phone = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact_phone',
+        related='so_id.so_media_agency_contacts_contact_phone',
         string='Agency Contact Phone',
         size=64
     )
     media_agency_contacts_contact_type = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact_type',
+        related='so_id.so_media_agency_contacts_contact_type',
         string='Agency Contact Type',
         size=64
     )
     media_agency_contacts_contact_language = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact_language',
+        related='so_id.so_media_agency_contacts_contact_language',
         string='Agency Contact Language',
         size=16,
         default='nl'
     )
     media_agency_contacts_contact2_id = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact2_id',
+        related='so_id.so_media_agency_contacts_contact2_id',
         string='Agency Contact2 Number',
         size=32
     )
     media_agency_contacts_contact2_name = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact2_name',
+        related='so_id.so_media_agency_contacts_contact2_name',
         string='Agency Contact2 Name',
         size=64
     )
     media_agency_contacts_contact2_email = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact2_email',
+        related='so_id.so_media_agency_contacts_contact2_email',
         string='Agency Contact2 Email',
         size=64
     )
     media_agency_contacts_contact2_phone = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact2_phone',
+        related='so_id.so_media_agency_contacts_contact2_phone',
         string='Agency Contact2 Phone',
         size=64
     )
     media_agency_contacts_contact2_type = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact2_type',
+        related='so_id.so_media_agency_contacts_contact2_type',
         string='Agency Contact2 Type',
         size=64
     )
     media_agency_contacts_contact2_language = fields.Char(
-        related='adgr_orde_id.so_media_agency_contacts_contact2_language',
+        related='so_id.so_media_agency_contacts_contact2_language',
         string='Agency Contact2 Language',
         size=16,
         default='nl'
@@ -1005,7 +1011,7 @@ class SoLinefromOdootoAd4all(models.Model):
         order_obj = Order.order(
             portal="nsm_L8hd6Ep",
             deliverer="nsm",
-            order_code=int(float(self.adgr_orde_id))
+            order_code=int(float(self.adgr_orde_id.id))
         )
         paper_deadline = datetime.datetime.strptime(
             self.paper_deadline, '%Y-%m-%d').strftime('%Y%m%d') \
@@ -1013,12 +1019,11 @@ class SoLinefromOdootoAd4all(models.Model):
         paper_pub_date = datetime.datetime.strptime(
             self.paper_pub_date, '%Y-%m-%d').strftime(
             '%Y%m%d') if self.paper_pub_date else ''
-
         xml_dict = [{
             'root': [
                 {'advert_id': int(float(self.advert_id))},
                 {'id': int(float(self.mat_id))},
-                {'adgr_orde_id': int(float(self.adgr_orde_id))},
+                {'adgr_orde_id': int(float(self.adgr_orde_id.id))},
                 {'adkind': self.adkind},
                 {'adstatus': self.adstatus},
                 {'cancelled': "Yes" if self.cancelled else "No"},
@@ -1124,10 +1129,8 @@ class SoLinefromOdootoAd4all(models.Model):
             xml_dict[0]['root'].append(media_data)
 
         xmlData = dicttoxml(xml_dict, attr_type=False, root=False)
-        xmlData = (xmlData.replace('<item>', '')).replace('</item>', '')
-
+        xmlData = (xmlData.replace('<item>', '')).replace('<item >', '').replace('</item>', '')
         order_obj.xml_data = xmlpprint(xmlData)
-        #        import pdb; pdb.set_trace()
         try:
             response = client.service.soap_order(order=order_obj)
             self.write({
