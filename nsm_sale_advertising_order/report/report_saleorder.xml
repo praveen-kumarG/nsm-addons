@@ -42,20 +42,13 @@
             <div class="row mt32 mb32" style="padding-left:85px;">
                  <div class="col-xs-7" style="padding:0px;">
                      <div class="col-xs-4" style="padding:0px;">
-                         <span t-if="doc.state in ['sale','done']"><strong>Order Date</strong></span>
-                         <span t-if="doc.state not in ['sale','done']"><strong>Quotation Date</strong></span>
+                         <span t-if="doc.state in ['sale','done']"><strong>Order Date :</strong></span>
+                         <span t-if="doc.state not in ['sale','done']"><strong>Quotation Date :</strong></span>
                          <br/>
-                         <span t-if="doc.state in ['sale','done']"><strong>Order Number</strong></span>
-                         <span t-if="doc.state not in ['sale','done']"><strong>Quotation Number</strong></span>
+                         <span t-if="doc.state in ['sale','done']"><strong>Order Number :</strong></span>
+                         <span t-if="doc.state not in ['sale','done']"><strong>Quotation Number :</strong></span>
                          <br/>
-                         <span><strong>Customer Code</strong></span>
-                     </div>
-                     <div class="col-xs-1" style="padding:0px;">
-                         <span><strong>:</strong></span>
-                         <br/>
-                         <span><strong>:</strong></span>
-                         <br/>
-                         <span><strong>:</strong></span>
+                         <span><strong>Customer Code :</strong></span>
                      </div>
                      <div class="col-xs-7" style="padding:0px;">
                          <span t-field="doc.date_order"/>
