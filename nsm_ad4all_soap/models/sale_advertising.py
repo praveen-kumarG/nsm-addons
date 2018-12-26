@@ -206,11 +206,11 @@ class SaleOrder(models.Model):
                     self.advertising_agency:
                 varb = 11
                 if self.material_contact_person and \
-                    self.material_contact_person.parent_id == \
+                    self.material_contact_person.parent_id != \
                     self.advertising_agency:
                     varb = 13
             elif self.material_contact_person and \
-                    self.material_contact_person.parent_id == \
+                    self.material_contact_person.parent_id != \
                     self.advertising_agency:
                 varb = 12
 
