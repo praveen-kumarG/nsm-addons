@@ -75,6 +75,7 @@ class ResPartner(models.Model):
         # only assign a 'ref' to commercial partners
         if self._context.get('no_partner_sequence', False):
             return False
+        return True
 
 class Users(models.Model):
     _inherit = 'res.users'
