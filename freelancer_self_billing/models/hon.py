@@ -342,7 +342,7 @@ class HonIssueLine(models.Model):
                 'quantity': qty,
                 # 'uos_id': self.uos_id,
                 'product_id': self.product_id.id,
-                'analytic_tag_ids': self.tag_id.id,
+                'analytic_tag_ids': [(6, 0, [self.tag_id.id])],
             }
 
         return res
