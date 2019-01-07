@@ -342,7 +342,7 @@ class HonIssueLine(models.Model):
                 'quantity': qty,
                 # 'uos_id': self.uos_id,
                 'product_id': self.product_id.id,
-                'analytic_tag_ids': self.tag_id.id,
+                'analytic_tag_ids': [(6, 0, [self.tag_id.id])],
             }
 
         return res
@@ -415,9 +415,9 @@ class HonIssueLine(models.Model):
 
         self.employee = True if part.employee else False
 
-        if 'nsm_supplier_portal' in self.env['ir.module.module']._installed():
-            if part.product_category_ids:
-                self.product_category_id = part.product_category_ids[0].id
+        # if 'nsm_supplier_portal' in self.env['ir.module.module']._installed():
+        #     if part.product_category_ids:
+        #         self.product_category_id = part.product_category_ids[0].id
 
         res = self.product_id
         a = res.property_account_expense_id.id
