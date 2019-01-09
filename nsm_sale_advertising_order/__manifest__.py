@@ -36,12 +36,15 @@ This module allows you to use both CRM and Sales Management to run your advertis
                 'nsm_ad4all_soap',
                 'partner_firstname',
                 'l10n_nl_partner_name',
-                'report_xlsx'
+                'report_xlsx',
+                'operating_unit_report_layout',
+                'report_qweb_operating_unit'
                 ],
     'data': [
              "security/ir.model.access.csv",
              "data/circulation_type.xml",
              "report/nsm_report.xml",
+             "report/report_saleorder.xml",
              "views/sale_advertising_view.xml",
              "views/advertising_issue_view.xml",
              "views/product_view.xml",
