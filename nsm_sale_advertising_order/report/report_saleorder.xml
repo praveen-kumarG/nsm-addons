@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<template id="report_qweb_operating_unit.external_layout_ou">
+    <!-- Multicompany -->
+    <t t-if="not o and doc">
+        <t t-set="o" t-value="doc"/>
+    </t>
+    <t t-if="o and 'company_id' in o">
+        <t t-set="company" t-value="o.company_id"></t>
+    </t>
+    <t t-if="not o or not 'company_id' in o">
+        <t t-set="company" t-value="res_company"></t>
+    </t>
+
+    <t t-call="report_qweb_operating_unit.external_layout_header_ou" />
+    <t t-raw="0" />
+    <!--<t t-call="report_qweb_operating_unit.external_layout_footer_ou" />-->
+</template>
+
 <template id="report_qweb_operating_unit.external_layout_header_ou">
     <div class="header">
         <div class="row">
