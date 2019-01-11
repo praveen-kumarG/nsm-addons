@@ -47,7 +47,7 @@
                     </h3>
                 </div>
             </div>
-            <t t-set="bank_acc" t-value="any([b.acc_number for b in o.company_id.partner_id.bank_ids])"/>
+            <!--<t t-set="bank_acc" t-value="any([b.acc_number for b in o.company_id.partner_id.bank_ids])"/>-->
             <div style="padding-left:85px;padding-right:15px;">
                 <div class="row" style="padding:0px;padding-right:15px;border-top:1px solid black;border-bottom:1px solid black;">
                     <div class="col-xs-6" style="padding:0px;">
@@ -56,21 +56,21 @@
                              <br/>
                              <span>Our Reference</span>
                              <br/>
-                             <span t-if="bank_acc">Expiry Date</span>
+                             <span>Expiry Date</span>
                          </div>
                          <div class="col-xs-1" style="padding:0px;">
                              <span><strong> </strong></span>
                              <br/>
                              <span><strong> </strong></span>
                              <br/>
-                             <span t-if="bank_acc"><strong> </strong></span>
+                             <span><strong> </strong></span>
                          </div>
                          <div class="col-xs-8" style="padding:0px;">
                              <span t-field="o.number"/>
                              <br/>
                              <span t-field="o.origin"/>
                              <br/>
-                             <span t-if="bank_acc" t-field="o.date_due"/>
+                             <span t-field="o.date_due"/>
                          </div>
                     </div>
                     <div class="col-xs-6" style="padding:0px;">
@@ -78,22 +78,22 @@
                              <span>Invoice Date</span>
                              <br/>
                              <span>Your Reference</span>
-                             <br/>
-                             <span t-if="bank_acc">IBAN</span>
+                             <!--<br/>-->
+                             <!--<span t-if="bank_acc">IBAN</span>-->
                         </div>
                         <div class="col-xs-1" style="padding:0px;">
                              <span><strong> </strong></span>
                              <br/>
                              <span><strong> </strong></span>
-                             <br/>
-                             <span t-if="bank_acc"><strong> </strong></span>
+                             <!--<br/>-->
+                             <!--<span t-if="bank_acc"><strong> </strong></span>-->
                         </div>
                         <div class="col-xs-8" style="padding:0px;">
                              <span t-field="o.date_invoice"/>
                              <br/>
                              <span t-field="o.name"/>
-                             <br/>
-                             <span t-if="bank_acc" t-esc="', '.join(map(lambda b: (b.acc_number or ''), o.company_id.partner_id.bank_ids))"/>
+                             <!--<br/>
+                             <span t-if="bank_acc" t-esc="', '.join(map(lambda b: (b.acc_number or ''), o.company_id.partner_id.bank_ids))"/>-->
                         </div>
                     </div>
                 </div>
