@@ -45,6 +45,7 @@ representing the Issue and to the products representing the type and price of th
     'depends' : ['product',
                  'partner_firstname',
                  'publishing_accounts',
+                 'report_qweb_operating_unit'
     ],
     'data' : ["data/product_category_hon.xml",
               "security/security.xml",
@@ -60,6 +61,7 @@ representing the Issue and to the products representing the type and price of th
               "views/product_view.xml",
               "views/account_invoice_report.xml",
               "views/account_analytic_view.xml",
+              "report/report_invoice_hon.xml"
 
     ],
     'demo' : [],
