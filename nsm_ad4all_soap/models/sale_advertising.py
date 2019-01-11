@@ -46,14 +46,19 @@ def xmlpprint(xml):
 class SaleOrder(models.Model):
     _inherit = ["sale.order"]
 
-    @api.depends('order_line.line_ad4all_allow')
+    @api.depends('order_line.line_ad4all_allow','order_line.no_copy_chase' )
     @api.multi
     def _ad4all_allow(self):
         for order in self:
             order.order_ad4all_allow = False
+            order.no_copy_chase = False
             for line in order.order_line:
+                ncc = oaa = False
                 if line.line_ad4all_allow:
-                    order.order_ad4all_allow = True
+                    order.order_ad4all_allow = oaa = True
+                if line.no_copy_chase:
+                    order.no_copy_chase = ncc = True
+                if ncc and oaa:
                     break
 
     @api.depends('date_sent_ad4all', 'write_date')
@@ -79,6 +84,13 @@ class SaleOrder(models.Model):
         default=False,
         store=True,
         string='Allow to Ad4all',
+        copy=False
+    )
+    no_copy_chase = fields.Boolean(
+        compute=_ad4all_allow,
+        default=False,
+        store=True,
+        string='No Copy Chase',
         copy=False
     )
     date_sent_ad4all = fields.Datetime(
@@ -187,34 +199,37 @@ class SaleOrder(models.Model):
                 'so_agency': self.partner_id.is_ad_agency,
             }
             vals2 = vals3 = vals4 = vals5 = vals6 = {}
-            varb = 0
-
+            var0 = var1 = var2 = var11 = var12 = False
+            if self.partner_id.is_ad_agency:
+                var0 = True
+                print "var0 = True"
             if self.customer_contact and \
                     self.customer_contact.parent_id == \
                     self.published_customer:
-                varb = 1
-                if self.material_contact_person and \
+                var1 = True
+                print "var1 = True"
+            if self.material_contact_person and \
                     self.material_contact_person.parent_id == \
                     self.published_customer:
-                    varb = 3
-            elif self.material_contact_person and \
-                    self.material_contact_person.parent_id == \
-                    self.published_customer:
-                varb = 2
+                var2 = True
+                print "var2 = True"
             if self.customer_contact and \
                     self.customer_contact.parent_id == \
                     self.advertising_agency:
-                varb = 11
-                if self.material_contact_person and \
+                var11 = True
+                print "var11 = True"
+            if self.material_contact_person and \
                     self.material_contact_person.parent_id != \
-                    self.advertising_agency:
-                    varb = 13
-            elif self.material_contact_person and \
-                    self.material_contact_person.parent_id != \
-                    self.advertising_agency:
-                varb = 12
+                    self.published_customer:
+                var12 = True
+                print "var12 = True"
+            if not var2 and not var12:
+                raise UserError(
+                    _('You have to fill in a material contact person.\n'
+                      'Be aware, that the contact must have email and phone filled in.'))
 
-            if varb == 1 or varb == 3:
+
+            if not var0 and var1:
                 vals2 = {
                     'so_customer_contacts_contact_id':
                         self.customer_contact.ref or False,
@@ -229,9 +244,8 @@ class SaleOrder(models.Model):
                         self.published_customer.phone or False,
                     'so_customer_contacts_contact_type': '',
                     'so_customer_contacts_contact_language': 'NL'
-#                        self.customer_contact.lang or '',
                 }
-            if varb == 2 :
+            if not (var0 and var1) and (var2 or var12):
                 vals2 = {
                     'so_customer_contacts_contact_id':
                         self.material_contact_person.ref or False,
@@ -246,9 +260,8 @@ class SaleOrder(models.Model):
                         self.published_customer.phone or False,
                     'so_customer_contacts_contact_type': '',
                     'so_customer_contacts_contact_language': 'NL'
-#                        self.material_contact_person.lang or '',
                 }
-            if varb == 3:
+            if not var0 and var1 and (var2 or var12):
                 vals3 = {
                     'so_customer_contacts_contact2_id':
                         self.material_contact_person.ref or False,
@@ -261,9 +274,8 @@ class SaleOrder(models.Model):
                         self.material_contact_person.mobile or False,
                     'so_customer_contacts_contact2_type': '',
                     'so_customer_contacts_contact2_language': 'NL'
-#                        self.material_contact_person.lang or '',
                 }
-            if self.partner_id.is_ad_agency:
+            if var0:
                 vals4 = {
                     'so_media_agency_code':
                         self.advertising_agency.ref or '',
@@ -274,53 +286,49 @@ class SaleOrder(models.Model):
                     'so_media_agency_phone':
                         self.advertising_agency.phone or '',
                     'so_media_agency_language': 'NL'
-#                        self.advertising_agency.lang or '',
                 }
-                if varb == 11 or varb == 13:
-                     vals5 = {
-                        'so_media_agency_contacts_contact_id':
-                            self.customer_contact.ref or False,
-                        'so_media_agency_contacts_contact_name':
-                            self.customer_contact.name or False,
-                        'so_media_agency_contacts_contact_email':
-                            self.customer_contact.email or False,
-                        'so_media_agency_contacts_contact_phone':
-                            self.customer_contact.phone or
-                            self.customer_contact.mobile or False,
-                        'so_media_agency_contacts_contact_type': '',
-                        'so_media_agency_contacts_contact_language': 'NL'
-#                            self.customer_contact.lang or '',
-                     }
-                if varb == 12:
-                     vals5 = {
-                        'so_media_agency_contacts_contact_id':
-                            self.material_contact_person.ref or False,
-                        'so_media_agency_contacts_contact_name':
-                            self.material_contact_person.name or False,
-                        'so_media_agency_contacts_contact_email':
-                            self.material_contact_person.email or False,
-                        'so_media_agency_contacts_contact_phone':
-                            self.material_contact_person.phone or
-                            self.material_contact_person.mobile or False,
-                        'so_media_agency_contacts_contact_type': '',
-                        'so_media_agency_contacts_contact_language': 'NL'
-#                            self.material_contact_person.lang or '',
-                     }
-                if varb == 13:
-                    vals6 = {
-                        'so_media_agency_contacts_contact2_id':
-                            self.material_contact_person.ref or False,
-                        'so_media_agency_contacts_contact2_name':
-                            self.material_contact_person.name or False,
-                        'so_media_agency_contacts_contact2_email':
-                            self.material_contact_person.email or False,
-                        'so_media_agency_contacts_contact2_phone':
-                            self.material_contact_person.phone or
-                            self.material_contact_person.mobile or False,
-                        'so_media_agency_contacts_contact2_type': '',
-                        'so_media_agency_contacts_contact2_language': 'NL'
-#                            self.material_contact_person.lang or '',
-                    }
+            if var0 and var11:
+                 vals5 = {
+                    'so_media_agency_contacts_contact_id':
+                        self.customer_contact.ref or False,
+                    'so_media_agency_contacts_contact_name':
+                        self.customer_contact.name or False,
+                    'so_media_agency_contacts_contact_email':
+                        self.customer_contact.email or False,
+                    'so_media_agency_contacts_contact_phone':
+                        self.customer_contact.phone or
+                        self.customer_contact.mobile or False,
+                    'so_media_agency_contacts_contact_type': '',
+                    'so_media_agency_contacts_contact_language': 'NL'
+                 }
+            if var0 and not var11 and var12:
+                 vals5 = {
+                    'so_media_agency_contacts_contact_id':
+                        self.material_contact_person.ref or False,
+                    'so_media_agency_contacts_contact_name':
+                        self.material_contact_person.name or False,
+                    'so_media_agency_contacts_contact_email':
+                        self.material_contact_person.email or False,
+                    'so_media_agency_contacts_contact_phone':
+                        self.material_contact_person.phone or
+                        self.material_contact_person.mobile or False,
+                    'so_media_agency_contacts_contact_type': '',
+                    'so_media_agency_contacts_contact_language': 'NL'
+                 }
+            if var0 and var11 and var12:
+                vals6 = {
+                    'so_media_agency_contacts_contact2_id':
+                        self.material_contact_person.ref or False,
+                    'so_media_agency_contacts_contact2_name':
+                        self.material_contact_person.name or False,
+                    'so_media_agency_contacts_contact2_email':
+                        self.material_contact_person.email or False,
+                    'so_media_agency_contacts_contact2_phone':
+                        self.material_contact_person.phone or
+                        self.material_contact_person.mobile or False,
+                    'so_media_agency_contacts_contact2_type': '',
+                    'so_media_agency_contacts_contact2_language': 'NL'
+                }
             vals.update(vals2)
             vals.update(vals3)
             vals.update(vals4)
