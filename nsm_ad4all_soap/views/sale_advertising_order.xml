@@ -194,7 +194,6 @@
         <record id="advertising_order_view_search_ad4all" model="ir.ui.view">
             <field name="name">advertising.sale.order.search.ad4all</field>
             <field name="model">sale.order</field>
-            <!--field name="mode">primary</field-->
             <field name="inherit_id" ref="sale_advertising_order.advertising_order_view_search_inherit_sale"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='approved1']" position="after">

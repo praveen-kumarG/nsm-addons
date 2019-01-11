@@ -57,6 +57,7 @@ Enchances the Accounting Module according to NSM Requirements
               'report/report_blank_invoice.xml',
 
               "views/report.xml",
+              "report/report_invoice.xml",
               "views/res_partner_view.xml",
               "views/res_company_view.xml",
               "views/account_view.xml",
