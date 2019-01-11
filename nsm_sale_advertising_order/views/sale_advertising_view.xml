@@ -11,9 +11,7 @@
                     <attribute name="context">{'customer_contact': customer_contact}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='advertising_agency']" position="after">
-                    <field name="no_copy_chase" invisible="1"/>
                     <field name="material_contact_person" domain="[('customer', '=', True),('is_company', '!=', True)]"
-                           attrs="{'required':[('order_ad4all_allow', '=', True),('no_copy_chase', '=', False)]}"
                            context="{'default_parent_id': partner_id, 'show_email': 1}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_payer']" position="replace">
