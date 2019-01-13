@@ -353,7 +353,7 @@ class HonIssueLine(models.Model):
                     \n* The \'Cancelled\' status is set when a user cancel the hon issue related.')
     gratis = fields.Boolean('Gratis',  help="It indicates that no letter/invoice is generated.")
 
-    ## TODO: This method is not in use 
+    ## TODO: This method is not in use
     @api.multi
     def button_cancel(self):
         if self.invoice_line_id:
