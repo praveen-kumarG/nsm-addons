@@ -108,7 +108,7 @@
             <div style="padding-left:85px;padding-right:15px;" t-if="not o.invoice_description">
                 <table class="table table-condensed table-padding">
                         <tr t-foreach="o.invoice_line_ids" t-as="l">
-                            <t t-set="tot_Cdiscount" t-value="tot_Cdiscount + l.computed_discount"/>
+                            <t t-set="tot_Cdiscount" t-value="l.computed_discount"/>
                             <t t-set="sale_order_line" t-value="l.so_line_id or l.sale_line_ids"/>
                             <t t-if="o.type != 'out_refund'">
                                 <td t-if="sale_order_line.date_type not in ['validity','issue_date']"><span t-field="o.date_invoice"/></td>
