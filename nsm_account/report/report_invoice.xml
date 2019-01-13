@@ -122,7 +122,6 @@
                         </tr>
                     </thead>
                 </table>
-                    <tbody class="invoice_tbody">
                 <table class="table table-condensed table-padding">
                         <tr t-foreach="o.invoice_line_ids" t-as="l">
                             <t t-set="tot_Cdiscount" t-value="l.computed_discount"/>
