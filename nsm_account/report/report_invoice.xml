@@ -107,6 +107,23 @@
 
             <div style="padding-left:85px;padding-right:15px;" t-if="not o.invoice_description">
                 <table class="table table-condensed table-padding">
+                    <thead>
+                        <tr>
+                            <th width="10%">Date</th>
+                            <th width="10%">Advertising Issue</th>
+                            <th width="20%">Description/ short content</th>
+                            <th width="10%">Reference</th>
+                            <th width="10%">Product</th>
+                            <th width="10%" class="text-right">Volume</th>
+                            <t t-if="display_unit_price"><th width="10%" class="text-right">Unit Price</th></t>
+                            <th width="10%" t-if="display_discount" class="text-right">Subtotal Before Commission</th>
+                            <th width="10%" t-if="display_discount" class="text-right">Disc(%)</th>
+                            <th width="10%" class="text-right">Tax Excluded Price</th>
+                        </tr>
+                    </thead>
+                </table>
+                    <tbody class="invoice_tbody">
+                <table class="table table-condensed table-padding">
                         <tr t-foreach="o.invoice_line_ids" t-as="l">
                             <t t-set="tot_Cdiscount" t-value="l.computed_discount"/>
                             <t t-set="sale_order_line" t-value="l.so_line_id or l.sale_line_ids"/>
