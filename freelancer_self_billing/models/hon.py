@@ -259,7 +259,7 @@ class HonIssue(models.Model):
         if not self.hon_issue_line:
             raise UserError(_('You cannot confirm a hon issue which has no line.'))
         self.write({'state': 'open', })
-        self.hon_issue_line.button_confirm()
+        self.hon_issue_line.action_line_confirm()
 
 
     @api.multi
@@ -269,7 +269,7 @@ class HonIssue(models.Model):
         if not self.hon_issue_line:
             raise UserError(_('You cannot unconfirm a hon issue which has no line.'))
         self.write({'state': 'draft', })
-        self.hon_issue_line.button_unconfirm()
+        self.hon_issue_line.action_line_unconfirm()
 
     @api.multi
     def action_cancel(self):
@@ -291,7 +291,6 @@ class HonIssue(models.Model):
     def action_done(self):
         if not self.invoiced:
             UserError(_('Cannot finalise this issue!, First invoice all hon_lines attached to this issue.'))
-
         self.write({'state': 'done'})
 
     @api.multi
@@ -354,6 +353,26 @@ class HonIssueLine(models.Model):
                     \n* The \'Cancelled\' status is set when a user cancel the hon issue related.')
     gratis = fields.Boolean('Gratis',  help="It indicates that no letter/invoice is generated.")
 
+    ## TODO: This method is not in use 
+    @api.multi
+    def button_cancel(self):
+        if self.invoice_line_id:
+            raise UserError(_('You cannot cancel a Hon line that has already been invoiced.'))
+        self.write({'state': 'cancel'})
+
+    @api.multi
+    def action_line_confirm(self):
+        self.write({'state': 'confirmed'})
+
+    @api.multi
+    def action_line_unconfirm(self):
+        self.write({'state': 'draft'})
+
+    # TODO: This method is not in use
+    @api.multi
+    def action_line_done(self):
+        self.write({'state': 'done'})
+        self.issue_id.action_done()
 
     @api.multi
     def unlink(self):
