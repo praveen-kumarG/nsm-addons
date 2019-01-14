@@ -75,26 +75,53 @@ class SaleOrderLine(models.Model):
             result.update({'proof_number_payer':self.env.context['customer_contact']})
         return result
 
-    @api.onchange('ad_class', 'title', 'title_ids')
-    def onchange_ad_clsss_title(self):
-        vals, data, result = {}, {}, {}
-        vals['product_template_id'] = False
-        data['product_template_id'] = []
-        if self.ad_class:
-            data['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
-            vals['is_plusproposition_category'] = self.ad_class.is_plusproposition_category
-        titles = self.title if self.title else self.title_ids or False
-        if titles:
-            product_ids = self.env['product.product']
-            for title in titles:
-                if title.product_attribute_value_id:
-                    product_ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
-                    product_ids += product_ids
 
+    @api.onchange('ad_class')
+    def onchange_ad_class(self):
+        res = super(SaleOrderLine, self).onchange_ad_class()
+        if not self.advertising:
+            return res
+        if self.ad_class:
+            res['value']['is_plusproposition_category'] = self.ad_class.is_plusproposition_category
+        return res
+
+    @api.onchange('title')
+    def title_oc(self):
+        res = super(SaleOrderLine, self).title_oc()
+        if not self.advertising:
+            return res
+        if self.title:
+            if self.title.product_attribute_value_id:
+                    product_ids = self.env['product.product'].search([('attribute_value_ids', '=',
+                                                       [self.title.product_attribute_value_id.id])])
             if product_ids:
                 product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
-                data['product_template_id'] += [('id', 'in', product_tmpl_ids)]
-        return {'value': vals, 'domain': data, 'warning': result}
+                if 'product_template_id' in res['domain']:
+                    res['domain']['product_template_id'] += [('id', 'in', product_tmpl_ids)]
+                else:
+                    res['domain']['product_template_id'] = [('id', 'in', product_tmpl_ids)]
+        return res
+
+    @api.onchange('title_ids')
+    def title_ids_oc(self):
+        super(SaleOrderLine, self).title_ids_oc()
+        vals, data = {}, {}
+        if not self.advertising:
+            return {'value': vals}
+        if self.title_ids:
+            product_ids = self.env['product.product']
+            for title in self.title_ids:
+                if title.product_attribute_value_id:
+                    ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
+                    product_ids += ids
+            if product_ids:
+                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
+                if 'product_template_id' in data:
+                    data['product_template_id'] += [('id', 'in', product_tmpl_ids)]
+                else:
+                    data['product_template_id'] = [('id', 'in', product_tmpl_ids)]
+        return {'domain': data }
+
 
     @api.onchange('circulation_type')
     def onchange_circulation_type(self):
