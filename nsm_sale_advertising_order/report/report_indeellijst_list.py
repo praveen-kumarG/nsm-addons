@@ -15,6 +15,9 @@ class IndeellijstListReport(ReportXlsx):
             if sol.product_uom_qty > 1:
                 pro_name += '('+str(int(sol.product_uom_qty)) + 'p)'
             sline.append(sol.order_advertiser_id.name)
+            sline.append(sol.order_id.opportunity_subject)
+            sline.append(sol.order_id.name)
+            sline.append(sol.order_id.user_id.name)
             sline.append(sol.id)
             sline.append(sol.recurring_id.id if sol.recurring_id else sol.id)
             sline.append(pro_name)
@@ -44,7 +47,9 @@ class IndeellijstListReport(ReportXlsx):
         title = orderLines[0].title
         adv_issue = orderLines[0].adv_issue
         issue_date = orderLines[0].issue_date
-        report_name = title.name + '-' + adv_issue.name
+        report_name = title.name if title else adv_issue.name if adv_issue else ""
+        if title and title.name and adv_issue and adv_issue.name:
+            report_name = title.name + '-' + adv_issue.name
         sheet = workbook.add_worksheet(report_name[:31])
 
         row = 0
@@ -63,7 +68,7 @@ class IndeellijstListReport(ReportXlsx):
         sheet.write(row, 1, issue_date, cell_format)
         row += 2
 
-        ad_class_header = ['Adverteerder', 'Order ID', 'Material ID', 'Product', 'Opmerkingen', 'Paginasoort']
+        ad_class_header = ['Adverteerder', 'Opportunity Subject', 'Sale Order', 'Salesperson', 'Order ID', 'Material ID', 'Product', 'Opmerkingen', 'Paginasoort']
 
         for rdata in orderByAdClass:
             ad_class_id = rdata['ad_class'][0]
@@ -72,6 +77,7 @@ class IndeellijstListReport(ReportXlsx):
             row += 1
             for i, title in enumerate(ad_class_header):
                 sheet.write(row, i, title, bold_format)
+                sheet.set_column(row, i, 20)
             row += 1
             for sol in orderLines.filtered(lambda sl: sl.ad_class.id == ad_class_id):
                 row_datas = _form_data(sol)

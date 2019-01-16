@@ -129,6 +129,7 @@
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
                 <tree string="Indeellijst Lists" create="false" edit="false" delete="false">
+                        <field name="order_id" />
                         <field name="id" />
                         <field name="title" />
                         <field name="adv_issue" />
