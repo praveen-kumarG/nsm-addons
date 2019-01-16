@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_credit_control_summary_document_nsm" inherit_id="account_credit_control.report_credit_control_summary_document">
+        <xpath expr="//t[@t-call='report.external_layout']" position="attributes">
+            <attribute name="t-call">report_qweb_operating_unit.external_layout_ou</attribute>
+        </xpath>
+        <xpath expr="//div[@id='address']" position="replace">
+            <div class="row mt32 mb32" id="address">
+                <br/>
+                <br/>
+                <div class="col-xs-12">
+                    <address t-field="doc.contact_address"
+                             t-field-options='{"widget": "contact",
+                                               "fields": ["address", "name"],
+                                               "no_marker": true}'/>
+                </div>
+                <div class="col-xs-12">
+                    <span t-field="doc.report_date"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
