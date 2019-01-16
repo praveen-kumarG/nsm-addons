@@ -30,8 +30,7 @@ class HrExpense(models.Model):
 
     account_id = fields.Many2one('account.account', 'Account', readonly=True,
                                  help="The partner account used for this expense.")
-
-
+    state = fields.Selection(selection_add=[('revise', 'To Be Revise')])
 
     # Overridden:
     @api.multi
@@ -110,6 +109,22 @@ class HrExpense(models.Model):
         return True
 
 
+    @api.multi
+    def write(self, vals):
+        if vals.get('operating_unit_id', False):
+            sheet_id = vals['sheet_id'] if vals.get('sheet_id', False) else self.sheet_id.id
+            if sheet_id:
+                expense_sheet = self.env['hr.expense.sheet'].browse(sheet_id)
+                expense_sheet.write({'operating_unit_id':vals.get('operating_unit_id')})
+        res = super(HrExpense, self).write(vals)
+        return res
+
+    @api.onchange('analytic_account_id', 'operating_unit_id')
+    def anaytic_account_change(self):
+        if self.analytic_account_id and self.analytic_account_id.linked_operating_unit:
+            self.operating_unit_id = self.analytic_account_id.operating_unit_ids.ids[0]
+
+
 class HrExpenseSheet(models.Model):
     _inherit = 'hr.expense.sheet'
 
@@ -118,7 +133,8 @@ class HrExpenseSheet(models.Model):
                               ('post', 'Posted'),
                               ('approve', 'Approved'),
                               ('done', 'Paid'),
-                              ('cancel', 'Refused')
+                              ('cancel', 'Refused'),
+                              ('revise', 'To Be Revise')
                               ], string='Status', index=True, readonly=True, track_visibility='onchange', copy=False, default='submit', required=True,
         help='Expense Report State')
 
@@ -188,6 +204,19 @@ class HrExpenseSheet(models.Model):
                 self.account_move_id.post()
 
         self.write({'state': 'done'})
+
+    @api.multi
+    def revise_expense(self):
+        expenses = self.expense_line_ids.filtered(lambda x: x.state == 'reported')
+        self.write({'state': 'revise'})
+        expenses.write({'state':'revise'})
+
+    @api.multi
+    def expense_revised(self):
+        expenses = self.expense_line_ids.filtered(lambda x: x.state == 'revise')
+        expenses.write({'state': 'reported'})
+        self.write({'state': 'approve'})
+
 
 
 

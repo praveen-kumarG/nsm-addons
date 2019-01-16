@@ -43,7 +43,7 @@ defined.
     'website' : 'http://www.magnus.nl',
     'depends' : ['account',
                 'analytic',
-                'hr_expense',
+                'hr_expense_operating_unit',
                 # 'account_invoice_2step_validation',
                  "base_vat",
     ],
