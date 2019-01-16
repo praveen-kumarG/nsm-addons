@@ -95,10 +95,10 @@
                 <br/>
                 <br/>
                 <div t-if="o.product_category.hon_type == 'letter_a'">
-                    <span>Voor onderstaand(e) artikel(en), gepubliceerd in </span><span t-field="o.origin"/><span> d.d. </span><span t-if="o.invoice_line_ids" t-esc="datetime.datetime.strptime(o.invoice_line_ids[0].account_analytic_id.date_publish, '%Y-%m-%d').strftime('%d-%m-%Y')"/><span> ontvangt u op uw IBAN nummer </span><span t-if="o.partner_bank_id and o.partner_bank_id.acc_number" t-field="o.partner_bank_id.acc_number" /><span> het volgende bedrag:</span>
+                    <span>Voor onderstaand(e) artikel(en), gepubliceerd in </span><span t-field="o.origin"/><span> d.d. </span><span t-if="o.invoice_line_ids and o.invoice_line_ids[0].account_analytic_id.date_publish" t-esc="datetime.datetime.strptime(o.invoice_line_ids[0].account_analytic_id.date_publish, '%Y-%m-%d').strftime('%d-%m-%Y')"/><span> ontvangt u op uw IBAN nummer </span><span t-if="o.partner_bank_id and o.partner_bank_id.acc_number" t-field="o.partner_bank_id.acc_number" /><span> het volgende bedrag:</span>
                 </div>
                 <div t-if="o.product_category.hon_type == 'letter_b'">
-                    <span>Hierbij verzoeken wij u ons een rekening te zenden voor de hieronder vermelde foto('s)/illustratie(s) gepubliceerd in </span><span t-field="o.origin"/><span> d.d. </span><span t-if="o.invoice_line_ids" t-esc="datetime.datetime.strptime(o.invoice_line_ids[0].account_analytic_id.date_publish, '%Y-%m-%d').strftime('%d-%m-%Y')"/>
+                    <span>Hierbij verzoeken wij u ons een rekening te zenden voor de hieronder vermelde foto('s)/illustratie(s) gepubliceerd in </span><span t-field="o.origin"/><span> d.d. </span><span t-if="o.invoice_line_ids and o.invoice_line_ids[0].account_analytic_id.date_publish" t-esc="datetime.datetime.strptime(o.invoice_line_ids[0].account_analytic_id.date_publish, '%Y-%m-%d').strftime('%d-%m-%Y')"/>
                 </div>
                 <br/>
                 <br/>
