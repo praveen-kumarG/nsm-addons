@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <record id="view_users_form_nsm_2step" model="ir.ui.view">
+        <field name="name">res.users.nsm2step.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="sale_team_id" string="Default Sale Team"/>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</odoo>

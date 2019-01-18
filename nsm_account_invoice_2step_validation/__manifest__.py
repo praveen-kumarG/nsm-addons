@@ -23,11 +23,13 @@ Enchanced to add
     'website' : 'http://www.magnus.nl',
     'depends' : ['account_invoice_2step_validation',
                  'nsm_supplier_portal',
+                 'sales_team',
     ],
     'data' : [
         "security/account_security.xml",
         "views/res_partner_view.xml",
         "views/account_invoice_view.xml",
+        "views/user_view.xml",
     ],
     'demo' : [],
     'installable': True
