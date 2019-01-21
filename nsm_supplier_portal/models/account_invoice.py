@@ -289,7 +289,7 @@ class Invoice(models.Model):
 
             case.write({'is_portal': True,
                         'date_invoice': fields.Date.context_today(self),
-                        'state': 'draft',
+                        'state': 'start_wf',
                         # 'section_id': salesTeam.sales_team_id.id,
                         'team_id':  salesTeam.sales_team_id.id,
                         'user_id':  salesTeam.sales_team_id.user_id.id or self.env.user.id})
