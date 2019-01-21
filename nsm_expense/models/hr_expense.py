@@ -27,86 +27,49 @@ from odoo.tools import email_split, float_is_zero
 class HrExpense(models.Model):
     _inherit = 'hr.expense'
 
+    @api.depends('sheet_id.state')
+    def _get_sheet_state(self):
+        for exp in self:
+            if exp.sheet_id:
+                exp.sheet_state = exp.sheet_id.state
 
-    account_id = fields.Many2one('account.account', 'Account', readonly=True,
-                                 help="The partner account used for this expense.")
+    sheet_state = fields.Char(compute='_get_sheet_state', string='Sheet Status', help='Expense Report State',
+                              store=True)
     state = fields.Selection(selection_add=[('revise', 'To Be Revise')])
 
-    # Overridden:
+    @api.multi
+    def submit_expenses(self):
+        if any(expense.state != 'draft' for expense in self):
+            raise UserError(_("You cannot report twice the same line!"))
+        if len(self.mapped('employee_id')) != 1:
+            raise UserError(_("You cannot report expenses for different employees in the same report!"))
+        expense_sheet = self.env['hr.expense.sheet'].create({'expense_line_ids':[(6, 0, [line.id for line in self])], 'employee_id':self[0].employee_id.id, 'name': self[0].name if len(self.ids) == 1 else '','operating_unit_id':self[0].operating_unit_id.id})
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'hr.expense.sheet',
+            'target': 'current',
+            'res_id': expense_sheet.id
+        }
+
+    @api.multi
+    def view_sheet(self):
+        res = super(HrExpense, self).view_sheet()
+        res['flags'] = {'initial_mode': 'edit'}
+        return res
+
     @api.multi
     def action_move_create(self):
         '''
-        main function that is called when trying to create the accounting entries related to an expense
+        inherited function that is called when trying to create the accounting entries related to an expense
         '''
+        res = super(HrExpense, self).action_move_create()
         for expense in self:
-            journal = expense.sheet_id.bank_journal_id if expense.payment_mode == 'company_account' else expense.sheet_id.journal_id
-            #create the move that will contain the accounting entries
-            acc_date = expense.sheet_id.accounting_date or expense.date
-            move = self.env['account.move'].create({
-                'journal_id': journal.id,
-                'company_id': self.env.user.company_id.id,
-                'date': acc_date,
-                'ref': expense.sheet_id.name,
-                # force the name to the default value, to avoid an eventual 'default_name' in the context
-                # to set it to '' which cause no number to be given to the account.move when posted.
-                'name': '/',
-            })
-            company_currency = expense.company_id.currency_id
-            diff_currency_p = expense.currency_id != company_currency
-            #one account.move.line per expense (+taxes..)
-            move_lines = expense._move_line_get()
-
-            #create one more move line, a counterline for the total on payable account
-            payment_id = False
-            total, total_currency, move_lines = expense._compute_expense_totals(company_currency, move_lines, acc_date)
-            if expense.payment_mode == 'company_account':
-                if not expense.sheet_id.bank_journal_id.default_credit_account_id:
-                    raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.sheet_id.bank_journal_id.name))
-                emp_account = expense.sheet_id.bank_journal_id.default_credit_account_id.id
-                journal = expense.sheet_id.bank_journal_id
-                #create payment
-                payment_methods = (total < 0) and journal.outbound_payment_method_ids or journal.inbound_payment_method_ids
-                journal_currency = journal.currency_id or journal.company_id.currency_id
-                payment = self.env['account.payment'].create({
-                    'payment_method_id': payment_methods and payment_methods[0].id or False,
-                    'payment_type': total < 0 and 'outbound' or 'inbound',
-                    'partner_id': expense.employee_id.address_home_id.commercial_partner_id.id,
-                    'partner_type': 'supplier',
-                    'journal_id': journal.id,
-                    'payment_date': expense.date,
-                    'state': 'reconciled',
-                    'currency_id': diff_currency_p and expense.currency_id.id or journal_currency.id,
-                    'amount': diff_currency_p and abs(total_currency) or abs(total),
-                    'name': expense.name,
-                })
-                payment_id = payment.id
-            else:
-                if not expense.employee_id.address_home_id:
-                    raise UserError(_("No Home Address found for the employee %s, please configure one.") % (expense.employee_id.name))
-                emp_account = expense.employee_id.address_home_id.property_account_payable_id.id
-
-            aml_name = expense.employee_id.name + ': ' + expense.name.split('\n')[0][:64]
-            move_lines.append({
-                    'type': 'dest',
-                    'name': aml_name,
-                    'price': total,
-                    'account_id': emp_account,
-                    'date_maturity': acc_date,
-                    'amount_currency': diff_currency_p and total_currency or False,
-                    'currency_id': diff_currency_p and expense.currency_id.id or False,
-                    'payment_id': payment_id,
-                    })
-
-            #convert eml into an osv-valid format
-            lines = map(lambda x: (0, 0, expense._prepare_move_line(x)), move_lines)
-            move.with_context(dont_create_taxes=True).write({'line_ids': lines})
-            expense.sheet_id.write({'account_move_id': move.id})
-            # move.post()
-            if expense.payment_mode == 'company_account':
-                expense.sheet_id.paid_expense_sheets()
-
-            expense.write({'account_id': emp_account})
-        return True
+            if expense.analytic_account_id and expense.analytic_account_id.operating_unit_ids:
+                ou = expense.analytic_account_id.operating_unit_ids[0]
+                if ou and expense.sheet_id.account_move_id:
+                    expense.sheet_id.account_move_id.operating_unit_id = ou.id
+        return res
 
 
     @api.multi
@@ -128,15 +91,16 @@ class HrExpense(models.Model):
 class HrExpenseSheet(models.Model):
     _inherit = 'hr.expense.sheet'
 
-    # Overriden:
-    state = fields.Selection([('submit', 'Submitted'),
-                              ('post', 'Posted'),
-                              ('approve', 'Approved'),
-                              ('done', 'Paid'),
-                              ('cancel', 'Refused'),
-                              ('revise', 'To Be Revise')
-                              ], string='Status', index=True, readonly=True, track_visibility='onchange', copy=False, default='submit', required=True,
-        help='Expense Report State')
+    # Overriden:commented out @sushma
+    # state = fields.Selection([('submit', 'Submitted'),
+    #                           ('post', 'Posted'),
+    #                           ('approve', 'Approved'),
+    #                           ('done', 'Paid'),
+    #                           ('cancel', 'Refused'),
+    #                           ('revise', 'To Be Revise')
+    #                           ], string='Status', index=True, readonly=True, track_visibility='onchange', copy=False, default='submit', required=True,
+    #     help='Expense Report State')
+    state = fields.Selection(selection_add=[('revise', 'To Be Revise')])
 
 
     @api.model
@@ -146,64 +110,64 @@ class HrExpenseSheet(models.Model):
         return res
 
 
-    #Overriden:
-    @api.multi
-    def approve_expense_sheets(self):
-        if self.account_move_id:
-            self.account_move_id.post()
-        self.write({'state': 'approve', 'responsible_id': self.env.user.id})
+    # #Overriden:commented out @sushma
+    # @api.multi
+    # def approve_expense_sheets(self):
+    #     if self.account_move_id:
+    #         self.account_move_id.post()
+    #     self.write({'state': 'approve', 'responsible_id': self.env.user.id})
 
-    #Overriden:
-    @api.multi
-    def refuse_expenses(self, reason):
-        if self.account_move_id:
-            for aml in self.account_move_id.line_ids:
-                if aml.reconciled:
-                     raise UserError(
-                         _('Please unreconcile payment accounting entries before cancelling this expense'))
-            ### Then we unlink the move line
-            self.account_move_id.button_cancel()
-            self.account_move_id.unlink()
-
-        self.write({'state': 'cancel'})
-        for sheet in self:
-            body = (_("Your Expense %s has been refused.<br/><ul class=o_timeline_tracking_value_list><li>Reason<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>") % (sheet.name, reason))
-            sheet.message_post(body=body)
-
-
-    # Overriden:
-    @api.multi
-    def action_sheet_move_create(self):
-        if any(sheet.state != 'submit' for sheet in self):
-            raise UserError(_("You can only generate accounting entry for submitted expense(s)."))
-
-        if any(not sheet.journal_id for sheet in self):
-            raise UserError(_("Expenses must have an expense journal specified to generate accounting entries."))
-
-        expense_line_ids = self.mapped('expense_line_ids')\
-            .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.user.company_id.currency_id).rounding))
-
-        res = expense_line_ids.action_move_create()
-
-        if not self.accounting_date:
-            self.accounting_date = self.account_move_id.date
-
-        if self.payment_mode == 'own_account' and expense_line_ids:
-            self.write({'state': 'post'})
-        else:
-            # self.write({'state': 'done'})
-            self.paid_expense_sheets()
-        return res
+    # #Overriden:commented out @sushma
+    # @api.multi
+    # def refuse_expenses(self, reason):
+    #     if self.account_move_id:
+    #         for aml in self.account_move_id.line_ids:
+    #             if aml.reconciled:
+    #                  raise UserError(
+    #                      _('Please unreconcile payment accounting entries before cancelling this expense'))
+    #         ### Then we unlink the move line
+    #         self.account_move_id.button_cancel()
+    #         self.account_move_id.unlink()
+    #
+    #     self.write({'state': 'cancel'})
+    #     for sheet in self:
+    #         body = (_("Your Expense %s has been refused.<br/><ul class=o_timeline_tracking_value_list><li>Reason<span> : </span><span class=o_timeline_tracking_value>%s</span></li></ul>") % (sheet.name, reason))
+    #         sheet.message_post(body=body)
 
 
-    # Overriden:
-    @api.multi
-    def paid_expense_sheets(self):
-        if self.account_move_id:
-            if not self.account_move_id.state == 'posted':
-                self.account_move_id.post()
+    # Overriden: commented out @sushma
+    # @api.multi
+    # def action_sheet_move_create(self):
+    #     if any(sheet.state != 'submit' for sheet in self):
+    #         raise UserError(_("You can only generate accounting entry for submitted expense(s)."))
+    #
+    #     if any(not sheet.journal_id for sheet in self):
+    #         raise UserError(_("Expenses must have an expense journal specified to generate accounting entries."))
+    #
+    #     expense_line_ids = self.mapped('expense_line_ids')\
+    #         .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.user.company_id.currency_id).rounding))
+    #
+    #     res = expense_line_ids.action_move_create()
+    #
+    #     if not self.accounting_date:
+    #         self.accounting_date = self.account_move_id.date
+    #
+    #     if self.payment_mode == 'own_account' and expense_line_ids:
+    #         self.write({'state': 'post'})
+    #     else:
+    #         # self.write({'state': 'done'})
+    #         self.paid_expense_sheets()
+    #     return res
 
-        self.write({'state': 'done'})
+
+    # # Overriden:commented out @sushma
+    # @api.multi
+    # def paid_expense_sheets(self):
+    #     if self.account_move_id:
+    #         if not self.account_move_id.state == 'posted':
+    #             self.account_move_id.post()
+    #
+    #     self.write({'state': 'done'})
 
     @api.multi
     def revise_expense(self):
