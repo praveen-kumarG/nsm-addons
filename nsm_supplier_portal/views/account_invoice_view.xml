@@ -143,7 +143,7 @@
                             <field name="journal_id"
                                 widget="selection" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
-                            <field name="check_total" groups="account.group_supplier_inv_check_total" attrs="{'readonly': [('is_submitted','=',True)]}"/>
+                            <field name="check_total" groups="account_invoice_check_total.group_supplier_inv_check_total" attrs="{'readonly': [('is_submitted','=',True)]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -507,7 +507,7 @@
                             <field name="journal_id"
                                 on_change="onchange_journal_id(journal_id, context)" widget="selection" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
-                            <field name="check_total" groups="account.group_supplier_inv_check_total"/>
+                            <field name="check_total" groups="account_invoice_check_total.group_supplier_inv_check_total"/>
                         </group>
                     </group>
                     <notebook>
