@@ -424,8 +424,8 @@ class InvoiceLine(models.Model):
     @api.onchange('new_tax_id')
     def onchange_tax_id(self):
         if not self.new_tax_id:
-            return {'value': {'invoice_line_tax_id': []}}
-        return {'value': {'invoice_line_tax_id': [self.new_tax_id.id]}}
+            return {'value': {'invoice_line_tax_ids': []}}
+        return {'value': {'invoice_line_tax_ids': [(6, 0, [self.new_tax_id.id])]}}
 
 
     @api.onchange('product_id')

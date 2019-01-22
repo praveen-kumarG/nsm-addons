@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<openerp>
+<odoo>
     <data>
         <!--  Supplier Invoices Tree View  -->
         <!--  and  -->
@@ -143,8 +143,9 @@
                             <field name="journal_id"
                                 widget="selection" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
-                            <field name="check_total" groups="account.group_supplier_inv_check_total" attrs="{'readonly': [('is_submitted','=',True)]}"/>
+                            <field name="check_total" groups="account_invoice_check_total.group_supplier_inv_check_total" attrs="{'readonly': [('is_submitted','=',True)]}"/>
                         </group>
+                        <field name="tax_line_ids" attrs="{'readonly': [('state','not in',('portalcreate','draft'))],}" invisible="1"/>
                     </group>
                     <notebook>
                         <page string="Invoice">
@@ -346,6 +347,7 @@
                             <field name="currency_id" invisible="1"/>
                             <field name="check_total" groups="account_invoice_check_total.group_supplier_inv_check_total"/>
                         </group>
+                        <field name="tax_line_ids" attrs="{'readonly': [('state','not in',('portalcreate','draft'))],}" invisible="1"/>
                     </group>
                     <notebook>
                         <page string="Invoice">
@@ -507,8 +509,9 @@
                             <field name="journal_id"
                                 on_change="onchange_journal_id(journal_id, context)" widget="selection" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
-                            <field name="check_total" groups="account.group_supplier_inv_check_total"/>
+                            <field name="check_total" groups="account_invoice_check_total.group_supplier_inv_check_total"/>
                         </group>
+                        <field name="tax_line_ids" attrs="{'readonly': [('state','not in',('portalcreate','draft'))],}" invisible="1"/>
                     </group>
                     <notebook>
                         <page string="Invoice">
@@ -710,4 +713,4 @@
         </record>
 
     </data>
-</openerp>
+</odoo>
