@@ -12,7 +12,9 @@
                  <div class="col-xs-7" style="padding:0px;">
                     <strong>
                         <t t-if="o.partner_id.is_company">
-                            <div t-if="o.partner_id and o.partner_id.property_account_payable_id" t-field="o.partner_id.property_account_payable_id.name"/>
+                            <!--<div t-if="o.partner_id and o.partner_id.property_account_payable_id" t-field="o.partner_id.property_account_payable_id.name"/>-->
+                            <br/>
+                            <br/>
                             <div t-field="o.partner_id.name"/>
                             <div>T.a.v.: Crediteurenadministratie</div>
                         </t>
@@ -52,8 +54,8 @@
                          <div class="col-xs-3" style="padding:0px;">
                              <span>Invoice Number</span>
                              <br/>
-                             <span>Our Reference</span>
-                             <br/>
+<!--                             <span>Our Reference</span>
+                             <br/>-->
                              <span>Expiry Date</span>
                          </div>
                          <div class="col-xs-1" style="padding:0px;">
@@ -66,8 +68,8 @@
                          <div class="col-xs-8" style="padding:0px;">
                              <span t-field="o.number"/>
                              <br/>
-                             <span t-field="o.origin"/>
-                             <br/>
+<!--                             <span t-field="o.origin"/>
+                             <br/>-->
                              <span t-field="o.date_due"/>
                          </div>
                     </div>
@@ -157,6 +159,12 @@
                             </t>
                             <t t-if="o.type == 'out_refund'">
                                 <td><span t-esc="l.opportunity_subject"/></td>
+                            </t>
+                            <t t-if="o.type != 'out_refund'">
+                                <td><span t-field="l.ad_number"/></td>
+                            </t>
+                            <t t-if="o.type == 'out_refund'">
+                                <td><span t-esc="l.ad_number"/></td>
                             </t>
                             <td><span t-if="l.product_id" t-field="l.product_id.name"/></td>
                             <td class="text-right">
