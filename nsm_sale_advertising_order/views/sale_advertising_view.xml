@@ -44,6 +44,9 @@
                         <field name="circulation_type" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}" options="{'no_create_edit': True}"/>
                         <field name="circulation_description" attrs="{'required':[('selective_circulation', '=', True)], 'invisible':[('selective_circulation', '=', False)]}" placeholder="Such as ZIP code, channel, etc."/>
                 </xpath>
+                <xpath expr="//tree/field[@name='title']" position="after">
+                    <field name="adv_issue"/>
+                </xpath>
             </field>
         </record>
 
