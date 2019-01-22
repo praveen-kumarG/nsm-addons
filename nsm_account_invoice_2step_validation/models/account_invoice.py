@@ -32,11 +32,15 @@ class AccountInvoice(models.Model):
             self.user_id = self.env.user
         return res
 
-    @api.onchange('invoice_line_ids')
-    def _onchange_invoice_line_ids(self):
-        if self.type in ('in_invoice', 'in_refund'):
-            invoice_line = self.invoice_line_ids and self.invoice_line_ids[0]
-            if invoice_line.account_analytic_id:
-                team_acc_mapp = self.env['sales.team'].search([('analytic_account_id','=',invoice_line.account_analytic_id.id)], limit=1)
-                self.team_id = team_acc_mapp.id
+    @api.multi
+    def write(self, vals):
+        res = super(AccountInvoice, self).write(vals)
+        for inv in self:
+            if 'invoice_line_ids' in vals:
+                if inv.type in ('in_invoice', 'in_refund'):
+                    invoice_line = inv.invoice_line_ids and inv.invoice_line_ids[0]
+                    if invoice_line.account_analytic_id:
+                        team_acc_mapp = self.env['sales.team'].search([('analytic_account_id','=',invoice_line.account_analytic_id.id)], limit=1)
+                        inv.team_id = team_acc_mapp.sales_team_id.id
+        return res
 
