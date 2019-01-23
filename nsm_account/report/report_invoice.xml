@@ -51,7 +51,7 @@
             <div style="padding-left:85px;padding-right:15px;">
                 <div class="row" style="padding:0px;padding-right:15px;border-top:1px solid black;border-bottom:1px solid black;">
                     <div class="col-xs-6" style="padding:0px;">
-                         <div class="col-xs-3" style="padding:0px;">
+                         <div class="col-xs-4" style="padding:0px;">
                              <span>Invoice Number</span>
                              <br/>
 <!--                             <span>Our Reference</span>
@@ -65,7 +65,7 @@
                              <br/>
                              <span><strong> </strong></span>
                          </div>
-                         <div class="col-xs-8" style="padding:0px;">
+                         <div class="col-xs-7" style="padding:0px;">
                              <span t-field="o.number"/>
                              <br/>
 <!--                             <span t-field="o.origin"/>
