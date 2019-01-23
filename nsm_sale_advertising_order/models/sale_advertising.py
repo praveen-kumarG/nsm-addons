@@ -30,6 +30,17 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
+    @api.multi
+    @api.depends('adv_issue', 'product_template_id')
+    def name_get(self):
+        result = []
+        for sol in self:
+            name = sol.adv_issue.name if sol.adv_issue else ""
+            if sol.product_template_id:
+                name = name+' ('+sol.product_template_id.name+')'
+                result.append((sol.id, name))
+        return result
+
     @api.depends('state')
     def _get_indeellijst_data(self):
         for line in self:
