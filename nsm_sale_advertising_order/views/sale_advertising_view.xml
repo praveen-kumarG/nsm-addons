@@ -214,5 +214,16 @@
             <field name="act_window_id" ref="nsm_advertising_send_along_list_action"/>
         </record>
 
+        <record id="view_order_form_advertising_ad4all_inherited" model="ir.ui.view">
+            <field name="name">sale.order.form.advertising.ad4all.nsm</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="nsm_ad4all_soap.view_order_form_advertising_ad4all"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='recurring_id']" position="attributes">
+                    <attribute name="domain">[('order_advertiser_id','=', parent.published_customer),('recurring','=', False),('product_template_id', '=', product_template_id)]</attribute>
+                </xpath>
+            </field>
+        </record>
+
     </data>
 </odoo>
