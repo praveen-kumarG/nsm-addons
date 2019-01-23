@@ -73,6 +73,10 @@ class SaleOrderLine(models.Model):
         result = super(SaleOrderLine, self).default_get(fields_list)
         if 'customer_contact' in self.env.context:
             result.update({'proof_number_payer':self.env.context['customer_contact']})
+            result.update({'proof_number_amt_payer': 1})
+
+        result.update({'proof_number_adv_customer': False})
+        result.update({'proof_number_amt_adv_customer': 0})
         return result
 
 
@@ -126,6 +130,18 @@ class SaleOrderLine(models.Model):
     @api.onchange('circulation_type')
     def onchange_circulation_type(self):
         self.selective_circulation = self.circulation_type.selective_circulation if self.circulation_type else False
+
+    @api.onchange('proof_number_adv_customer')
+    def onchange_proof_number_adv_customer(self):
+        self.proof_number_amt_adv_customer = 1 if self.proof_number_adv_customer else 0
+
+    @api.onchange('proof_number_amt_payer')
+    def onchange_proof_number_amt_payer(self):
+        if self.proof_number_amt_payer < 1: self.proof_number_payer = False
+
+    @api.onchange('proof_number_payer')
+    def onchange_proof_number_payer(self):
+        self.proof_number_amt_payer = 1 if self.proof_number_payer else 0
 
     proof_number_payer = fields.Many2one('res.partner', 'Proof Number Payer')
     proof_number_adv_customer = fields.Many2many('res.partner', 'partner_line_proof_rel', 'line_id', 'partner_id', string='Proof Number Advertising Customer')
