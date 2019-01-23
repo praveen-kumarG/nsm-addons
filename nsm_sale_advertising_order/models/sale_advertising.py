@@ -30,6 +30,17 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
+    @api.multi
+    @api.depends('adv_issue', 'product_template_id')
+    def name_get(self):
+        result = []
+        for sol in self:
+            name = sol.adv_issue.name if sol.adv_issue else ""
+            if sol.product_template_id:
+                name = name+' ('+sol.product_template_id.name+')'
+                result.append((sol.id, name))
+        return result
+
     @api.depends('state')
     def _get_indeellijst_data(self):
         for line in self:
@@ -134,6 +145,10 @@ class SaleOrderLine(models.Model):
     @api.onchange('proof_number_adv_customer')
     def onchange_proof_number_adv_customer(self):
         self.proof_number_amt_adv_customer = 1 if self.proof_number_adv_customer else 0
+
+    @api.onchange('proof_number_amt_adv_customer')
+    def onchange_proof_number_amt_adv_customer(self):
+        if self.proof_number_amt_adv_customer <= 0: self.proof_number_adv_customer = False
 
     @api.onchange('proof_number_amt_payer')
     def onchange_proof_number_amt_payer(self):
