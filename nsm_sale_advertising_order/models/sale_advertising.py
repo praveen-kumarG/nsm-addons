@@ -146,6 +146,10 @@ class SaleOrderLine(models.Model):
     def onchange_proof_number_adv_customer(self):
         self.proof_number_amt_adv_customer = 1 if self.proof_number_adv_customer else 0
 
+    @api.onchange('proof_number_amt_adv_customer')
+    def onchange_proof_number_amt_adv_customer(self):
+        if self.proof_number_amt_adv_customer <= 0: self.proof_number_adv_customer = False
+
     @api.onchange('proof_number_amt_payer')
     def onchange_proof_number_amt_payer(self):
         if self.proof_number_amt_payer < 1: self.proof_number_payer = False
