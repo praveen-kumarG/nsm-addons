@@ -50,7 +50,7 @@
                         <notebook>
                             <page string="Honorarium Issue Lines">
                                 <field name="hon_issue_line">
-                                    <tree string="Hon Issue lines" editable="bottom">
+                                    <tree string="Hon Issue lines" editable="top">
                                         <field name="company_id" invisible="1"/>
                                         <field name="sequence" widget="handle" />
                                         <field name="partner_id"  domain="['|',('employee','=', True),('category_id', '=',  %(freelancer_self_billing.hon_partner_category)d)]"
