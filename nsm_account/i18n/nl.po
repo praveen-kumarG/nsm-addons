@@ -24,6 +24,21 @@ msgstr "<br/>\n"
 
 #. module: nsm_account
 #: model:ir.ui.view,arch_db:nsm_account.report_invoice_document_nsm_account
+msgid "<span width=\"35%\">\n"
+"                        <strong>Advertiser</strong>\n"
+"                    </span>\n"
+"                    <span width=\"1%\">\n"
+"                        <strong>:</strong>\n"
+"                    </span>"
+msgstr "<span width=\"35%\">\n"
+"                        <strong>Adverteerder</strong>\n"
+"                    </span>\n"
+"                    <span width=\"1%\">\n"
+"                        <strong>:</strong>\n"
+"                    </span>"
+
+#. module: nsm_account
+#: model:ir.ui.view,arch_db:nsm_account.report_invoice_document_nsm_account
 msgid "<span>Invoice Date</span>\n"
 "                             <br/>\n"
 "                             <span>Expiry Date</span>"
@@ -40,8 +55,12 @@ msgstr "<span>Factuurnummer</span>\n"
 
 #. module: nsm_account
 #: model:ir.ui.view,arch_db:nsm_account.report_invoice_document_nsm_account
-msgid "<span>Your Reference</span>"
-msgstr "<span>Uw Referentie</span>"
+msgid "<span>Your Reference</span>\n"
+"                             <br/>\n"
+"                             <span>Customer ID</span>"
+msgstr "<span>Uw Referentie</span>\n"
+"                             <br/>\n"
+"                             <span>Klantnummer</span>"
 
 #. module: nsm_account
 #: model:ir.ui.view,arch_db:nsm_account.report_invoice_document_nsm_account
@@ -132,6 +151,11 @@ msgstr "Aangemaakt door"
 #: model:ir.model.fields,field_description:nsm_account.field_supplier_invoice_merge_pdf_create_date
 msgid "Created on"
 msgstr "Aangemaakt op"
+
+#. module: nsm_account
+#: model:ir.ui.view,arch_db:nsm_account.report_invoice_document_nsm_account
+msgid "<span>Customer ID</span>"
+msgstr "<span>Klantnummer</span>"
 
 #. module: nsm_account
 #: model:ir.ui.view,arch_db:nsm_account.report_invoice_document_nsm_account
@@ -338,7 +362,7 @@ msgstr "You cannot modify a posted entry of this journal.\n"
 #. module: nsm_account
 #: model:ir.ui.view,arch_db:nsm_account.invoice_form_NSM
 msgid "Your Reference"
-msgstr "Your Reference"
+msgstr "Uw Referentie"
 
 #. module: nsm_account
 #: model:ir.model.fields,field_description:nsm_account.field_account_invoice_klantnummer
