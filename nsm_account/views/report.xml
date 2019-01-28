@@ -2,6 +2,11 @@
 <openerp>
     <data>
 
+        <record id="operating_unit_report_layout.paperformat_ou_layout" model="report.paperformat">
+            <field name="margin_top">55</field>
+            <field name="header_spacing">55</field>
+        </record>
+
         <report auto="False"
             id="account.account_invoices"
             model="account.invoice"
