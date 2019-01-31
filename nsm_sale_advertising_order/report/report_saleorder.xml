@@ -90,8 +90,8 @@
                             <t><td><span t-if="l.adv_issue" t-field="l.adv_issue.default_note"/></td></t>
                             <td t-if="l.product_id" ><span t-field="l.product_id.name"/></td>
                             <td class="text-right">
-                                <span t-field="l.product_uom_qty"/>
-                                    <span t-field="l.product_uom" groups="product.group_uom"/>
+                                <span t-esc="'%.2f'% l.product_uom_qty"/>
+                                <span t-field="l.product_uom" groups="product.group_uom"/>
                             </td>
                             <td class="text-right">
                                 <span t-field="l.price_unit"/>
