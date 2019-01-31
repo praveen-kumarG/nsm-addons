@@ -41,6 +41,7 @@ class AccountInvoice(models.Model):
                     invoice_line = inv.invoice_line_ids and inv.invoice_line_ids[0]
                     if invoice_line.account_analytic_id:
                         team_acc_mapp = self.env['sales.team'].search([('analytic_account_id','=',invoice_line.account_analytic_id.id)], limit=1)
-                        inv.team_id = team_acc_mapp.sales_team_id.id
+                        if team_acc_mapp and team_acc_mapp.sales_team_id:
+                            inv.team_id = team_acc_mapp.sales_team_id.id
         return res
 
