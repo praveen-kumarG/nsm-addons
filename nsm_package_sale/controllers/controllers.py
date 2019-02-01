@@ -1,23 +1,20 @@
-{%- set mod = name|snake -%}
-{%- set model = "%s.%s"|format(mod, mod) -%}
-{%- set root = "/%s/%s"|format(mod, mod) -%}
 # -*- coding: utf-8 -*-
 from odoo import http
 
-# class {{ mod|pascal }}(http.Controller):
-#     @http.route('{{ root }}/', auth='public')
+# class PackageSaleAdvertisingOrder(http.Controller):
+#     @http.route('/package_sale_advertising_order/package_sale_advertising_order/', auth='public')
 #     def index(self, **kw):
 #         return "Hello, world"
 
-#     @http.route('{{ root }}/objects/', auth='public')
+#     @http.route('/package_sale_advertising_order/package_sale_advertising_order/objects/', auth='public')
 #     def list(self, **kw):
-#         return http.request.render('{{ mod }}.listing', {
-#             'root': '{{ root }}',
-#             'objects': http.request.env['{{ model }}'].search([]),
+#         return http.request.render('package_sale_advertising_order.listing', {
+#             'root': '/package_sale_advertising_order/package_sale_advertising_order',
+#             'objects': http.request.env['package_sale_advertising_order.package_sale_advertising_order'].search([]),
 #         })
 
-#     @http.route('{{ root }}/objects/<model("{{ model }}"):obj>/', auth='public')
+#     @http.route('/package_sale_advertising_order/package_sale_advertising_order/objects/<model("package_sale_advertising_order.package_sale_advertising_order"):obj>/', auth='public')
 #     def object(self, obj, **kw):
-#         return http.request.render('{{ mod }}.object', {
+#         return http.request.render('package_sale_advertising_order.object', {
 #             'object': obj
 #         })
