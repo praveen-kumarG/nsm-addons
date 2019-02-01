@@ -90,27 +90,26 @@
                             <t><td><span t-if="l.adv_issue" t-field="l.adv_issue.default_note"/></td></t>
                             <td t-if="l.product_id" ><span t-field="l.product_id.name"/></td>
                             <td class="text-right">
-                                <span t-field="l.product_uom_qty"/>
-                                    <span t-field="l.product_uom" groups="product.group_uom"/>
+                                <span t-esc="'%.2f'% l.product_uom_qty"/>
+                                <span t-field="l.product_uom" groups="product.group_uom"/>
                             </td>
                             <td class="text-right">
-                                <span t-field="l.price_unit"/>
+                                <span t-esc="'%.2f'% l.price_unit"/>
                             </td>
                             <td t-if="doc.partner_id.is_ad_agency" class="text-right">
-                                <span t-field="l.subtotal_before_agency_disc"/>
+                                <span t-esc="'%.2f'% l.subtotal_before_agency_disc"/>
                             </td>
                             <td t-if="display_discount" class="text-right">
-                                <span t-field="l.discount"/>
+                                <span t-esc="'%.2f'% l.discount"/>
                             </td>
                             <td t-if="display_Cdiscount" class="text-right">
-                                <span t-field="l.computed_discount"/>
+                                <span t-esc="'%.2f'% l.computed_discount"/>
                             </td>
                             <td t-if="doc.display_discount_to_customer" class="text-right">
-                                <span t-field="l.computed_discount"/>
+                                <span t-esc="'%.2f'% l.computed_discount"/>
                             </td>
                             <td name="line_amount_td" class="text-right" >
-                                <span t-field="l.price_subtotal"
-                                    t-options='{"widget": "monetary", "display_currency": doc.pricelist_id.currency_id}'/>
+                                <span t-esc="'%.2f'% l.price_subtotal"/><span> </span><span t-if="doc.pricelist_id and doc.pricelist_id.currency_id" t-field="doc.pricelist_id.currency_id.symbol"/>
                             </td>
                         </tr>
                         <t>
