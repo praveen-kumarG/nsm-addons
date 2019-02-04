@@ -279,12 +279,10 @@ class SaleOrderLine(models.Model):
         copy=False
     )
     recurring = fields.Boolean(
-        'Recurring Advertisement',
-        copy=False
+        'Recurring Advertisement'
     )
     no_copy_chase = fields.Boolean(
         'No Copy Chasing',
-        copy=False,
         default=False
     )
     recurring_id = fields.Many2one(
