@@ -35,7 +35,7 @@ class WizardUser(models.TransientModel):
             raise UserError(_('You must have an email address in your User Preferences to send emails.'))
 
         grp = "nsm_supplier_portal.group_module_supplier_portal_user"
-        template = self.env.ref('nsm_supplier_portal.send_invitation_email')
+        template = self.env.ref('portal.mail_template_data_portal_welcome')
 
         for wizard_line in self:
 
