@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
+# Copyright 2018 Willem Hulshof Magnus (www.magnus.nl).
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
-    'name': "nsm_package_sale",
+    'name': "nsm_package_sale_advertising_order",
 
     'summary': """
-        Package Sale""",
+        Package Sale Advertising Order""",
 
     'description': """
-        
+
     """,
 
-    'author': 'Magnus - Willem Hulshof',
-    'website': 'http://www.magnus.nl',
+    'author': "Magnus",
+    'website': "http://www.magnus.nl",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
@@ -19,12 +21,12 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['sale'],
+    'depends': ['nsm_sale_advertising_order','package_sale_advertising_order'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/sale_views.xml',
+        'report/report_saleorder.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
