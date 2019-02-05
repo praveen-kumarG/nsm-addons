@@ -55,15 +55,16 @@
                 <tr>
                     <th width="5%">Date</th>
                     <!--<t><th width="10%">Edition</th></t>-->
-                    <t><th width="15%">Advertising Issue</th></t>
+                    <t><th width="15%">Advertising issue</th></t>
                     <th width="10%">Product</th>
                     <th width="10%" class="text-right">Volume</th>
-                    <th width="10%" class="text-right">Unit Price</th>
-                    <th width="10%" t-if="doc.partner_id.is_ad_agency" class="text-right">Subtotal Before Commission</th>
-                    <th width="10%" t-if="display_discount" class="text-right">Disc(%)</th>
-                    <th width="10%" t-if="display_Cdiscount" class="text-right">Computed Discount</th>
-                    <th width="10%" t-if="doc.display_discount_to_customer" class="text-right">Computed Discount</th>
-                    <th name="line_amount_th" width="10%" class="text-right">Tax Excluded Price</th>
+                    <th width="10%" t-if="doc.display_discount_to_customer" class="text-right">Unit price</th>
+                    <th width="10%" t-if="not doc.advertising_agency" class="text-right">Actual unit price</th>
+                    <th width="10%" t-if="doc.advertising_agency" class="text-right">Subtotal before agency discount</th>
+                    <th width="10%" t-if="doc.advertising_agency" class="text-right">Disc(%)</th>
+                    <!--<th width="10%" t-if="display_Cdiscount" class="text-right">Computed Discount</th>-->
+                    <th width="10%" t-if="doc.display_discount_to_customer" class="text-right">Computed discount</th>
+                    <th name="line_amount_th" width="10%" class="text-right">Tax excluded price</th>
                 </tr>
             </thead>
             <tbody class="sale_tbody">
@@ -93,18 +94,21 @@
                                 <span t-esc="'%.2f'% l.product_uom_qty"/>
                                 <span t-field="l.product_uom" groups="product.group_uom"/>
                             </td>
-                            <td class="text-right">
+                            <td t-if="doc.display_discount_to_customer" class="text-right">
                                 <span t-esc="'%.2f'% l.price_unit"/>
                             </td>
-                            <td t-if="doc.partner_id.is_ad_agency" class="text-right">
+                            <td t-if="not doc.advertising_agency" class="text-right">
+                                <span t-esc="'%.2f'% l.actual_unit_price"/>
+                            </td>
+                            <td t-if="doc.advertising_agency" class="text-right">
                                 <span t-esc="'%.2f'% l.subtotal_before_agency_disc"/>
                             </td>
-                            <td t-if="display_discount" class="text-right">
+                            <td t-if="doc.advertising_agency" class="text-right">
                                 <span t-esc="'%.2f'% l.discount"/>
                             </td>
-                            <td t-if="display_Cdiscount" class="text-right">
+                            <!--<td t-if="display_Cdiscount" class="text-right">
                                 <span t-esc="'%.2f'% l.computed_discount"/>
-                            </td>
+                            </td>-->
                             <td t-if="doc.display_discount_to_customer" class="text-right">
                                 <span t-esc="'%.2f'% l.computed_discount"/>
                             </td>
@@ -204,7 +208,7 @@
 
             <!-- Is there a discount on at least one line? -->
             <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
-            <t t-set="display_Cdiscount" t-value="any([l.computed_discount for l in doc.order_line])"/>
+            <!--<t t-set="display_Cdiscount" t-value="any([l.computed_discount for l in doc.order_line])"/>-->
             <t t-set="tot_Cdiscount" t-value="0"/>
 
             <div name="order_lines" class="row" style="padding-left:85px;padding-right:15px;">
