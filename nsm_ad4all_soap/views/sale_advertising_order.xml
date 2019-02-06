@@ -136,7 +136,7 @@
                 <group name="ad_refs" position="after">
                     <group string="Ad4all" name="ad4all" >
                         <field name="no_copy_chase"
-                               attrs="{'invisible': [('line_ad4all_allow','!=', True)]}"/>
+                               attrs="{'invisible': [('line_ad4all_allow','!=', True),('multi_line','=', False)]}"/>
                         <field name="line_ad4all_allow" readonly="1" />
                         <field name="ad4all_sent" readonly="1"/>
                     </group>
