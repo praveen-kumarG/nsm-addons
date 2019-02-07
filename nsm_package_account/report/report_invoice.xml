@@ -14,6 +14,11 @@
                     <t t-call="nsm_account.report_invoice_orderlines_document_nsm_account"/>
                 </div>
             </t>
+            <t t-if="o.invoice_line_ids and not o.invoice_line_ids[0].sale_order_id">
+                <div name="invoice_orderlines" style="padding-left:70px;padding-right:0px;" t-if="not o.invoice_description">
+                    <t t-call="nsm_account.report_invoice_orderlines_document_nsm_account"/>
+                </div>
+            </t>
         </xpath>
     </template>
 
