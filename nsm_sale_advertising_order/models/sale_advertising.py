@@ -26,7 +26,24 @@ class SaleOrder(models.Model):
     _inherit = ["sale.order"]
 
     material_contact_person = fields.Many2one('res.partner', 'Material Contact Person', domain=[('customer','=',True)])
-    
+
+    @api.multi
+    def action_approve1(self):
+        res = super(SaleOrder, self).action_approve1()
+        orders = self.filtered(lambda s: s.state in ['approved1'])
+        for order in orders:
+            olines = []
+            for line in order.order_line:
+                if line.multi_line:
+                    olines.append(line.id)
+            if olines:
+                list = self.env['sale.order.line.create.multi.lines'].create_multi_from_order_lines(orderlines=olines)
+                newlines = self.env['sale.order.line'].browse(list)
+                for newline in newlines:
+                    if newline.deadline_check():
+                        newline.page_qty_check_create()
+        return res
+
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
@@ -106,6 +123,7 @@ class SaleOrderLine(models.Model):
         if not self.advertising:
             return res
         if self.title:
+            product_ids = []
             if self.title.product_attribute_value_id:
                     product_ids = self.env['product.product'].search([('attribute_value_ids', '=',
                                                        [self.title.product_attribute_value_id.id])])
