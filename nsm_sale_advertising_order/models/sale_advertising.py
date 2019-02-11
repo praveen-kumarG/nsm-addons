@@ -115,6 +115,27 @@ class SaleOrderLine(models.Model):
             return res
         if self.ad_class:
             res['value']['is_plusproposition_category'] = self.ad_class.is_plusproposition_category
+
+        res['domain']['product_template_id'] = []
+        if self.ad_class:
+            if 'product_template_id' in res['domain']:
+                res['domain']['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
+            else:
+                res['domain']['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
+        titles = self.title if self.title else self.title_ids or False
+        if titles:
+            product_ids = self.env['product.product']
+            for title in titles:
+                if title.product_attribute_value_id:
+                    product_ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
+                    product_ids += product_ids
+
+            if product_ids:
+                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
+                if 'product_template_id' in res['domain']:
+                    res['domain']['product_template_id'] += [('id', 'in', product_tmpl_ids)]
+                else:
+                    res['domain']['product_template_id'] = [('id', 'in', product_tmpl_ids)]
         return res
 
     @api.onchange('title')
@@ -122,6 +143,7 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self).title_oc()
         if not self.advertising:
             return res
+        res['domain']['product_template_id'] = []
         if self.title:
             product_ids = []
             if self.title.product_attribute_value_id:
@@ -133,6 +155,11 @@ class SaleOrderLine(models.Model):
                     res['domain']['product_template_id'] += [('id', 'in', product_tmpl_ids)]
                 else:
                     res['domain']['product_template_id'] = [('id', 'in', product_tmpl_ids)]
+        if self.ad_class:
+            if 'product_template_id' in res['domain']:
+                res['domain']['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
+            else:
+                res['domain']['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
         return res
 
     @api.onchange('title_ids')
@@ -141,6 +168,7 @@ class SaleOrderLine(models.Model):
         vals, data = {}, {}
         if not self.advertising:
             return {'value': vals}
+        data['product_template_id'] = []
         if self.title_ids:
             product_ids = self.env['product.product']
             for title in self.title_ids:
@@ -153,6 +181,11 @@ class SaleOrderLine(models.Model):
                     data['product_template_id'] += [('id', 'in', product_tmpl_ids)]
                 else:
                     data['product_template_id'] = [('id', 'in', product_tmpl_ids)]
+        if self.ad_class:
+            if 'product_template_id' in data:
+                data['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
+            else:
+                data['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
         return {'domain': data }
 
 
