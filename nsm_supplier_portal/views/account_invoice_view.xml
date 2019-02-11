@@ -35,6 +35,24 @@
                 </field>
         </record>
 
+        <!--Analytic Account tree view for Supplier Portal Users-->
+        <record id="view_account_analytic_account_list_portal" model="ir.ui.view">
+            <field name="name">account.analytic.account.list</field>
+            <field name="model">account.analytic.account</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Analytic Accounts">
+                    <field name="display_name"/>
+                    <field name="department_id" string="Department"/>
+                    <field name="code"/>
+                    <field name="portal_main" string="Portal"/>
+                    <field name="portal_sub" string="Portal"/>
+                    <field name="partner_id"/>
+                    <field name="active" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
 
     <!--  Enter Your Invoice View  -->
 
@@ -122,7 +140,8 @@
                                options='{"no_create": True, "no_create_edit": True, "no_open": True}' attrs="{'readonly': [('state','!=','portalcreate')],}"/>
                             <field name="main_account_analytic_id" string="Title/Department"
                                options='{"no_create": True, "no_create_edit": True, "no_open": True}' required="True"
-                               attrs="{'readonly': [('state','!=','portalcreate')],}"/>
+                               attrs="{'readonly': [('state','!=','portalcreate')],}"
+                               context="{'tree_view_ref': 'nsm_supplier_portal.view_account_analytic_account_list_portal'}"/>
 
                             <field name="operating_unit_id" groups="operating_unit.group_multi_operating_unit" attrs="{'readonly': [('state','!=','portalcreate')]}" options='{"no_create": True, "no_create_edit": True, "no_open": True}'/>
 
