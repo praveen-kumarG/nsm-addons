@@ -11,6 +11,19 @@
             <xpath expr="//field[@name='product_id']" position="attributes">
                 <attribute name="domain">[('purchase_ok','=',True)]</attribute>
             </xpath>
+            <xpath expr="//group/field[@name='account_id']" position="attributes">
+                <attribute name="groups">account.group_account_manager,account_invoice_2step_validation.vendor_manager</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="invoice_supplier_form_auth_nsm" model="ir.ui.view">
+        <field name="name">account.invoice</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account_invoice_2step_validation.invoice_supplier_form_auth"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='account_id']" position="attributes">
+                <attribute name="groups">account.group_account_user,account_invoice_2step_validation.vendor_manager,account.group_account_invoice,account_invoice_2step_validation.goedk_facturen</attribute>
+            </xpath>
         </field>
     </record>
 </odoo>
