@@ -169,9 +169,10 @@ class SaleOrderLine(models.Model):
         if not self.advertising:
             return {'value': vals}
         data['product_template_id'] = []
-        if self.title_ids:
+        titles = self.title_ids if self.title_ids else self.title or False
+        if titles:
             product_ids = self.env['product.product']
-            for title in self.title_ids:
+            for title in titles:
                 if title.product_attribute_value_id:
                     ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
                     product_ids += ids
