@@ -30,3 +30,18 @@ msgstr "Abonnements Oplage"
 #: model:circulation.type,name:nsm_sale_advertising_order.circulation_type2
 msgid "Selective Circulation"
 msgstr "Selectieve Oplage"
+
+#. module: nsm_sale_advertising_order
+#: model:ir.ui.view,arch_db:nsm_sale_advertising_order.report_credit_control_summary_document_nsm
+msgid "Kind regards,"
+msgstr "Met vriendelijke groet,"
+
+#. module: nsm_sale_advertising_order
+#: model:ir.ui.view,arch_db:nsm_sale_advertising_order.report_credit_control_summary_document_nsm
+msgid "Credit management New Skool Media B.V."
+msgstr "Debiteurenbeheer New Skool Media B.V."
+
+#. module: nsm_sale_advertising_order
+#: model:ir.ui.view,arch_db:nsm_sale_advertising_order.report_credit_control_summary_document_nsm
+msgid "Credit management ONE Business B.V."
+msgstr "Debiteurenbeheer ONE Business B.V."

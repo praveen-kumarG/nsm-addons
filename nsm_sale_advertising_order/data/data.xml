@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--Email template -->
+    <record id="account_credit_control.email_template_credit_control_base" model="mail.template">
+        <field name="name">Credit Control Email</field>
+        <field name="email_from">${object.partner_id.company_id.email or ''}</field>
+        <field name="subject">Credit Control:
+            (${object.current_policy_level.name or 'n/a'})
+        </field>
+        <field name="email_to">${object.get_email() or  ''}</field>
+        <field name="model_id" ref="model_credit_control_communication"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="lang">
+            ${object.get_contact_address().lang or 'en_US'}
+        </field>
+        <field name="report_template" ref="account_credit_control.credit_control_summary"/>
+        <field name="body_html"><![CDATA[
+            Dear ${object.contact_address.name or ''}
+            <br/>
+            <br/>
+            ${object.current_policy_level.custom_mail_text | safe}
+            <p><b>Credit Management</b></p>
+            % if object.credit_control_line_ids[0].invoice_id.operating_unit_id.code == 'ONE':
+            <p><strong>ONE Business B.V.</strong>, part of New Skool Media B.V.</p>
+            <p>debiteuren@onebusiness.nl</p>
+            % else:
+            <p><strong>New Skool Media B.V.</strong></p>
+            <p>debiteuren@newskoolmedia.nl</p>
+            % endif}
+        ]]></field>
+    </record>
+</odoo>

@@ -26,7 +26,24 @@ class SaleOrder(models.Model):
     _inherit = ["sale.order"]
 
     material_contact_person = fields.Many2one('res.partner', 'Material Contact Person', domain=[('customer','=',True)])
-    
+
+    @api.multi
+    def action_approve1(self):
+        res = super(SaleOrder, self).action_approve1()
+        orders = self.filtered(lambda s: s.state in ['approved1'])
+        for order in orders:
+            olines = []
+            for line in order.order_line:
+                if line.multi_line:
+                    olines.append(line.id)
+            if olines:
+                list = self.env['sale.order.line.create.multi.lines'].create_multi_from_order_lines(orderlines=olines)
+                newlines = self.env['sale.order.line'].browse(list)
+                for newline in newlines:
+                    if newline.deadline_check():
+                        newline.page_qty_check_create()
+        return res
+
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
@@ -98,6 +115,27 @@ class SaleOrderLine(models.Model):
             return res
         if self.ad_class:
             res['value']['is_plusproposition_category'] = self.ad_class.is_plusproposition_category
+
+        res['domain']['product_template_id'] = []
+        if self.ad_class:
+            if 'product_template_id' in res['domain']:
+                res['domain']['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
+            else:
+                res['domain']['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
+        titles = self.title if self.title else self.title_ids or False
+        if titles:
+            product_ids = self.env['product.product']
+            for title in titles:
+                if title.product_attribute_value_id:
+                    product_ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
+                    product_ids += product_ids
+
+            if product_ids:
+                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
+                if 'product_template_id' in res['domain']:
+                    res['domain']['product_template_id'] += [('id', 'in', product_tmpl_ids)]
+                else:
+                    res['domain']['product_template_id'] = [('id', 'in', product_tmpl_ids)]
         return res
 
     @api.onchange('title')
@@ -105,7 +143,9 @@ class SaleOrderLine(models.Model):
         res = super(SaleOrderLine, self).title_oc()
         if not self.advertising:
             return res
+        res['domain']['product_template_id'] = []
         if self.title:
+            product_ids = []
             if self.title.product_attribute_value_id:
                     product_ids = self.env['product.product'].search([('attribute_value_ids', '=',
                                                        [self.title.product_attribute_value_id.id])])
@@ -115,6 +155,11 @@ class SaleOrderLine(models.Model):
                     res['domain']['product_template_id'] += [('id', 'in', product_tmpl_ids)]
                 else:
                     res['domain']['product_template_id'] = [('id', 'in', product_tmpl_ids)]
+        if self.ad_class:
+            if 'product_template_id' in res['domain']:
+                res['domain']['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
+            else:
+                res['domain']['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
         return res
 
     @api.onchange('title_ids')
@@ -123,9 +168,11 @@ class SaleOrderLine(models.Model):
         vals, data = {}, {}
         if not self.advertising:
             return {'value': vals}
-        if self.title_ids:
+        data['product_template_id'] = []
+        titles = self.title_ids if self.title_ids else self.title or False
+        if titles:
             product_ids = self.env['product.product']
-            for title in self.title_ids:
+            for title in titles:
                 if title.product_attribute_value_id:
                     ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
                     product_ids += ids
@@ -135,6 +182,11 @@ class SaleOrderLine(models.Model):
                     data['product_template_id'] += [('id', 'in', product_tmpl_ids)]
                 else:
                     data['product_template_id'] = [('id', 'in', product_tmpl_ids)]
+        if self.ad_class:
+            if 'product_template_id' in data:
+                data['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
+            else:
+                data['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
         return {'domain': data }
 
 
