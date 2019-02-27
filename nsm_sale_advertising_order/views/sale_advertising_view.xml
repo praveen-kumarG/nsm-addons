@@ -47,6 +47,12 @@
                 <xpath expr="//tree/field[@name='title']" position="after">
                     <field name="adv_issue"/>
                 </xpath>
+                <xpath expr="//field[@name='order_line']/form/group[1]/group[1]/field[@name='product_template_id']" position="before">
+                    <field name="product_template_domain" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form/group[1]/group[1]/field[@name='product_template_id']" position="attributes">
+                    <attribute name="domain">product_template_domain</attribute>
+                </xpath>
             </field>
         </record>
 
