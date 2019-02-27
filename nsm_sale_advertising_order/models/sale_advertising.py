@@ -237,5 +237,12 @@ class SaleOrderLine(models.Model):
     send_with_advertising_issue = fields.Boolean(string="Send with advertising issue")
     adv_issue_parent = fields.Many2one(related='adv_issue.parent_id', string='Advertising Issue Parent', readonly=True, store=True)
 
+    @api.multi
+    def _prepare_invoice_line(self, qty):
+        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+        res['start_date'] = self.from_date
+        res['end_date'] = self.to_date
+        return res
+
 
 

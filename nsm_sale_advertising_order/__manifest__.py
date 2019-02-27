@@ -39,7 +39,8 @@ This module allows you to use both CRM and Sales Management to run your advertis
                 'report_xlsx',
                 'operating_unit_report_layout',
                 'report_qweb_operating_unit',
-                'account_credit_control'
+                'account_credit_control',
+                'account_invoice_start_end_dates'
                 ],
     'data': [
              "security/ir.model.access.csv",

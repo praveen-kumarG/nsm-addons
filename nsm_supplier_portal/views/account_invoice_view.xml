@@ -185,7 +185,8 @@
                                     <field name="acc_analytic_domain" invisible="1"/>
                                     <field name="account_analytic_id" string="Editie"
                                         domain="acc_analytic_domain"
-                                        options='{"no_create": True, "no_create_edit": True, "no_open": True}' required="True"/>
+                                        options='{"no_create": True, "no_create_edit": True, "no_open": True}' required="True"
+                                        context="{'tree_view_ref': 'nsm_supplier_portal.view_account_analytic_account_list_portal'}"/>
 
                                     <field name="quantity"/>
 
