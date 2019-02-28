@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <menuitem id="menu_sale_order_line_proof" parent="sale_advertising_order.menu_advsales"
-                  action="nsm_proof_number_delivery_list_action"
+                  action="nsm_proof_delivery_list_action"
                   groups="sale_advertising_order.group_advertising_sales_user" sequence="12" />
 
         <menuitem id="menu_sale_order_line_indeellijst" parent="sale_advertising_order.menu_advsales"
