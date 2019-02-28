@@ -21,6 +21,7 @@
 ##############################################################################
 
 from odoo import api, fields, models, _
+import json
 
 class SaleOrder(models.Model):
     _inherit = ["sale.order"]
@@ -115,80 +116,7 @@ class SaleOrderLine(models.Model):
             return res
         if self.ad_class:
             res['value']['is_plusproposition_category'] = self.ad_class.is_plusproposition_category
-
-        res['domain']['product_template_id'] = []
-        if self.ad_class:
-            if 'product_template_id' in res['domain']:
-                res['domain']['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
-            else:
-                res['domain']['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
-        titles = self.title if self.title else self.title_ids or False
-        if titles:
-            product_ids = self.env['product.product']
-            for title in titles:
-                if title.product_attribute_value_id:
-                    product_ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
-                    product_ids += product_ids
-
-            if product_ids:
-                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
-                if 'product_template_id' in res['domain']:
-                    res['domain']['product_template_id'] += [('id', 'in', product_tmpl_ids)]
-                else:
-                    res['domain']['product_template_id'] = [('id', 'in', product_tmpl_ids)]
         return res
-
-    @api.onchange('title')
-    def title_oc(self):
-        res = super(SaleOrderLine, self).title_oc()
-        if not self.advertising:
-            return res
-        res['domain']['product_template_id'] = []
-        if self.title:
-            product_ids = []
-            if self.title.product_attribute_value_id:
-                    product_ids = self.env['product.product'].search([('attribute_value_ids', '=',
-                                                       [self.title.product_attribute_value_id.id])])
-            if product_ids:
-                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
-                if 'product_template_id' in res['domain']:
-                    res['domain']['product_template_id'] += [('id', 'in', product_tmpl_ids)]
-                else:
-                    res['domain']['product_template_id'] = [('id', 'in', product_tmpl_ids)]
-        if self.ad_class:
-            if 'product_template_id' in res['domain']:
-                res['domain']['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
-            else:
-                res['domain']['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
-        return res
-
-    @api.onchange('title_ids')
-    def title_ids_oc(self):
-        super(SaleOrderLine, self).title_ids_oc()
-        vals, data = {}, {}
-        if not self.advertising:
-            return {'value': vals}
-        data['product_template_id'] = []
-        titles = self.title_ids if self.title_ids else self.title or False
-        if titles:
-            product_ids = self.env['product.product']
-            for title in titles:
-                if title.product_attribute_value_id:
-                    ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
-                    product_ids += ids
-            if product_ids:
-                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
-                if 'product_template_id' in data:
-                    data['product_template_id'] += [('id', 'in', product_tmpl_ids)]
-                else:
-                    data['product_template_id'] = [('id', 'in', product_tmpl_ids)]
-        if self.ad_class:
-            if 'product_template_id' in data:
-                data['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
-            else:
-                data['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
-        return {'domain': data }
-
 
     @api.onchange('circulation_type')
     def onchange_circulation_type(self):
@@ -209,6 +137,27 @@ class SaleOrderLine(models.Model):
     @api.onchange('proof_number_payer')
     def onchange_proof_number_payer(self):
         self.proof_number_amt_payer = 1 if self.proof_number_payer else 0
+
+    @api.depends('ad_class','title','title_ids')
+    @api.multi
+    def _compute_product_template_domain(self):
+        """
+        Compute domain for the field product_template_id.
+        """
+        for rec in self:
+            titles = rec.title_ids if rec.title_ids else rec.title or False
+            domain = []
+            if titles:
+                product_ids = rec.env['product.product']
+                for title in titles:
+                    if title.product_attribute_value_id:
+                        ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
+                        product_ids += ids
+                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
+                domain += [('id', 'in', product_tmpl_ids)]
+            if rec.ad_class:
+                domain += [('categ_id', '=', rec.ad_class.id)]
+            rec.product_template_domain = json.dumps(domain)
 
     proof_number_payer = fields.Many2one('res.partner', 'Proof Number Payer')
     proof_number_adv_customer = fields.Many2many('res.partner', 'partner_line_proof_rel', 'line_id', 'partner_id', string='Proof Number Advertising Customer')
@@ -236,6 +185,7 @@ class SaleOrderLine(models.Model):
     circulation_type = fields.Many2one('circulation.type', string='Circulation Type')
     send_with_advertising_issue = fields.Boolean(string="Send with advertising issue")
     adv_issue_parent = fields.Many2one(related='adv_issue.parent_id', string='Advertising Issue Parent', readonly=True, store=True)
+    product_template_domain = fields.Char(compute="_compute_product_template_domain", string="Product Template Domain")
 
     @api.multi
     def _prepare_invoice_line(self, qty):
