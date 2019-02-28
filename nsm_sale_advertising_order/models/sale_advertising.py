@@ -67,35 +67,6 @@ class SaleOrderLine(models.Model):
                 line.product_height = prod.height
                 line.material_id = line.recurring_id.id if line.recurring_id else line.id
 
-
-    @api.depends('proof_number_payer','proof_number_adv_customer')
-    def _get_proof_data(self):
-        for line in self:
-            proof_payer = line.proof_number_payer
-            proof_cus = line.proof_number_adv_customer and line.proof_number_adv_customer[0]
-            if proof_payer:
-                line.proof_parent_name = proof_payer.parent_id and proof_payer.parent_id.name or False
-                line.proof_initials = proof_payer.initials or ''
-                line.proof_infix = proof_payer.infix or ''
-                line.proof_lastname = proof_payer.lastname or ''
-                line.proof_country_code = proof_payer.country_id.code or ''
-                line.proof_zip = proof_payer.zip or ''
-                line.proof_street_number = proof_payer.street_number or ''
-                line.proof_street_name = proof_payer.street_name or ''
-                line.proof_city = proof_payer.city or ''
-                line.proof_partner_name = proof_payer.name or ''
-            elif proof_cus:
-                line.proof_parent_name = proof_cus.parent_id and proof_cus.parent_id.name or False
-                line.proof_initials = proof_cus.initials or ''
-                line.proof_infix = proof_cus.infix or ''
-                line.proof_lastname = proof_cus.lastname or ''
-                line.proof_country_code = proof_cus.country_id.code or ''
-                line.proof_zip = proof_cus.zip or ''
-                line.proof_street_number = proof_cus.street_number or ''
-                line.proof_street_name = proof_cus.street_name or ''
-                line.proof_city = proof_cus.city or ''
-                line.proof_partner_name = proof_cus.name or ''
-
     @api.model
     def default_get(self, fields_list):
         result = super(SaleOrderLine, self).default_get(fields_list)
@@ -214,16 +185,6 @@ class SaleOrderLine(models.Model):
     proof_number_adv_customer = fields.Many2many('res.partner', 'partner_line_proof_rel', 'line_id', 'partner_id', string='Proof Number Advertising Customer')
     proof_number_amt_payer = fields.Integer('Proof Number Amount Payer', default=1)
     proof_number_amt_adv_customer = fields.Integer('Proof Number Amount Advertising', default=1)
-    proof_parent_name = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Parent")
-    proof_initials = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Initials")
-    proof_infix = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Infix")
-    proof_lastname = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Last Name")
-    proof_country_code = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Country Code")
-    proof_zip = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Zip")
-    proof_street_number = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Street Number")
-    proof_street_name = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Street Name")
-    proof_city = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="City")
-    proof_partner_name = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Name")
     product_width = fields.Float(compute='_get_indeellijst_data', readonly=True, store=False, string="Width")
     product_height = fields.Float(compute='_get_indeellijst_data', readonly=True, store=False, string="Height")
     material_id = fields.Integer(compute='_get_indeellijst_data', readonly=True, store=False, string="Material ID")
