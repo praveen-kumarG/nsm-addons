@@ -25,6 +25,7 @@ import advertising_issue
 import product
 import circulation_type
 import credit_control_run
+import proof_delivery_list
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
