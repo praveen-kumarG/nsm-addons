@@ -45,6 +45,20 @@ class SaleOrder(models.Model):
                         newline.page_qty_check_create()
         return res
 
+    #Overridden not to change the state of the record while printing reports.
+    @api.multi
+    def print_quotation(self):
+        orders = self.filtered(lambda s: s.advertising and s.state in ['draft','approved1', 'submitted', 'approved2'])
+        for order in orders:
+            olines = []
+            for line in order.order_line:
+                if line.multi_line:
+                    olines.append(line.id)
+            if not olines == []:
+                self.env['sale.order.line.create.multi.lines'].create_multi_from_order_lines(orderlines=olines)
+        self._cr.commit()
+        return self.env['report'].get_action(self, 'sale.report_saleorder')
+
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
@@ -156,4 +170,10 @@ class SaleOrderLine(models.Model):
         return res
 
 
+class MailComposeMessage(models.TransientModel):
+    _inherit = 'mail.compose.message'
 
+    #Overridden and calling super with mark_so_as_sent = False.
+    @api.multi
+    def send_mail(self, auto_commit=False):
+        return super(MailComposeMessage, self.with_context(mark_so_as_sent=False)).send_mail(auto_commit=auto_commit)
