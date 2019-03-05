@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_sale_circulation_type_salesman,circulation.type.salesman,model_circulation_type,sales_team.group_sale_salesman,1,1,1,0
 access_sale_circulation_type_manager,circulation.type.manager,model_circulation_type,sales_team.group_sale_manager,1,1,1,1
+access_proof_number_delivery_list_salesman,proof.number.delivery.list.salesman,model_proof_number_delivery_list,sales_team.group_sale_salesman,1,1,1,0
+access_proof_number_delivery_list_manager,proof.number.delivery.list.manager,model_proof_number_delivery_list,sales_team.group_sale_manager,1,1,1,1
