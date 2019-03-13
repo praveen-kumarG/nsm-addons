@@ -130,6 +130,8 @@
                                    context="{'form_view_ref':'nsm_supplier_portal.view_partner_supplier_form', 'is_portal': True}"
                                    attrs="{'invisible':[('type', '=', 'in_refund')]}"/>
 
+                            <field name="reference" invisible="1"/>
+                            <field name="payment_mode_id" invisible="1"/>
                             <field string="Supplier" name="partner_id"
                                   context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1, 'form_view_ref':'nsm_supplier_portal.view_partner_supplier_form', 'is_portal': True}"
                                   domain="[('supplier', '=', True)]" attrs="{'invisible':[('type', '!=', 'in_refund')], 'readonly': [('type','=','in_refund')]}"/>
