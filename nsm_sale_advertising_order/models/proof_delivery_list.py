@@ -25,7 +25,7 @@ class ProofNumberDeliveryList(models.Model):
             line.proof_partner_name = proof_payer.name or ''
             order_line = line.line_id
             amt = 0
-            if order_line.proof_number_payer and proof_payer == order_line.proof_number_payer:
+            if order_line.proof_number_payer_id and proof_payer == order_line.proof_number_payer_id:
                 amt += order_line.proof_number_amt_payer
             if proof_payer.id in order_line.proof_number_adv_customer.ids:
                 amt += order_line.proof_number_amt_adv_customer
@@ -56,20 +56,20 @@ class ProofNumberDeliveryList(models.Model):
                 CREATE OR REPLACE VIEW proof_number_delivery_list AS (   
                                     
                    WITH Q11 AS(
-                            SELECT 
-                                sol.id as id,sol.proof_number_payer as partner , sol.title as title, sol.adv_issue as adv_issue, sol.issue_date as issue_date 
-                            FROM 
-                                sale_order_line as sol 
-                            WHERE 
-                                proof_number_payer IS NOT NULL AND sol.advertising = TRUE AND sol.state IN ('sale','done')
-    
-                            UNION ALL 
-                            
+                            SELECT
+                                sol.id as id,sol.proof_number_payer_id as partner , sol.title as title, sol.adv_issue as adv_issue, sol.issue_date as issue_date
+                            FROM
+                                sale_order_line as sol
+                            WHERE
+                                proof_number_payer_id IS NOT NULL AND sol.advertising = TRUE AND sol.state IN ('sale','done')
+
+                            UNION ALL
+
                             SELECT
                                 ppl.line_id as id, ppl.partner_id as partner, sol.title as title, sol.adv_issue as adv_issue, sol.issue_date as issue_date
                             FROM
                                 partner_line_proof_rel as ppl join sale_order_line as sol on (sol.id = ppl.line_id)
-                            WHERE 
+                            WHERE
                                 sol.advertising = TRUE AND sol.state IN ('sale','done')
                     )
     
