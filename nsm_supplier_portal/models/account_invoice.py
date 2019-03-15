@@ -280,6 +280,9 @@ class Invoice(models.Model):
             if not case.invoice_line_ids:
                 raise UserError(_('Please create some invoice lines.'))
 
+            if case.check_total != case.amount_total:
+                raise UserError(_('Please make sure Verification Total is equal to Invoice Total.'))
+
             salesTeam = salesTeam.search(
                         [('analytic_account_id', '=', case.main_account_analytic_id.id),
                           ('product_cat_id', '=', (case.invoice_line_ids and
