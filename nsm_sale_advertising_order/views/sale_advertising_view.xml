@@ -168,7 +168,7 @@
             <field name="act_window_id" ref="nsm_indeellijst_action"/>
         </record>
 
-                <record id="view_order_form_inherited" model="ir.ui.view">
+        <record id="view_order_form_inherited" model="ir.ui.view">
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
