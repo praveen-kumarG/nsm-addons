@@ -86,7 +86,7 @@ class SaleOrderLine(models.Model):
     def default_get(self, fields_list):
         result = super(SaleOrderLine, self).default_get(fields_list)
         if 'customer_contact' in self.env.context:
-            result.update({'proof_number_payer':self.env.context['customer_contact']})
+            result.update({'proof_number_payer_id':self.env.context['customer_contact']})
             result.update({'proof_number_amt_payer': 1})
 
         result.update({'proof_number_adv_customer': False})
@@ -117,11 +117,11 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('proof_number_amt_payer')
     def onchange_proof_number_amt_payer(self):
-        if self.proof_number_amt_payer < 1: self.proof_number_payer = False
+        if self.proof_number_amt_payer < 1: self.proof_number_payer_id = False
 
-    @api.onchange('proof_number_payer')
-    def onchange_proof_number_payer(self):
-        self.proof_number_amt_payer = 1 if self.proof_number_payer else 0
+    @api.onchange('proof_number_payer_id')
+    def onchange_proof_number_payer_id(self):
+        self.proof_number_amt_payer = 1 if self.proof_number_payer_id else 0
 
     @api.depends('ad_class','title','title_ids')
     @api.multi
@@ -144,7 +144,7 @@ class SaleOrderLine(models.Model):
                 domain += [('categ_id', '=', rec.ad_class.id)]
             rec.product_template_domain = json.dumps(domain)
 
-    proof_number_payer = fields.Many2one('res.partner', 'Proof Number Payer')
+    proof_number_payer_id = fields.Many2one('res.partner', 'Proof Number Payer')
     proof_number_adv_customer = fields.Many2many('res.partner', 'partner_line_proof_rel', 'line_id', 'partner_id', string='Proof Number Advertising Customer')
     proof_number_amt_payer = fields.Integer('Proof Number Amount Payer', default=1)
     proof_number_amt_adv_customer = fields.Integer('Proof Number Amount Advertising', default=1)

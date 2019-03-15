@@ -15,13 +15,13 @@
                            context="{'default_parent_id': partner_id, 'show_email': 1}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_payer']" position="replace">
-                    <field name="proof_number_payer" domain="[('customer', '=', True),('id','child_of',parent.partner_id)]" attrs="{'required': [('proof_number_amt_payer', '>', 0)]}" context="{'default_parent_id': 'order_partner_id', 'show_address': 1}" options="{'no_create_edit': True, 'always_reload': True}"/>
+                    <field name="proof_number_payer_id" domain="[('customer', '=', True),('id','child_of',parent.partner_id)]" attrs="{'required': [('proof_number_amt_payer', '>', 0)]}" context="{'default_parent_id': 'order_partner_id', 'show_address': 1}" options="{'no_create_edit': True, 'always_reload': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="replace">
                     <field name="proof_number_adv_customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'parent.partner_id', 'show_email': 1}" options="{'no_create_edit': True}" widget="many2many_tags"/>
                 </xpath>
-                <xpath expr="//field[@name='proof_number_payer']" position="after">
-                     <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer','=', False)],'required':[('proof_number_payer','!=', False)]}"/>
+                <xpath expr="//field[@name='proof_number_payer_id']" position="after">
+                     <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer_id','=', False)],'required':[('proof_number_payer_id','!=', False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="after">
                      <field name="proof_number_amt_adv_customer" attrs="{'invisible':[('proof_number_amt_adv_customer','=', 0)],'required':[('proof_number_adv_customer','!=', False)]}"/>
@@ -62,13 +62,13 @@
             <field name="inherit_id" ref="sale_advertising_order.view_adv_order_line_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='proof_number_payer']" position="replace">
-                    <field name="proof_number_payer" domain="[('customer', '=', True),('id', 'child_of', order_partner_id)]" context="{'default_parent_id': 'order_partner_id', 'show_address': 1}" options="{'no_create_edit': True, 'always_reload': True}"/>
+                    <field name="proof_number_payer_id" domain="[('customer', '=', True),('id', 'child_of', order_partner_id)]" context="{'default_parent_id': 'order_partner_id', 'show_address': 1}" options="{'no_create_edit': True, 'always_reload': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="replace">
                     <field name="proof_number_adv_customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'order_partner_id', 'show_email': 1}" options="{'no_create_edit': True}" widget="many2many_tags"/>
                 </xpath>
-                <xpath expr="//field[@name='proof_number_payer']" position="after">
-                     <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer','=', False)],'required':[('proof_number_payer','!=', False)]}"/>
+                <xpath expr="//field[@name='proof_number_payer_id']" position="after">
+                     <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer_id','=', False)],'required':[('proof_number_payer_id','!=', False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="after">
                      <field name="proof_number_amt_adv_customer" attrs="{'invisible':[('proof_number_adv_customer','=', False)],'required':[('proof_number_adv_customer','!=', False)]}"/>
