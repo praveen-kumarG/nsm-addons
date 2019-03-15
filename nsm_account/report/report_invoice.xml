@@ -13,8 +13,8 @@
                 <th width="10%" class="text-left">Product</th>
                 <th width="10%" class="text-right">Volume</th>
                 <t t-if="display_unit_price or display_discount"><th width="5%" class="text-right">Unit Price</th></t>
-                <th width="5%" t-if="display_discount" class="text-right">S.B.A.D.</th>
-                <th width="10%" t-if="display_discount" class="text-right">Disc(%)</th>
+                <th width="5%" t-if="display_discount" class="text-right">SBAD</th>
+                <th width="10%" t-if="display_discount" class="text-right">Agency Disc</th>
                 <th style="width:2%"/>
                 <th width="10%" class="text-right">Tax Excluded Price</th>
             </tr>
@@ -248,7 +248,7 @@
                 <strong><span t-field="o.invoice_description"/></strong>
             </div>
 
-            <t t-set="total_before_discount" t-value="sum([l.price_unit for l in o.invoice_line_ids])"/>
+            <t t-set="total_before_discount" t-value="sum([l.subtotal_before_agency_disc for l in o.invoice_line_ids])"/>
             <t t-set="total_discount" t-value="sum([l.subtotal_before_agency_disc - l.price_subtotal for l in o.invoice_line_ids])"/>
             <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
             <t t-set="display_unit_price" t-value="any([l.quantity>1 for l in o.invoice_line_ids])"/>

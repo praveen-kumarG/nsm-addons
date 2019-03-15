@@ -86,7 +86,7 @@ class SaleOrderLine(models.Model):
     def default_get(self, fields_list):
         result = super(SaleOrderLine, self).default_get(fields_list)
         if 'customer_contact' in self.env.context:
-            result.update({'proof_number_payer':self.env.context['customer_contact']})
+            result.update({'proof_number_payer_id':self.env.context['customer_contact']})
             result.update({'proof_number_amt_payer': 1})
 
         result.update({'proof_number_adv_customer': False})
@@ -96,12 +96,35 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('ad_class')
     def onchange_ad_class(self):
-        res = super(SaleOrderLine, self).onchange_ad_class()
+        vals, result = {}, {}
         if not self.advertising:
-            return res
+            return {'value': vals}
+        titles = self.title_ids if self.title_ids else self.title or False
+        domain = []
+        if titles:
+            product_ids = self.env['product.product']
+            for title in titles:
+                if title.product_attribute_value_id:
+                    ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
+                    product_ids += ids
+            product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
+            domain = [('id', 'in', product_tmpl_ids)]
         if self.ad_class:
-            res['value']['is_plusproposition_category'] = self.ad_class.is_plusproposition_category
-        return res
+            vals['is_plusproposition_category'] = self.ad_class.is_plusproposition_category
+            product_ids = self.env['product.template'].search(domain+[('categ_id', '=', self.ad_class.id)])
+            if product_ids and len(product_ids) == 1:
+                vals['product_template_id'] = product_ids[0]
+            else:
+                vals['product_template_id'] = False
+            date_type = self.ad_class.date_type
+            if date_type:
+                vals['date_type'] = date_type
+            else: result = {'title':_('Warning'),
+                                 'message':_('The Ad Class has no Date Type. You have to define one')}
+        else:
+            vals['product_template_id'] = False
+            vals['date_type'] = False
+        return {'value': vals, 'warning': result}
 
     @api.onchange('circulation_type')
     def onchange_circulation_type(self):
@@ -117,11 +140,11 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('proof_number_amt_payer')
     def onchange_proof_number_amt_payer(self):
-        if self.proof_number_amt_payer < 1: self.proof_number_payer = False
+        if self.proof_number_amt_payer < 1: self.proof_number_payer_id = False
 
-    @api.onchange('proof_number_payer')
-    def onchange_proof_number_payer(self):
-        self.proof_number_amt_payer = 1 if self.proof_number_payer else 0
+    @api.onchange('proof_number_payer_id')
+    def onchange_proof_number_payer_id(self):
+        self.proof_number_amt_payer = 1 if self.proof_number_payer_id else 0
 
     @api.depends('ad_class','title','title_ids')
     @api.multi
@@ -144,7 +167,7 @@ class SaleOrderLine(models.Model):
                 domain += [('categ_id', '=', rec.ad_class.id)]
             rec.product_template_domain = json.dumps(domain)
 
-    proof_number_payer = fields.Many2one('res.partner', 'Proof Number Payer')
+    proof_number_payer_id = fields.Many2one('res.partner', 'Proof Number Payer')
     proof_number_adv_customer = fields.Many2many('res.partner', 'partner_line_proof_rel', 'line_id', 'partner_id', string='Proof Number Advertising Customer')
     proof_number_amt_payer = fields.Integer('Proof Number Amount Payer', default=1)
     proof_number_amt_adv_customer = fields.Integer('Proof Number Amount Advertising', default=1)

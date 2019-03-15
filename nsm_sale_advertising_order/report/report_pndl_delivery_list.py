@@ -45,7 +45,7 @@ class NSMDeliveryListReport(ReportXlsx):
             amount = 0
             if customer.id in orderLine.proof_number_adv_customer.ids:
                 amount += orderLine.proof_number_amt_adv_customer
-            if orderLine.proof_number_payer and orderLine.proof_number_payer.id == customer.id:
+            if orderLine.proof_number_payer_id and orderLine.proof_number_payer_id.id == customer.id:
                 amount += orderLine.proof_number_amt_payer
             records.append(amount)
             records.append(customer.name if parent else '')
