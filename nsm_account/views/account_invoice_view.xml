@@ -33,6 +33,9 @@
                         <field name="origin" groups="account.group_account_user" string="Our Reference"/>
                         <field name="name" groups="account.group_account_user" string="Your Reference"/>
                     </xpath>
+                    <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="attributes">
+                        <attribute name="string">Agency Discount (%)</attribute>
+                    </xpath>
 
                 </data>
             </field>

@@ -53,6 +53,32 @@
                 <xpath expr="//field[@name='order_line']/form/group[1]/group[1]/field[@name='product_template_id']" position="attributes">
                     <attribute name="domain">product_template_domain</attribute>
                 </xpath>
+                <xpath expr="//field[@name='order_line']/form/group[1]/group[2]/label[@for='discount']" position="attributes">
+                    <attribute name="string">Agency Discount (%)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='discount_dummy']" position="attributes">
+                    <attribute name="string">Agency Discount (%)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form/group[1]/group[2]/field[@name='subtotal_before_agency_disc']" position="attributes">
+                    <attribute name="string">SBAD</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='subtotal_before_agency_disc']" position="attributes">
+                    <attribute name="string">SBAD</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_adv_order_line_tree_nsm" model="ir.ui.view">
+            <field name="name">sale.adv.order.line.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale_advertising_order.view_adv_order_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='discount_dummy']" position="attributes">
+                    <attribute name="string">Agency Discount (%)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='subtotal_before_agency_disc']" position="attributes">
+                    <attribute name="string">SBAD</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -90,6 +116,12 @@
                         </div>
                         <field name="circulation_type" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}" options="{'no_create_edit': True}"/>
                         <field name="circulation_description" attrs="{'required':[('selective_circulation', '=', True)], 'invisible':[('selective_circulation', '=', False)]}" placeholder="Such as ZIP code, channel, etc."/>
+                </xpath>
+                <xpath expr="//label[@for='discount']" position="attributes">
+                    <attribute name="string">Agency Discount (%)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='subtotal_before_agency_disc']" position="attributes">
+                    <attribute name="string">SBAD</attribute>
                 </xpath>
             </field>
         </record>
