@@ -166,6 +166,7 @@ class SaleOrderLine(models.Model):
     def fields_get(self, fields=None, attributes=None):
         fields = super(SaleOrderLine, self).fields_get(fields, attributes=attributes)
         fields['proof_number_payer']['selectable'] = False
+        fields['proof_number_payer']['sortable'] = False
         return fields
 
     @api.multi
