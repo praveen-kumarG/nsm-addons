@@ -167,7 +167,7 @@ class SaleOrderLine(models.Model):
                 domain += [('categ_id', '=', rec.ad_class.id)]
             rec.product_template_domain = json.dumps(domain)
 
-    proof_number_payer_id = fields.Many2one('res.partner', 'Proof Number Payer')
+    proof_number_payer_id = fields.Many2one('res.partner', 'Proof Number Payer ID')
     proof_number_adv_customer = fields.Many2many('res.partner', 'partner_line_proof_rel', 'line_id', 'partner_id', string='Proof Number Advertising Customer')
     proof_number_amt_payer = fields.Integer('Proof Number Amount Payer', default=1)
     proof_number_amt_adv_customer = fields.Integer('Proof Number Amount Advertising', default=1)
@@ -184,6 +184,13 @@ class SaleOrderLine(models.Model):
     send_with_advertising_issue = fields.Boolean(string="Send with advertising issue")
     adv_issue_parent = fields.Many2one(related='adv_issue.parent_id', string='Advertising Issue Parent', readonly=True, store=True)
     product_template_domain = fields.Char(compute="_compute_product_template_domain", string="Product Template Domain")
+
+    @api.model
+    def fields_get(self, fields=None, attributes=None):
+        fields = super(SaleOrderLine, self).fields_get(fields, attributes=attributes)
+        fields['proof_number_payer']['selectable'] = False
+        fields['proof_number_payer']['sortable'] = False
+        return fields
 
     @api.multi
     def _prepare_invoice_line(self, qty):
