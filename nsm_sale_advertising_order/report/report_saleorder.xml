@@ -80,8 +80,6 @@
 
                     <!-- Lines associated -->
                     <t t-foreach="layout_category['lines']" t-as="l">
-                        <t t-set="tot_Cdiscount" t-value="tot_Cdiscount + l.computed_discount"/>
-
                         <tr>
                             <td t-if="l.medium.date_type == 'validity'">
                                 <span t-field="l.from_date"/><span> - </span><span t-field="l.to_date"/>
@@ -209,7 +207,7 @@
             <!-- Is there a discount on at least one line? -->
             <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
             <!--<t t-set="display_Cdiscount" t-value="any([l.computed_discount for l in doc.order_line])"/>-->
-            <t t-set="tot_Cdiscount" t-value="0"/>
+            <t t-set="tot_Cdiscount" t-value="sum([(l.price_unit * l.product_uom_qty) - l.subtotal_before_agency_disc for l in doc.order_line])"/>
 
             <div name="order_lines" class="row" style="padding-left:85px;padding-right:15px;">
                 <t t-call="nsm_sale_advertising_order.report_saleorderlines_document_nsm"/>
@@ -226,7 +224,7 @@
                         </tr>
                         <t>
                             <tr>
-                                <td>Discount</td>
+                                <td>Computed discount</td>
                                 <td class="text-right">
                                     <span t-if="doc.pricelist_id and doc.pricelist_id.currency_id" t-field="doc.pricelist_id.currency_id.symbol"/><span> </span><span t-esc="'%.2f'% tot_Cdiscount"/>
                                 </td>
