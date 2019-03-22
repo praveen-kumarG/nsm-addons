@@ -404,3 +404,13 @@ msgstr "sofrom.odooto.pubble"
 #: model:ir.model,name:bdu_pubble_soap.model_soline_from_odooto_pubble
 msgid "soline.from.odooto.pubble"
 msgstr "soline.from.odooto.pubble"
+
+#. module: nsm_ad4all_soap
+#: model:ir.model.fields,field_description:nsm_ad4all_soap.field_sale_order_line_recurring
+msgid "Recurring Advertisement"
+msgstr "Herplaatsing"
+
+#. module: nsm_ad4all_soap
+#: model:ir.model.fields,field_description:nsm_ad4all_soap.field_sale_order_line_no_copy_chase
+msgid "No Copy Chasing"
+msgstr "Niet manen"

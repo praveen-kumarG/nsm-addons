@@ -50,3 +50,23 @@ msgstr "Debiteurenbeheer ONE Business B.V."
 #: model:ir.ui.view,arch_db:nsm_sale_advertising_order.report_saleorder_document_nsm
 msgid "Computed discount"
 msgstr "Berekende korting"
+
+#. module: nsm_sale_advertising_order
+#: model:ir.model.fields,field_description:nsm_sale_advertising_order.field_sale_order_line_proof_number_amt_adv_customer
+msgid "Proof Number Amount Advertising"
+msgstr "Aant. bewijsnr. adverteerder"
+
+#. module: nsm_sale_advertising_order
+#: model:ir.model.fields,field_description:nsm_sale_advertising_order.field_sale_order_line_proof_number_payer_id
+msgid "Proof Number Payer ID"
+msgstr "Bewijsnr. betaler"
+
+#. module: nsm_sale_advertising_order
+#: model:ir.model.fields,field_description:nsm_sale_advertising_order.field_sale_order_line_proof_number_amt_payer
+msgid "Proof Number Amount Payer"
+msgstr "Aant. bewijsnr. betaler"
+
+#. module: sale_advertising_order
+#: model:ir.model.fields,field_description:sale_advertising_order.field_sale_order_line_proof_number_adv_customer
+msgid "Proof Number Advertising Customer"
+msgstr "Bewijsnr. adverteerder"
