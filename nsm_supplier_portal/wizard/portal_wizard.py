@@ -28,6 +28,8 @@ _logger = logging.getLogger(__name__)
 class WizardUser(models.TransientModel):
     _inherit = 'portal.wizard.user'
 
+    operating_unit_ids = fields.Many2many('operating.unit', string='Operating Units')
+
     @api.multi
     def _send_email(self):
         """ send notification email to a new portal user """
@@ -70,5 +72,14 @@ class WizardUser(models.TransientModel):
                        raise UserError(_('For this supplier [%s] to be invited to the Portal you have to grant him one or more Invoice Categories and one or more Titles/Departments/Prices.' % partner.name))
 
         return super(WizardUser, self).action_apply()
+
+    @api.multi
+    def _create_user(self):
+        """ update operating unit for the newly created user for wizard_user.partner_id
+            :returns record of res.users
+        """
+        user = super(WizardUser, self)._create_user()
+        user.write({'default_operating_unit_id': False,'operating_unit_ids': [(6, 0, self.operating_unit_ids.ids)]})
+        return user
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
