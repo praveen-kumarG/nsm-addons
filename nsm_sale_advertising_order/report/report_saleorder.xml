@@ -226,7 +226,7 @@
                             <tr>
                                 <td>Computed discount</td>
                                 <td class="text-right">
-                                    <span t-if="doc.display_discount_to_customer and doc.pricelist_id and doc.pricelist_id.currency_id" t-field="doc.pricelist_id.currency_id.symbol"/><span> </span><span t-esc="'%.2f'% tot_Cdiscount"/>
+                                    <span t-if="doc.pricelist_id and doc.pricelist_id.currency_id" t-field="doc.pricelist_id.currency_id.symbol"/><span> </span><span t-esc="'%.2f'% tot_Cdiscount"/>
                                 </td>
                             </tr>
                         </t>
