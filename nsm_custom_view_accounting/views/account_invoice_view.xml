@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+  <data>
+
+    <record id="invoice_supplier_form_inherit_nsm_custom_view1" model="ir.ui.view">
+      <field name="name">account.invoice.supplier.form.nsm_custom_view1</field>
+      <field name="model">account.invoice</field>
+      <field name="inherit_id" ref="nsm_account.invoice_supplier_form_NSM"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='klantnummer']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='move_name']" position="replace">
+        </xpath>
+      </field>
+    </record>
+
+    <record id="invoice_supplier_form_inherit_nsm_custom_view4" model="ir.ui.view">
+      <field name="name">account.invoice.supplier.form.nsm_custom_view4</field>
+      <field name="model">account.invoice</field>
+      <field name="inherit_id" ref="account_invoice_transmit_method.invoice_supplier_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='transmit_method_id']" position="after">
+          <field name="move_name" invisible="0" groups="account.group_account_manager"/>
+        </xpath>
+      </field>
+    </record>
+
+    <record id="invoice_supplier_form_inherit_nsm_custom_view5" model="ir.ui.view">
+      <field name="name">account.invoice.supplier.form.nsm_custom_view5</field>
+      <field name="model">account.invoice</field>
+      <field name="inherit_id" ref="nsm_account_invoice_2step_validation.view_invoice_supplier_form_nsm"/>
+      <field name="arch" type="xml">
+        <xpath expr="//field[@name='team_id']" position="replace">
+        </xpath>
+      </field>
+    </record>
+
+    <record id="invoice_supplier_tree_inherit_nsm_custom_view" model="ir.ui.view">
+        <field name="name">invoice_supplier_tree.nsm_custom_view</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="nsm_account.invoice_supplier_tree_inherit"/>
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='klantnummer']" position="attributes">
+            <attribute name="invisible">1</attribute>
+          </xpath>
+        </field>
+    </record>
+
+    <record id="invoice_supplier_form_ou_nsm_custom_view" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.form.ou.nsm_custom_view</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account_operating_unit.invoice_supplier_form_ou" />
+        <field name="arch" type="xml">
+          <xpath expr="//field[@name='operating_unit_id']" position="replace">
+          </xpath>
+        </field>
+    </record>
+
+    <record id="invoice_supplier_form_account_nsm_custom_view3" model="ir.ui.view">
+      <field name="name">account.invoice.supplier.form.nsm_custom_view3</field>
+      <field name="model">account.invoice</field>
+      <field name="inherit_id" ref="account.invoice_supplier_form"/>
+      <field name="arch" type="xml">
+        <xpath expr="//group/field[@name='account_id']" position="attributes">
+          <attribute name="invisible">1</attribute>
+        </xpath>
+        <xpath expr="//field[@name='reference']" position="after">
+          <field name="operating_unit_id" required="1"
+                     options="{'no_create': True}"
+                     widget="selection" groups="operating_unit.group_multi_operating_unit"/>
+          <field domain="[('company_id', '=', company_id), ('internal_type', '=', 'payable'), ('deprecated', '=', False)]" name="account_id" groups="account.group_account_manager"/>
+          <field name="team_id"/>
+        </xpath>
+      </field>
+    </record>
+
+  </data>
+</odoo>
