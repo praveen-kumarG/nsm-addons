@@ -65,6 +65,12 @@
                 <xpath expr="//field[@name='order_line']/tree/field[@name='subtotal_before_agency_disc']" position="attributes">
                     <attribute name="string">SBAD</attribute>
                 </xpath>
+                <xpath expr="//form/group[1]/group[1]/field[@name='deadline']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form/group[3]/group[3]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -122,6 +128,12 @@
                 </xpath>
                 <xpath expr="//field[@name='subtotal_before_agency_disc']" position="attributes">
                     <attribute name="string">SBAD</attribute>
+                </xpath>
+                <xpath expr="//field[@name='deadline']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//form/group[3]/group[3]" position="attributes">
+                    <attribute name="invisible">1</attribute>
                 </xpath>
             </field>
         </record>
