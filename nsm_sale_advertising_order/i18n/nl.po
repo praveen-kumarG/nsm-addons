@@ -66,7 +66,8 @@ msgstr "Bewijsnr. betaler"
 msgid "Proof Number Amount Payer"
 msgstr "Aant. bewijsnr. betaler"
 
-#. module: sale_advertising_order
-#: model:ir.model.fields,field_description:sale_advertising_order.field_sale_order_line_proof_number_adv_customer
+#. module: nsm_sale_advertising_order
+#: model:ir.ui.view,arch_db:nsm_sale_advertising_order.view_adv_order_line_form_nsm
+#: model:ir.ui.view,arch_db:nsm_sale_advertising_order.view_order_form_advertising_nsm
 msgid "Proof Number Advertising Customer"
 msgstr "Bewijsnr. adverteerder"
