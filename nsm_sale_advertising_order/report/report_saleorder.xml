@@ -222,7 +222,7 @@
                                 <span t-if="doc.pricelist_id and doc.pricelist_id.currency_id" t-field="doc.pricelist_id.currency_id.symbol"/><span> </span><span t-esc="'%.2f'% doc.amount_untaxed"/>
                             </td>
                         </tr>
-                        <t>
+                        <t t-if="doc.display_discount_to_customer">
                             <tr>
                                 <td>Computed discount</td>
                                 <td class="text-right">
