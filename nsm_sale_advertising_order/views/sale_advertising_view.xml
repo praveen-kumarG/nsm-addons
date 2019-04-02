@@ -18,7 +18,7 @@
                     <field name="proof_number_payer_id" domain="[('customer', '=', True),('id','child_of',parent.partner_id)]" attrs="{'required': [('proof_number_amt_payer', '>', 0)]}" context="{'default_parent_id': 'order_partner_id', 'show_address': 1}" options="{'no_create_edit': True, 'always_reload': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="replace">
-                    <field name="proof_number_adv_customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'parent.partner_id', 'show_email': 1}" options="{'no_create_edit': True}" widget="many2many_tags"/>
+                    <field name="proof_number_adv_customer" string="Proof Number Advertising Customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'parent.partner_id', 'show_email': 1}" options="{'no_create_edit': True}" widget="many2many_tags"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_payer_id']" position="after">
                      <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer_id','=', False)],'required':[('proof_number_payer_id','!=', False)]}"/>
@@ -97,7 +97,7 @@
                     <field name="proof_number_payer_id" domain="[('customer', '=', True),('id', 'child_of', order_partner_id)]" context="{'default_parent_id': 'order_partner_id', 'show_address': 1}" options="{'no_create_edit': True, 'always_reload': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="replace">
-                    <field name="proof_number_adv_customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'order_partner_id', 'show_email': 1}" options="{'no_create_edit': True}" widget="many2many_tags"/>
+                    <field name="proof_number_adv_customer" string="Proof Number Advertising Customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'order_partner_id', 'show_email': 1}" options="{'no_create_edit': True}" widget="many2many_tags"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_payer_id']" position="after">
                      <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer_id','=', False)],'required':[('proof_number_payer_id','!=', False)]}"/>
