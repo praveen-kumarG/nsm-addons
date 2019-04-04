@@ -16,7 +16,7 @@
                     </xpath>
                     <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']" position="replace">
                         <field name="account_analytic_id" groups="analytic.group_analytic_accounting"
-                            domain="[('company_id', '=', parent.company_id)]" required="1"/>
+                            domain="[('company_id', '=', parent.company_id)]"/>
                     </xpath>
 
                     <xpath expr="//notebook/page[@name='other_info']" position="before">
