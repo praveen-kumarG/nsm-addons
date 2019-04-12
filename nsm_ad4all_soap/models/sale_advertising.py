@@ -624,6 +624,7 @@ class SoLinefromOdootoAd4all(models.Model):
     )
     placement_description = fields.Char(
         string='Advertising Description',
+        size=254
     )
     placement_notice = fields.Char(
         string='Material Remarks'
@@ -1015,19 +1016,7 @@ class SoLinefromOdootoAd4all(models.Model):
                 'json_message': order_obj.xml_data,
         })
         except Exception as e:
-#            if xml:
-#                xml_msg = history.last_sent
-#                reply = history.last_received if \
-#                    history.last_received else \
-#                    False
-#                self.write({'json_message': xml_msg, 'reply_message': reply})
-#                self.env.cr.commit()
             raise FailedJobError(
                 _('Error wsdl call: %s') % (e))
-        #        finally:
-#        if xml:
-#            xml_msg = history.last_sent
-#            reply = history.last_received if history.last_received else False
-#            self.write({'json_message': xml_msg, 'reply_message': reply})
         return response
 
