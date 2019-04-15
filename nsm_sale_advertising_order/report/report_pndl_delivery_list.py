@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 
 class NSMDeliveryListReport(ReportXlsx):
 
-    def generate_xlsx_report(self, workbook, data, orderLines):
+    def generate_xlsx_report(self, workbook, data, proofLines):
 
         def _get_title(orderLine):
             title = []
@@ -44,25 +44,28 @@ class NSMDeliveryListReport(ReportXlsx):
 
             amount = 0
             if customer.id in orderLine.proof_number_adv_customer.ids:
-                amount = orderLine.proof_number_amt_adv_customer
-            elif orderLine.proof_number_payer and orderLine.proof_number_payer.id == customer.id:
-                amount = orderLine.proof_number_amt_payer
+                amount += orderLine.proof_number_amt_adv_customer
+            if orderLine.proof_number_payer_id and orderLine.proof_number_payer_id.id == customer.id:
+                amount += orderLine.proof_number_amt_payer
             records.append(amount)
             records.append(customer.name if parent else '')
             return records
 
-        def _form_data(orderLines):
+        def _form_data(proofLines):
             row_datas = []
-            for orderLine in orderLines:
-                partners = orderLine.proof_number_adv_customer | orderLine.proof_number_payer
-                for part in partners:
-                    row_datas.append(_prepare_data(part, orderLine))
+            # for orderLine in orderLines:
+            for pLine in proofLines:
+                # partners = orderLine.proof_number_adv_customer | orderLine.proof_number_payer
+                row_datas.append(_prepare_data(pLine.proof_number_payer, pLine.line_id))
+                # for part in partners:
+                #     row_datas.append(_prepare_data(part, orderLine))
+
             return row_datas
 
         header = ['PAPERCODE', 'CUSTOMER NAME', 'VOORLETTERS', 'TUSSENVOEGSEL', 'ACHTERNAAM', 'COUNTRY CODE', 'ADDRESS ZIP',
                   'HUISNUMMER', 'AANVULLING', 'ADDRESS STREET', 'ADDRESS CITY', 'AANTAL', 'CONTACT PERSOON']
 
-        row_datas = _form_data(orderLines)
+        row_datas = _form_data(proofLines)
 
         if row_datas:
             bold_format = workbook.add_format({'bold': True})
@@ -79,4 +82,4 @@ class NSMDeliveryListReport(ReportXlsx):
 
 
 
-NSMDeliveryListReport('report.report_pndl_delivery_list.xlsx', 'sale.order.line')
+NSMDeliveryListReport('report.report_pndl_delivery_list.xlsx', 'proof.number.delivery.list')

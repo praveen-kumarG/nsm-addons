@@ -12,8 +12,8 @@
         />
 
         <report
-            id="report_nsm_delivery_list_report_xlsx"
-            model="sale.order.line"
+            id="report_nsm_proof_delivery_list_report_xlsx"
+            model="proof.number.delivery.list"
             string="P.N.D.L List XLSX"
             report_type="xlsx"
             name="report_pndl_delivery_list.xlsx"

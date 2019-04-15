@@ -21,6 +21,7 @@
 ##############################################################################
 
 from odoo import api, fields, models, _
+import json
 
 class SaleOrder(models.Model):
     _inherit = ["sale.order"]
@@ -43,6 +44,20 @@ class SaleOrder(models.Model):
                     if newline.deadline_check():
                         newline.page_qty_check_create()
         return res
+
+    #Overridden not to change the state of the record while printing reports.
+    @api.multi
+    def print_quotation(self):
+        orders = self.filtered(lambda s: s.advertising and s.state in ['draft','approved1', 'submitted', 'approved2'])
+        for order in orders:
+            olines = []
+            for line in order.order_line:
+                if line.multi_line:
+                    olines.append(line.id)
+            if not olines == []:
+                self.env['sale.order.line.create.multi.lines'].create_multi_from_order_lines(orderlines=olines)
+        self._cr.commit()
+        return self.env['report'].get_action(self, 'sale.report_saleorder')
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
@@ -67,40 +82,11 @@ class SaleOrderLine(models.Model):
                 line.product_height = prod.height
                 line.material_id = line.recurring_id.id if line.recurring_id else line.id
 
-
-    @api.depends('proof_number_payer','proof_number_adv_customer')
-    def _get_proof_data(self):
-        for line in self:
-            proof_payer = line.proof_number_payer
-            proof_cus = line.proof_number_adv_customer and line.proof_number_adv_customer[0]
-            if proof_payer:
-                line.proof_parent_name = proof_payer.parent_id and proof_payer.parent_id.name or False
-                line.proof_initials = proof_payer.initials or ''
-                line.proof_infix = proof_payer.infix or ''
-                line.proof_lastname = proof_payer.lastname or ''
-                line.proof_country_code = proof_payer.country_id.code or ''
-                line.proof_zip = proof_payer.zip or ''
-                line.proof_street_number = proof_payer.street_number or ''
-                line.proof_street_name = proof_payer.street_name or ''
-                line.proof_city = proof_payer.city or ''
-                line.proof_partner_name = proof_payer.name or ''
-            elif proof_cus:
-                line.proof_parent_name = proof_cus.parent_id and proof_cus.parent_id.name or False
-                line.proof_initials = proof_cus.initials or ''
-                line.proof_infix = proof_cus.infix or ''
-                line.proof_lastname = proof_cus.lastname or ''
-                line.proof_country_code = proof_cus.country_id.code or ''
-                line.proof_zip = proof_cus.zip or ''
-                line.proof_street_number = proof_cus.street_number or ''
-                line.proof_street_name = proof_cus.street_name or ''
-                line.proof_city = proof_cus.city or ''
-                line.proof_partner_name = proof_cus.name or ''
-
     @api.model
     def default_get(self, fields_list):
         result = super(SaleOrderLine, self).default_get(fields_list)
         if 'customer_contact' in self.env.context:
-            result.update({'proof_number_payer':self.env.context['customer_contact']})
+            result.update({'proof_number_payer_id':self.env.context['customer_contact']})
             result.update({'proof_number_amt_payer': 1})
 
         result.update({'proof_number_adv_customer': False})
@@ -110,85 +96,35 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('ad_class')
     def onchange_ad_class(self):
-        res = super(SaleOrderLine, self).onchange_ad_class()
-        if not self.advertising:
-            return res
-        if self.ad_class:
-            res['value']['is_plusproposition_category'] = self.ad_class.is_plusproposition_category
-
-        res['domain']['product_template_id'] = []
-        if self.ad_class:
-            if 'product_template_id' in res['domain']:
-                res['domain']['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
-            else:
-                res['domain']['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
-        titles = self.title if self.title else self.title_ids or False
-        if titles:
-            product_ids = self.env['product.product']
-            for title in titles:
-                if title.product_attribute_value_id:
-                    product_ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
-                    product_ids += product_ids
-
-            if product_ids:
-                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
-                if 'product_template_id' in res['domain']:
-                    res['domain']['product_template_id'] += [('id', 'in', product_tmpl_ids)]
-                else:
-                    res['domain']['product_template_id'] = [('id', 'in', product_tmpl_ids)]
-        return res
-
-    @api.onchange('title')
-    def title_oc(self):
-        res = super(SaleOrderLine, self).title_oc()
-        if not self.advertising:
-            return res
-        res['domain']['product_template_id'] = []
-        if self.title:
-            product_ids = []
-            if self.title.product_attribute_value_id:
-                    product_ids = self.env['product.product'].search([('attribute_value_ids', '=',
-                                                       [self.title.product_attribute_value_id.id])])
-            if product_ids:
-                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
-                if 'product_template_id' in res['domain']:
-                    res['domain']['product_template_id'] += [('id', 'in', product_tmpl_ids)]
-                else:
-                    res['domain']['product_template_id'] = [('id', 'in', product_tmpl_ids)]
-        if self.ad_class:
-            if 'product_template_id' in res['domain']:
-                res['domain']['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
-            else:
-                res['domain']['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
-        return res
-
-    @api.onchange('title_ids')
-    def title_ids_oc(self):
-        super(SaleOrderLine, self).title_ids_oc()
-        vals, data = {}, {}
+        vals, result = {}, {}
         if not self.advertising:
             return {'value': vals}
-        data['product_template_id'] = []
         titles = self.title_ids if self.title_ids else self.title or False
+        domain = []
         if titles:
             product_ids = self.env['product.product']
             for title in titles:
                 if title.product_attribute_value_id:
                     ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
                     product_ids += ids
-            if product_ids:
-                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
-                if 'product_template_id' in data:
-                    data['product_template_id'] += [('id', 'in', product_tmpl_ids)]
-                else:
-                    data['product_template_id'] = [('id', 'in', product_tmpl_ids)]
+            product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
+            domain = [('id', 'in', product_tmpl_ids)]
         if self.ad_class:
-            if 'product_template_id' in data:
-                data['product_template_id'] += [('categ_id', '=', self.ad_class.id)]
+            vals['is_plusproposition_category'] = self.ad_class.is_plusproposition_category
+            product_ids = self.env['product.template'].search(domain+[('categ_id', '=', self.ad_class.id)])
+            if product_ids and len(product_ids) == 1:
+                vals['product_template_id'] = product_ids[0]
             else:
-                data['product_template_id'] = [('categ_id', '=', self.ad_class.id)]
-        return {'domain': data }
-
+                vals['product_template_id'] = False
+            date_type = self.ad_class.date_type
+            if date_type:
+                vals['date_type'] = date_type
+            else: result = {'title':_('Warning'),
+                                 'message':_('The Ad Class has no Date Type. You have to define one')}
+        else:
+            vals['product_template_id'] = False
+            vals['date_type'] = False
+        return {'value': vals, 'warning': result}
 
     @api.onchange('circulation_type')
     def onchange_circulation_type(self):
@@ -204,26 +140,37 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('proof_number_amt_payer')
     def onchange_proof_number_amt_payer(self):
-        if self.proof_number_amt_payer < 1: self.proof_number_payer = False
+        if self.proof_number_amt_payer < 1: self.proof_number_payer_id = False
 
-    @api.onchange('proof_number_payer')
-    def onchange_proof_number_payer(self):
-        self.proof_number_amt_payer = 1 if self.proof_number_payer else 0
+    @api.onchange('proof_number_payer_id')
+    def onchange_proof_number_payer_id(self):
+        self.proof_number_amt_payer = 1 if self.proof_number_payer_id else 0
 
-    proof_number_payer = fields.Many2one('res.partner', 'Proof Number Payer')
+    @api.depends('ad_class','title','title_ids')
+    @api.multi
+    def _compute_product_template_domain(self):
+        """
+        Compute domain for the field product_template_id.
+        """
+        for rec in self:
+            titles = rec.title_ids if rec.title_ids else rec.title or False
+            domain = []
+            if titles:
+                product_ids = rec.env['product.product']
+                for title in titles:
+                    if title.product_attribute_value_id:
+                        ids = product_ids.search([('attribute_value_ids', '=', [title.product_attribute_value_id.id])])
+                        product_ids += ids
+                product_tmpl_ids = product_ids.mapped('product_tmpl_id').ids
+                domain += [('id', 'in', product_tmpl_ids)]
+            if rec.ad_class:
+                domain += [('categ_id', '=', rec.ad_class.id)]
+            rec.product_template_domain = json.dumps(domain)
+
+    proof_number_payer_id = fields.Many2one('res.partner', 'Proof Number Payer ID')
     proof_number_adv_customer = fields.Many2many('res.partner', 'partner_line_proof_rel', 'line_id', 'partner_id', string='Proof Number Advertising Customer')
     proof_number_amt_payer = fields.Integer('Proof Number Amount Payer', default=1)
     proof_number_amt_adv_customer = fields.Integer('Proof Number Amount Advertising', default=1)
-    proof_parent_name = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Parent")
-    proof_initials = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Initials")
-    proof_infix = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Infix")
-    proof_lastname = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Last Name")
-    proof_country_code = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Country Code")
-    proof_zip = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Zip")
-    proof_street_number = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Street Number")
-    proof_street_name = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Street Name")
-    proof_city = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="City")
-    proof_partner_name = fields.Char(compute='_get_proof_data', readonly=True, store=False, string="Name")
     product_width = fields.Float(compute='_get_indeellijst_data', readonly=True, store=False, string="Width")
     product_height = fields.Float(compute='_get_indeellijst_data', readonly=True, store=False, string="Height")
     material_id = fields.Integer(compute='_get_indeellijst_data', readonly=True, store=False, string="Material ID")
@@ -236,6 +183,14 @@ class SaleOrderLine(models.Model):
     circulation_type = fields.Many2one('circulation.type', string='Circulation Type')
     send_with_advertising_issue = fields.Boolean(string="Send with advertising issue")
     adv_issue_parent = fields.Many2one(related='adv_issue.parent_id', string='Advertising Issue Parent', readonly=True, store=True)
+    product_template_domain = fields.Char(compute="_compute_product_template_domain", string="Product Template Domain")
+
+    @api.model
+    def fields_get(self, fields=None, attributes=None):
+        fields = super(SaleOrderLine, self).fields_get(fields, attributes=attributes)
+        fields['proof_number_payer']['selectable'] = False
+        fields['proof_number_payer']['sortable'] = False
+        return fields
 
     @api.multi
     def _prepare_invoice_line(self, qty):
@@ -245,4 +200,10 @@ class SaleOrderLine(models.Model):
         return res
 
 
+class MailComposeMessage(models.TransientModel):
+    _inherit = 'mail.compose.message'
 
+    #Overridden and calling super with mark_so_as_sent = False.
+    @api.multi
+    def send_mail(self, auto_commit=False):
+        return super(MailComposeMessage, self.with_context(mark_so_as_sent=False)).send_mail(auto_commit=auto_commit)

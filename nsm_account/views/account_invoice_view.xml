@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
                 <data>
 					<xpath expr="//field[@name='partner_id']" position="after">
-                        <field name="klantnummer" string="aProfit-nummer" attrs="{'readonly': 'True'}"/>
+                        <field name="klantnummer" string="aProfit-nummer" attrs="{'readonly': 'True'}" invisible="1"/>
                     </xpath>
 					<xpath expr="//field[@name='move_name']" position="replace">
                         <field name="move_name" invisible="0" groups="account.group_account_user"/>
@@ -33,11 +33,38 @@
                         <field name="origin" groups="account.group_account_user" string="Our Reference"/>
                         <field name="name" groups="account.group_account_user" string="Your Reference"/>
                     </xpath>
-
+                    <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='discount']" position="attributes">
+                        <attribute name="string">Agency Discount (%)</attribute>
+                    </xpath>
+                    <xpath expr="//page[@name='other_info']/group[1]/group[2]/field[@name='name']" position="replace">
+                        <field name="user_id"/>
+                        <field name="team_id"/>
+                    </xpath>
+                    <xpath expr="//field[@name='user_id']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='name']" position="attributes">
+                        <attribute name="required">0</attribute>
+                    </xpath>
+                    <xpath expr="//field[@name='user_id']" position="after">
+                        <field name="name"/>
+                    </xpath>
                 </data>
             </field>
         </record>
 
+        <record id="account_invoice_form_NSM" model="ir.ui.view">
+            <field name="name">account.invoice.form.inherit_NSM</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="sale.account_invoice_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='team_id']" position="attributes">
+                        <attribute name="invisible">1</attribute>
+                    </xpath>
+                </data>
+            </field>
+        </record>
 
         <record id="invoice_supplier_form_NSM" model="ir.ui.view">
             <field name="name">account.invoice.supplier.form.inherit_NSM</field>

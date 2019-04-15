@@ -15,13 +15,13 @@
                            context="{'default_parent_id': partner_id, 'show_email': 1}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_payer']" position="replace">
-                    <field name="proof_number_payer" domain="[('customer', '=', True),('id','child_of',parent.partner_id)]" attrs="{'required': [('proof_number_amt_payer', '>', 0)]}" context="{'default_parent_id': 'order_partner_id', 'show_address': 1}" options="{'no_create_edit': True, 'always_reload': True}"/>
+                    <field name="proof_number_payer_id" domain="[('customer', '=', True),('id','child_of',parent.partner_id)]" attrs="{'required': [('proof_number_amt_payer', '>', 0)]}" context="{'default_parent_id': 'order_partner_id', 'show_address': 1}" options="{'no_create_edit': True, 'always_reload': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="replace">
-                    <field name="proof_number_adv_customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'parent.partner_id', 'show_email': 1}" options="{'no_create_edit': True}" widget="many2many_tags"/>
+                    <field name="proof_number_adv_customer" string="Proof Number Advertising Customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'parent.partner_id', 'show_email': 1}" options="{'no_create_edit': True}" widget="many2many_tags"/>
                 </xpath>
-                <xpath expr="//field[@name='proof_number_payer']" position="after">
-                     <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer','=', False)],'required':[('proof_number_payer','!=', False)]}"/>
+                <xpath expr="//field[@name='proof_number_payer_id']" position="after">
+                     <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer_id','=', False)],'required':[('proof_number_payer_id','!=', False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="after">
                      <field name="proof_number_amt_adv_customer" attrs="{'invisible':[('proof_number_amt_adv_customer','=', 0)],'required':[('proof_number_adv_customer','!=', False)]}"/>
@@ -47,6 +47,44 @@
                 <xpath expr="//tree/field[@name='title']" position="after">
                     <field name="adv_issue"/>
                 </xpath>
+                <xpath expr="//field[@name='order_line']/form/group[1]/group[1]/field[@name='product_template_id']" position="before">
+                    <field name="product_template_domain" invisible="1"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form/group[1]/group[1]/field[@name='product_template_id']" position="attributes">
+                    <attribute name="domain">product_template_domain</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form/group[1]/group[2]/label[@for='discount']" position="attributes">
+                    <attribute name="string">Agency Discount (%)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='discount_dummy']" position="attributes">
+                    <attribute name="string">Agency Discount (%)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form/group[1]/group[2]/field[@name='subtotal_before_agency_disc']" position="attributes">
+                    <attribute name="string">SBAD</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='subtotal_before_agency_disc']" position="attributes">
+                    <attribute name="string">SBAD</attribute>
+                </xpath>
+                <xpath expr="//form/group[1]/group[1]/field[@name='deadline']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form/group[3]/group[3]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_adv_order_line_tree_nsm" model="ir.ui.view">
+            <field name="name">sale.adv.order.line.tree</field>
+            <field name="model">sale.order.line</field>
+            <field name="inherit_id" ref="sale_advertising_order.view_adv_order_line_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='discount_dummy']" position="attributes">
+                    <attribute name="string">Agency Discount (%)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='subtotal_before_agency_disc']" position="attributes">
+                    <attribute name="string">SBAD</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -56,13 +94,13 @@
             <field name="inherit_id" ref="sale_advertising_order.view_adv_order_line_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='proof_number_payer']" position="replace">
-                    <field name="proof_number_payer" domain="[('customer', '=', True),('id', 'child_of', order_partner_id)]" context="{'default_parent_id': 'order_partner_id', 'show_address': 1}" options="{'no_create_edit': True, 'always_reload': True}"/>
+                    <field name="proof_number_payer_id" domain="[('customer', '=', True),('id', 'child_of', order_partner_id)]" context="{'default_parent_id': 'order_partner_id', 'show_address': 1}" options="{'no_create_edit': True, 'always_reload': True}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="replace">
-                    <field name="proof_number_adv_customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'order_partner_id', 'show_email': 1}" options="{'no_create_edit': True}" widget="many2many_tags"/>
+                    <field name="proof_number_adv_customer" string="Proof Number Advertising Customer" domain="[('customer', '=', True)]" context="{'default_parent_id': 'order_partner_id', 'show_email': 1}" options="{'no_create_edit': True}" widget="many2many_tags"/>
                 </xpath>
-                <xpath expr="//field[@name='proof_number_payer']" position="after">
-                     <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer','=', False)],'required':[('proof_number_payer','!=', False)]}"/>
+                <xpath expr="//field[@name='proof_number_payer_id']" position="after">
+                     <field name="proof_number_amt_payer" attrs="{'invisible':[('proof_number_payer_id','=', False)],'required':[('proof_number_payer_id','!=', False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='proof_number_adv_customer']" position="after">
                      <field name="proof_number_amt_adv_customer" attrs="{'invisible':[('proof_number_adv_customer','=', False)],'required':[('proof_number_adv_customer','!=', False)]}"/>
@@ -85,46 +123,19 @@
                         <field name="circulation_type" attrs="{'required':[('is_plusproposition_category', '=', True)], 'invisible':[('is_plusproposition_category', '=', False)]}" options="{'no_create_edit': True}"/>
                         <field name="circulation_description" attrs="{'required':[('selective_circulation', '=', True)], 'invisible':[('selective_circulation', '=', False)]}" placeholder="Such as ZIP code, channel, etc."/>
                 </xpath>
+                <xpath expr="//label[@for='discount']" position="attributes">
+                    <attribute name="string">Agency Discount (%)</attribute>
+                </xpath>
+                <xpath expr="//field[@name='subtotal_before_agency_disc']" position="attributes">
+                    <attribute name="string">SBAD</attribute>
+                </xpath>
+                <xpath expr="//field[@name='deadline']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//form/group[3]/group[3]" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
             </field>
-        </record>
-
-        <record id="view_proof_number_delivery_list_tree" model="ir.ui.view">
-            <field name="name">sale.order.line.proof.tree</field>
-            <field name="model">sale.order.line</field>
-            <field name="arch" type="xml">
-                <tree string="Proof Delivery Lists" create="false" edit="false" delete="false">
-                        <field name="title" />
-                        <field name="adv_issue" />
-                        <field name="issue_date" />
-                        <field name="proof_parent_name" />
-                        <field name="proof_initials" />
-                        <field name="proof_infix" />
-                        <field name="proof_lastname"/>
-                        <field name="proof_country_code"/>
-                        <field name="proof_zip"/>
-                        <field name="proof_street_number"/>
-                        <field name="proof_street_name"/>
-                        <field name="proof_city" />
-                        <field name="proof_partner_name"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="nsm_proof_number_delivery_list_action">
-			<field name="name">Proof Number Delivery List</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">sale.order.line</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form,pivot</field>
-            <field name="search_view_id" ref="sale_advertising_order.view_advertising_sales_order_line_filter"/>
-			<field name="domain">[('advertising','!=',False),('state','in',('sale','done')),'|',('proof_number_payer','!=', False),('proof_number_adv_customer','!=', False)]</field>
-		</record>
-
-         <record id="nsm_proof_number_delivery_list_action_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_proof_number_delivery_list_tree"/>
-            <field name="act_window_id" ref="nsm_proof_number_delivery_list_action"/>
         </record>
 
         <record id="view_indeellijst_list_tree" model="ir.ui.view">
@@ -169,7 +180,7 @@
             <field name="act_window_id" ref="nsm_indeellijst_action"/>
         </record>
 
-                <record id="view_order_form_inherited" model="ir.ui.view">
+        <record id="view_order_form_inherited" model="ir.ui.view">
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>

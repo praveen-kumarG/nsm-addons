@@ -19,11 +19,12 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['sale'],
+    'depends': ['sale','package_sale_advertising_order'],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
+        "report/report_saleorder.xml",
         'views/sale_views.xml',
     ],
     # only loaded in demonstration mode
