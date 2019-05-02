@@ -196,6 +196,7 @@
                     <attribute name="readonly">False</attribute>
                 </xpath>
                 <xpath expr="//field[@name='expense_line_ids']/tree/field[@name='name']" position="after">
+                    <field name="reference"/>
                     <field name="account_id"/>
                 </xpath>
 
