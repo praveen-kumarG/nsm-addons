@@ -29,4 +29,62 @@
             % endif}
         ]]></field>
     </record>
+
+    <!--Email template -->
+    <record id="sale_advertising_order.email_template_edi_sale_adver" model="mail.template">
+        <field name="name">Advertising Sales Order - Send by Email</field>
+        <field name="email_from">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+        <field name="subject">${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })</field>
+        <field name="partner_to">${(object.customer_contact.id if object.customer_contact.email else object.partner_id.id|safe)}</field>
+        <field name="reply_to">${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="auto_delete" eval="True"/>
+        <field name="report_template" ref="sale.report_sale_order"/>
+        <field name="report_name">${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="body_html"><![CDATA[
+            <p>
+            % if object.customer_contact.name:
+            </p><p>
+            Dear ${object.customer_contact.name},</p>
+            % else:
+            <p>Dear relation, </p>
+            % endif
+
+            % set access_action = object.with_context(force_website=True).get_access_action()
+            % set doc_name = 'quotation' if object.state not in ('sale', 'done') else 'order confirmation'
+            % set is_online = access_action and access_action['type'] == 'ir.actions.act_url'
+            % set access_name = is_online and object.template_id and doc_name == 'quotation' and 'Accept and pay %s online' % doc_name or 'View %s' % doc_name
+            % set access_url = is_online and access_action['url'] or None
+
+            <p></p>
+            <br><p>Attached you will find your ${doc_name} with&nbsp;${doc_name}&nbsp;number <strong>${object.name}.</strong>
+
+            % if object.origin:
+            Your order reference is: ${object.origin}.)
+            % endif
+            </p>
+            <br>
+
+            % if is_online:
+                <center>
+                    <a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">${access_name}</a>
+                    <br><br>
+                    <span style="color:#888888">(or view attached PDF)</span>
+                </center>
+                <br>
+            % endif
+
+            <p>Please contact me via the below mentioned e-mail address in case of any questions you might have.</p>
+            <br>
+            <p>&nbsp;</p>
+
+            <p style="color:#eeeeee;">
+            % if object.user_id and object.user_id.signature:
+                ${object.user_id.signature | safe}
+            % endif
+            </p>
+            ]]>
+        </field>
+    </record>
 </odoo>
