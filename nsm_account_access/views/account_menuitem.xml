@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <!-- Top menu item -->
+<!--        &lt;!&ndash; Top menu item &ndash;&gt;
        <menuitem name="Fianace"
             id="menu_finance_new"
             groups="nsm_account_access.account_extra_access_redactie"
@@ -22,12 +22,12 @@
      <menuitem id="menu_top_journal_enteries"
 		name="Journal Enteries"  parent="menu_finance_new"
 		groups="nsm_account_access.account_extra_access_redactie"
-                sequence="3"/>
+                sequence="3"/>-->
                 
       
 	<menuitem
-            name="Analytic Accounts"
-            parent="menu_top_journal_enteries"
+            name="Analytic Accounts for editorial teams"
+            parent="account.menu_finance"
             action="analytic.action_analytic_account_form"
             id="menu_action_analytic_account_tree2_new"
             sequence="30"
