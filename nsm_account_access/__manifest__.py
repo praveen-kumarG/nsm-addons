@@ -39,7 +39,6 @@ This module improved the access rights
     'depends' : ['account','analytic','nsm_supplier_portal'],
     'data' : [
 	          "security/account_security_view.xml",
-              "security/ir.model.access.csv",
               "views/account_menuitem.xml",
               ],
     'demo' : [],
