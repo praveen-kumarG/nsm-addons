@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+<!--        &lt;!&ndash; Top menu item &ndash;&gt;
+       <menuitem name="Fianace"
+            id="menu_finance_new"
+            groups="nsm_account_access.account_extra_access_redactie"
+            web_icon="account,static/description/icon.png"
+            sequence="40"/>
+   
+	<menuitem id="menu_finance_payables_new"
+		name="Suppliers" parent="menu_finance_new"
+		groups="nsm_account_access.account_extra_access_redactie"
+                sequence="3"/>
+     
+      <menuitem id="menu_action_invoice_tree2_new"
+               action="account.action_invoice_tree2" parent="menu_finance_payables_new"
+               groups="nsm_account_access.account_extra_access_redactie"/>
+     
+                
+     <menuitem id="menu_top_journal_enteries"
+		name="Journal Enteries"  parent="menu_finance_new"
+		groups="nsm_account_access.account_extra_access_redactie"
+                sequence="3"/>-->
+                
+      
+	<menuitem
+            name="Analytic Accounts for editorial teams"
+            parent="account.menu_finance"
+            action="analytic.action_analytic_account_form"
+            id="menu_action_analytic_account_tree2_new"
+            sequence="30"
+            groups="nsm_account_access.account_extra_access_redactie"/>
+            
+  <!--  <menuitem id="menu_analytic_accounting_new" name="Analytic Accounting" parent="account.menu_finance_configuration" groups="nsm_account_access.account_extra_access_redactie" sequence="5"/>
+   <menuitem id="menu_finance_entries_new" name="Journal Enteries" parent="account.menu_finance" sequence="4" groups="nsm_account_access.account_extra_access_redactie"/>
+     -->
+       <!--  <menuitem id="menu_finance_receivables" name="Sales" parent="menu_finance" sequence="2"/>
+        <menuitem id="menu_finance_payables" name="Purchases" parent="menu_finance" sequence="3"/>
+        <menuitem id="menu_finance_entries" name="Adviser" parent="menu_finance" sequence="4" groups="group_account_manager"/>
+        <menuitem id="menu_finance_reports" name="Reports" parent="menu_finance" sequence="5" groups="group_account_invoice"/>
+            Reporting sub-menus
+            <menuitem id="account_reports_management_menu" name="Management" parent="account.menu_finance_reports" sequence="4" groups="group_account_user"/>
+            <menuitem id="account_reports_business_intelligence_menu" name="Business Intelligence" parent="account.menu_finance_reports" sequence="5" groups="group_account_invoice"/>
+            <menuitem id="menu_finance_legal_statement" name="PDF Reports" parent="account.menu_finance_reports" groups="group_account_user"/>
+
+        <menuitem id="menu_finance_configuration" name="Configuration" parent="menu_finance" sequence="15" groups="group_account_invoice"/>
+            Configuration Sub-Menu
+            <menuitem id="account_account_menu" name="Accounting" parent="account.menu_finance_configuration" sequence="2" groups="group_account_invoice"/>
+            <menuitem id="account_management_menu" name="Management" parent="account.menu_finance_configuration" sequence="3" groups="group_account_manager"/>
+            <menuitem id="menu_analytic_accounting" name="Analytic Accounting" parent="menu_finance_configuration" groups="analytic.group_analytic_accounting" sequence="5"/>
+            <menuitem id="menu_config_multi_currency" name="Multi-Currencies" parent="menu_finance_configuration" sequence="9" groups="base.group_multi_currency"/>
+            <menuitem id="menu_action_currency_form" action="base.action_currency_form" name="Currencies" parent="menu_config_multi_currency" sequence="20" groups="base.group_multi_currency"/>
+            <menuitem id="menu_account_reports" name="Financial Reports" parent="menu_finance_configuration" groups="group_account_user"/>
+ -->
+
+
+    </data>
+</odoo>
+
