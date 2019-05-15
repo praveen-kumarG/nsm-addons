@@ -23,9 +23,20 @@
 		name="Journal Enteries"  parent="menu_finance_new"
 		groups="nsm_account_access.account_extra_access_redactie"
                 sequence="3"/>-->
-                
+
+        <record id="view_account_analytic_account_search" model="ir.ui.view">
+            <field name="name">account.analytic.account.search</field>
+            <field name="model">account.analytic.account</field>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_search" />
+            <field name="arch" type="xml">
+            <group name="groupby" position="inside">
+                <filter string="Analytic Account Grouping" context="{'group_by':'account_id'}" name="group_account_id"/>
+            </group>
+            </field>
+        </record>
+
     <record model="ir.actions.act_window" id="account_analytic_line_action">
-            <field name="context">{'search_default_account_id': 1}</field>
+            <field name="context">{'search_default_group_account_id': 1}</field>
             <field name="domain">[('general_account_id.user_type_id','in', ['Income','Cost of Revenue','Inkoopwaarde van de omzet','Omzet']),'|',('account_id.section_ids.member_ids','=',uid),('account_id.section_ids.user_id','=',uid)]</field>
             <field name="name">Costs &amp; Revenues</field>
             <field name="res_model">account.analytic.line</field>
