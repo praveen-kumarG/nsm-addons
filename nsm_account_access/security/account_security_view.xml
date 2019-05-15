@@ -11,7 +11,7 @@
 	<field name="name">Analytic Lines for Editorial Team</field>
 	<field name="model_id" ref="account.model_account_analytic_line"/>
 	<field name="global" eval="False"/>
-	<field name="domain_force">[('general_account_id.user_type_id','in', ['Income','Cost of Revenue']),'|',('account_id.section_ids.member_ids','=',user.id),('account_id.section_ids.user_id','=',user.id)]</field>
+	<field name="domain_force">[('general_account_id.user_type_id','in', ['Income','Cost of Revenue','Inkoopwaarde van de omzet','Omzet']),'|',('account_id.section_ids.member_ids','=',user.id),('account_id.section_ids.user_id','=',user.id)]</field>
 	<field name="groups" eval="[(4, ref('nsm_account_access.account_extra_access_redactie'))]"/>
 	</record>
 </data>

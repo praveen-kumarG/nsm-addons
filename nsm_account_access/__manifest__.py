@@ -31,7 +31,8 @@
     'version' : '1.0',
     'category': 'other',
     'description': """
-This module improved the access rights
+This module allows group "Inzicht kostenplaats redactie" to view analytic accounts for their sales teams
+
 =============================================================================
     """,
     'author'  : 'Magnus - DK',
