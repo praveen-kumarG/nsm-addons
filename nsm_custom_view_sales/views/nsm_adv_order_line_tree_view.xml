@@ -36,15 +36,8 @@
                         <field name="name" position="attributes">
                                 <attribute name="invisible">1</attribute>
                         </field>
-                        <field name="layout_category_id" position="after">
-                            <field name="ad_number"/>
-                        </field>
                         <field name="page_reference" position="attributes">
                                 <attribute name="invisible">1</attribute>
-                        </field>
-                        <field name="product_uom_qty" position="after">
-                            <field name="product_uom"/>
-                            <field name="price_unit" string="Listprice"/>
                         </field>
             </field>
         </record>
