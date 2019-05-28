@@ -33,7 +33,6 @@
                     <field name="parent_id" invisible="0"/>
                     <field name="email" position="after">
                         <field name="sector_id"/>
-                        <field name="firstname"/>
                         <field name="function" invisible="0"/>
                         <field name="user_id" invisible="0"/>
                     </field>
