@@ -7,37 +7,42 @@
             <field name="arch" type="xml">
                         <!--Id needs to be moved to after order_id-->
                         <field name="id" position="replace">
-           </field>
+                        </field>
                         <field name="order_id" position="after">
                                 <field name="id"/>
                         </field>
                         <!--Hide order_partner_id-->
-                        <field name="order_partner_id" position="attributes">
-                                <attribute name="invisible">1</attribute>
+                        <field name="order_partner_id" position="replace">
                         </field>
-                        <field name="title" position="attributes">
-                                <attribute name="invisible">1</attribute>
+                        <field name="title" position="replace">
                         </field>
                         <!--Place issue_date after adv_issue-->
                         <field name="adv_issue" position="after">
-           <field name="issue_date"/>
-                            <field name="from_date" string="Start date"/>
-                            <field name="to_date" string="End date"/>
-           </field>
-                        <field name="product_id" position="attributes">
-                                <attribute name="invisible">1</attribute>
+                                <field name="issue_date"/>
+                                <field name="from_date" string="Start date"/>
+                                <field name="to_date" string="End date"/>
+                        </field>
+                        <field name="product_id" position="replace">
                         </field>
                         <field name="ad_class" position="after">
-           <field name="product_template_id"/>
-           </field>
-                        <field name="booklet_surface_area" position="attributes">
-                                <attribute name="invisible">1</attribute>
+                                <field name="product_template_id"/>
                         </field>
-                        <field name="name" position="attributes">
-                                <attribute name="invisible">1</attribute>
+                        <field name="booklet_surface_area" position="replace">
                         </field>
-                        <field name="page_reference" position="attributes">
-                                <attribute name="invisible">1</attribute>
+                        <field name="name" position="replace">
+                        </field>
+                        <field name="page_reference" position="replace">
+                        </field>
+                        <field name="product_uom" position="replace">
+                        </field>
+                        <field name="price_unit" position="replace">
+                        </field>
+                        <field name="product_uom_qty" position="replace">
+                        </field>
+                        <field name="ad_number" position="after">
+                                <field name="product_uom_qty"/>
+                                <field name="product_uom"/>
+                                <field name="price_unit"/>
                         </field>
             </field>
         </record>
