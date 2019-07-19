@@ -69,9 +69,21 @@ class SaleOrderLine(models.Model):
         for sol in self:
             name = sol.adv_issue.name if sol.adv_issue else ""
             if sol.product_template_id:
-                name = name+' ('+sol.product_template_id.name+')'
+                name = str(sol.id)+'-'+name+' ('+sol.product_template_id.name+')'
                 result.append((sol.id, name))
         return result
+
+    @api.model
+    def name_search(self, name, args=None, operator='ilike', limit=100):
+        args = args or []
+        if name:
+            domain = ['|', ('adv_issue.name', operator, name), '|', ('product_template_id.name', operator, name), '|', ('product_id.name', operator, name)]
+            if name.isdigit():
+                domain += [('id', '=', int(name))]
+            line_ids = self.search(domain + args, limit=limit)
+        else:
+            line_ids = self.search(args, limit=limit)
+        return line_ids.name_get()
 
     @api.depends('state')
     def _get_indeellijst_data(self):
