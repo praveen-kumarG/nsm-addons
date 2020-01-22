@@ -71,12 +71,6 @@
                 <xpath expr="//field[@name='order_line']/form/group[3]/group[3]" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
-                <xpath expr="//form/group[2]/group[3]/field[@name='from_date']" position="attributes">
-                    <attribute name="attrs">{'invisible':[('date_type','!=','validity')], 'required':[('date_type','=','validity')]}</attribute>
-                </xpath>
-                <xpath expr="//form/group[2]/group[3]/field[@name='to_date']" position="attributes">
-                    <attribute name="attrs">{'invisible':[('date_type','!=','validity')], 'required':[('date_type','=','validity')]}</attribute>
-                </xpath>
             </field>
         </record>
 
