@@ -29,6 +29,18 @@ class SaleOrder(models.Model):
     material_contact_person = fields.Many2one('res.partner', 'Material Contact Person', domain=[('customer','=',True)])
 
     @api.multi
+    def action_submit(self):
+        orders = self.filtered(lambda s: s.state in ['draft'])
+        for o in orders:
+            if o.order_ad4all_allow and o.ad4all_sent:
+                if not o.material_contact_person:
+                    raise UserError(
+                        _('You have to fill in a material contact person.\n'
+                          'Be aware, that the contact must have email and phone filled in.'))
+
+        return super(SaleOrder, self).action_submit()
+
+    @api.multi
     def action_approve1(self):
         res = super(SaleOrder, self).action_approve1()
         orders = self.filtered(lambda s: s.state in ['approved1'])
