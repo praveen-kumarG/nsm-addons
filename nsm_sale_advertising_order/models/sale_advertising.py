@@ -22,6 +22,7 @@
 
 from odoo import api, fields, models, _
 import json
+from odoo.exceptions import UserError
 
 class SaleOrder(models.Model):
     _inherit = ["sale.order"]
