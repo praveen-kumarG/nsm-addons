@@ -22,6 +22,7 @@
 
 from odoo import api, fields, models, _
 import json
+from odoo.exceptions import UserError
 
 class SaleOrder(models.Model):
     _inherit = ["sale.order"]
@@ -32,7 +33,7 @@ class SaleOrder(models.Model):
     def action_submit(self):
         orders = self.filtered(lambda s: s.state in ['draft'])
         for o in orders:
-            if o.order_ad4all_allow and o.ad4all_sent:
+            if o.order_ad4all_allow:
                 if not o.material_contact_person:
                     raise UserError(
                         _('You have to fill in a material contact person.\n'
